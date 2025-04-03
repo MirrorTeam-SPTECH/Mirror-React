@@ -1,0 +1,36 @@
+.container-Search{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.Search {
+    display: flex;
+    flex-direction: row;
+    background-color: #FFFF;
+    width: 88.7%;
+    height: 30px;
+    border-radius: 6px;
+    color: #717171;
+    align-items: center;
+    gap: 5px;
+    padding: 0 10px;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .Search img {
+    filter: grayscale(100%) sepia(100%) saturate(500%) hue-rotate(0deg) brightness(30%) contrast(85%);
+    width: 20px;
+    height: auto;
+  }
+  
+  .searchInput {
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    color: #717171;
+    outline: none;
+    flex: 1; 
+  }
