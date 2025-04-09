@@ -1,0 +1,12 @@
+.containerSubNavigation{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.SubNavigation{
+    display: flex;
+    background-color: #FFFF;
+    width: 100px;
+}

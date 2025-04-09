@@ -1,0 +1,66 @@
+.containerListaProdutos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  margin: 0;
+}
+
+.listaProdutos {
+  text-align: start;
+  width: 88.7%; /* Mesma largura da barra de pesquisa */
+  background-color: #6e6a6a; /* Opcional: Adicione um fundo para combinar */
+  border-radius: 6px; /* Mesma borda arredondada */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); /* Opcional: Adicione sombra para combinar */
+}
+  
+  .titulo {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    text-align: start;
+  }
+  
+  .lista {
+    display: flex;
+  flex-wrap: wrap; /* Permite que os cards quebrem linha */
+  justify-content: space-between; /* Espaçamento uniforme entre os cards */
+  align-items: center;
+  margin: 0;
+  gap: 25px;
+  }
+  
+  .cardProduto {
+    background-color: white;
+  padding: 5px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  text-align: center;
+  transition: transform 0.2s;
+  max-width: 180px;
+  height: 135px;
+  flex: 1 1 calc((88.7% - 30px) / 5);
+  }
+  
+  .cardProduto:hover {
+    transform: translateY(-4px);
+  }
+  
+  .nome {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .tempo {
+    font-size: 10px;
+    color: #888;
+  }
+  
+  .preco {
+    font-size: 14px;
+    font-weight: bold;
+    color: #10b981;
+  }
+  
