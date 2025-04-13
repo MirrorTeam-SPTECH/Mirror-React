@@ -2,34 +2,35 @@
 
 
 .container-navBar {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 0;
+  padding-top: 10px;
+
+  .menu {
     display: flex;
-    flex-direction: row;
-    justify-content: center;
-    margin: 0;
-  
-    .menu {
-      display: flex;
-      gap: 10px;
-      list-style: none;
-      padding: 10px;
-  
-      button {
-        padding: 6px 15px;
-        border: 2px solid #c00;
-        border-radius: 8px;
-        color: #c00;
-        font-weight: bold;
-        cursor: pointer;
-        background: transparent;
-        transition: all 0.3s ease-in-out;
-        font-weight: 100;
-      }
-  
-      button:hover,
-      button.active {
-        background: #c00;
-        color: white;
-        transition: 0.3s ease-in-out;
-      }
+    gap: 10px;
+    list-style: none;
+    padding: 10px;
+
+    button {
+      padding: 6px 15px;
+      border: 2px solid #c00;
+      border-radius: 8px;
+      color: #c00;
+      font-weight: bold;
+      cursor: pointer;
+      background: transparent;
+      transition: all 0.3s ease-in-out;
+      font-weight: 100;
+    }
+
+    button:hover,
+    button.active {
+      background: #c00;
+      color: white;
+      transition: 0.3s ease-in-out;
     }
   }
+}

@@ -1,0 +1,175 @@
+{
+  "hamburgueres": [
+    {
+      "id": 1,
+      "nome": "X-Churrasco",
+      "tempoPreparo": "15-20 min",
+      "preco": "18,00",
+      "imagem": "caminho/para/imagem1.jpg",
+      "descricao": "Pão francês, espeto de carne, misto ou frango, vinagrete e queijo"
+    },
+    {
+      "id": 2,
+      "nome": "X-Burguer",
+      "tempoPreparo": "16-22 min",
+      "preco": "16,00",
+      "imagem": "caminho/para/imagem2.jpg",
+      "descricao": "Pão brioche, 180g de hambúrguer artenasal, maionese e queijo"
+    },
+    {
+      "id": 3,
+      "nome": "X-Salada",
+      "tempoPreparo": "15-20 min",
+      "preco": "18,00",
+      "imagem": "",
+      "descricao": "Pão brioche, 180g de hambúrguer artenasal, maionese, queijo, alface e tomate"
+    },
+    {
+      "id": 4,
+      "nome": "X-Bacon",
+      "tempoPreparo": "10-15 min",
+      "preco": "20,00",
+      "imagem": "",
+      "descricao": "Pão brioche, 180g de hambúrguer artenasal, bacon, maionese, queijo, alface e tomate"
+    },
+    {
+      "id": 5,
+      "nome": "X-Cheedar Bacon",
+      "tempoPreparo": "15-20 min",
+      "preco": "22,00",
+      "imagem": "",
+      "descricao": "Pão brioche, 180g de hambúrguer artenasal, bacon, maionese, queijo cheaddar, alface e tomate"
+    },
+    {
+      "id": 6,
+      "nome": "X-Egg Bacon",
+      "tempoPreparo": "10-15 min",
+      "preco": "22,00",
+      "imagem": "",
+      "descricao": "Pão brioche, 180g de hambúrguer artenasal, maionese, queijo, bacon, ovo, alface e tomate"
+    }
+  ],
+  "espetinhos": [
+    {
+      "id": 1,
+      "nome": "Carne",
+      "preco": 18,
+      "tempoPreparo": "15-20 min",
+      "descricao": "Espeto de carne suculenta, temperada com ervas finas"
+    },
+    {
+      "id": 2,
+      "nome": "Misto (carne e linguiça)",
+      "preco": 18,
+      "tempoPreparo": "15-20 min",
+      "descricao": "Combinação de carne e linguiça, perfeita para compartilhar"
+    },
+    {
+      "id": 3,
+      "nome": "Carne com bacon",
+      "preco": 20,
+      "tempoPreparo": "15-20 min",
+      "descricao": "Espeto de carne com pedaços de bacon crocante"
+    },
+    {
+      "id": 4,
+      "nome": "Cafta",
+      "preco": 16,
+      "tempoPreparo": "10-15 min",
+      "descricao": "Espeto de cafta tradicional, com sabor autêntico"
+    },
+    {
+      "id": 5,
+      "nome": "Linguiça",
+      "preco": 16,
+      "tempoPreparo": "10-15 min",
+      "descricao": "Linguiça temperada na brasa, com sabor inigualável"
+    },
+    {
+      "id": 6,
+      "nome": "Frango",
+      "preco": 16,
+      "tempoPreparo": "10-15 min",
+      "descricao": "Espeto de frango suculento, com toque especial de ervas"
+    },
+    {
+      "id": 7,
+      "nome": "Queijo Coalho",
+      "preco": 9,
+      "tempoPreparo": "5-10 min",
+      "descricao": "Queijo coalho grelhado, ideal para petiscar"
+    },
+    {
+      "id": 8,
+      "nome": "Pão de Alho",
+      "preco": 8,
+      "tempoPreparo": "5-10 min",
+      "descricao": "Pão de alho crocante com toque de ervas e manteiga"
+    }
+  ],
+    "bebidas": [
+      {
+        "id": 1,
+        "nome": "Coca-Cola",
+        "preco": 6,
+        "tempoPreparo": "0-5 min"
+      },
+      {
+        "id": 2,
+        "nome": "Pepsi",
+        "preco": 6,
+        "tempoPreparo": "0-5 min"
+      },
+      {
+        "id": 3,
+        "nome": "Guaraná Antarctica",
+        "preco": 6,
+        "tempoPreparo": "0-5 min"
+      },
+      {
+        "id": 4,
+        "nome": "Fanta Laranja",
+        "preco": 6,
+        "tempoPreparo": "0-5 min"
+      },
+      {
+        "id": 5,
+        "nome": "Sprite",
+        "preco": 6,
+        "tempoPreparo": "0-5 min"
+      },
+      {
+        "id": 6,
+        "nome": "Coca-Cola Zero",
+        "preco": 6,
+        "tempoPreparo": "0-5 min"
+      },
+      {
+        "id": 7,
+        "nome": "Sucos lata",
+        "preco": 5,
+        "tempoPreparo": "0-5 min"
+      },
+      {
+        "id": 8,
+        "nome": "Cerveja lata",
+        "preco": 5,
+        "tempoPreparo": "0-5 min"
+      }
+    ],
+    "porcoes": [
+        {
+            "id": 1,
+            "nome": "Fritas",
+            "preco": 10,
+            "tempoPreparo": "10-15 min"
+          },
+      {
+        "id": 2,
+        "nome": "Fritas c/ cheddar e bacon",
+        "preco": 20,
+        "tempoPreparo": "10-15 min"
+      }
+    ]
+  }
+  
