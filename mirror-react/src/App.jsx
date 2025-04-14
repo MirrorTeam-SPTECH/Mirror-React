@@ -1,20 +1,22 @@
-// src/App.jsx
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// src/App.jsx  
+import React from "react";  
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";  
 
-import Home from "./pages/Home";
-import Favoritos from "./pages/Favoritos";
+import Home from "./pages/Home";  
+import Favoritos from "./pages/Favoritos";  
+import SiteInstitucional from "./pages/SiteInstitucional"; 
 import "./App.css";
 
-function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/favoritos" element={<Favoritos />} />
-      </Routes>
-    </Router>
-  );
-}
+function App() {  
+    return (  
+        <Router>  
+            <Routes>  
+                <Route path="/" element={<SiteInstitucional />} />  
+                <Route path="/favoritos" element={<Favoritos />} />  
+                <Route path="/site-institucional" element={< Home/>} />  
+            </Routes>  
+        </Router>  
+    );  
+}  
 
-export default App;
+export default App;  
