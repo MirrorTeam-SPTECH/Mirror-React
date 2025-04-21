@@ -1,0 +1,189 @@
+.cadastro {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: relative;
+  color: #000;
+  background: #ffffff;
+
+  .img-background {
+    position: absolute;
+    top: 5%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .img-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 300px;
+    width: auto;
+    object-fit: cover;
+  }
+
+  .img-left {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 300px;
+    width: auto;
+    object-fit: cover;
+  }
+
+  section {
+    width: 65%;
+    height: 75%;
+    background-color: #ffffff;
+    display: flex;
+    position: relative;
+    align-items: center;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    padding: 0 20px;
+
+    form {
+      width: 450px;
+      height: 500px;
+      background-color: #ffffff;
+      position: relative;
+      display: flex;
+      left: 5%;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      border-radius: 10px;
+      box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+
+      .voltarInicio {
+        width: 100%;
+        height: 5%;
+        display: flex;
+        padding-left: 10px;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 2px;
+
+        a {
+          display: flex;
+          text-decoration: none;
+          font-size: 15px;
+          font-weight: 600;
+          color: #000;
+        }
+      }
+
+      .textCadastro {
+        display: flex;
+        font-weight: 700;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        flex-direction: column;
+        margin-bottom: 5px;
+
+        h2 {
+          font-size: 40px;
+        }
+
+        p {
+          font-size: 13px;
+
+          
+          }
+
+
+        }
+      }
+
+      label {
+        font-weight: 600;
+        font-size: 12px;
+        margin-bottom: 5px;
+        display: block;
+      }
+
+      input {
+        background-color: #efefef;
+        box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+        height: 40px;
+        outline: none;
+        width: 300px;
+        border: none;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        padding: 10px;
+        display: block;
+      }
+
+      button {
+        background-color: #A2DC00;
+        color: #000;
+        font-size: 16px;
+        font-weight: bold;
+        box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition: transform 0.3s ease;
+        left: 35%;
+        position: absolute;
+        border: none;
+        height: 30px;
+        width: 110px;
+        border-radius: 8px;
+        font-size: 15px;
+      }
+
+      button:hover {
+        transform: scale(1.05);
+      }
+
+      .parte-login {
+        text-align: center;
+        margin-top: 30px;
+
+        p {
+          font-weight: 600;
+          font-size: 12px;
+          margin-top: 5px;
+        }
+      }
+    }
+
+    .img-foodTruck {
+      background-color: #ffc800;
+      width: 570px;
+      height: 100%;
+      border-radius: 50% 0 0 50%;
+      position: absolute;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      img {
+        width: 80%;
+        height: auto;
+        object-fit: contain;
+        margin-right: -15%;
+      }
+    }
+  }
+
+
+::-webkit-input-placeholder {
+  color: rgb(175, 175, 175);
+  font-weight: 600;
+}
+
+#ACAD{
+  color: #008dcf;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+#ACAD:hover {
+text-decoration: underline;
+}

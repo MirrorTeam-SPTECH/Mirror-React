@@ -8,6 +8,7 @@ import produtosData from "../data/produtos.json"
 import "../styles/Favoritos.css"
 import "../styles/FavoritosLoading.css"
 import "../styles/Carregamento.css"
+import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react"
 
 function scrollCarrossel(direcao) {
   const carrossel = document.getElementById("carrosselFavoritos")
@@ -77,7 +78,7 @@ export default function FavoritosPage() {
             <h1>Favoritos</h1>
             <div className="div_favoritos-wrapper">
               <button className="btn-carrossel esquerda" onClick={() => scrollCarrossel("esquerda")}>
-                <span>&lt;</span>
+                <ChevronLeft color="white" size={20} absoluteStrokeWidth={false} />
               </button>
 
               <div className="div_favoritos" id="carrosselFavoritos">
@@ -93,7 +94,7 @@ export default function FavoritosPage() {
               </div>
 
               <button className="btn-carrossel direita" onClick={() => scrollCarrossel("direita")}>
-                <span>&gt;</span>
+                <ChevronRight color="white" size={20} absoluteStrokeWidth={false} />
               </button>
             </div>
           </div>
