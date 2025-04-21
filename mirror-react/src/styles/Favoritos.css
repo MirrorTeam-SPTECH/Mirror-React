@@ -17,11 +17,19 @@
     font-family: inherit;
     padding: 0px 16px;
     box-sizing: border-box;
+    font-weight: 500;
+
+    .descricao{
+      font-weight: 10;
+    }
 }
 
-.container_textos h2,
-.container_textos h4 {
-  margin: 5px;
+hr{
+  /* color: #DF001B; */
+  background: linear-gradient(to right, #DF001B 50%, #C8C8C8 50%);
+  border: none;
+  height: 3px;
+  border-radius: 6px;
 }
 
 

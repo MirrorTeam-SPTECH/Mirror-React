@@ -6,13 +6,14 @@
   border-radius: 6px;
   overflow: hidden;
   display: flex;
-  justify-content: center;
+  padding: 10px;
+  justify-content: flex-start;
   align-items: center;
   box-sizing: border-box; 
-  padding: 0; 
+  gap: 400px;
 }
 
-.header-container img {
+.imgheader {
   position: absolute;
   top: 0;
   left: 0;
@@ -20,24 +21,30 @@
   height: 100%;
   object-fit: cover;
   border-radius: 6px;
+  z-index: 0;
+}
+
+.logo {
+  position: relative;
+  z-index: 1000;
+  height: 90px;
+  width: auto;
+  margin-top: 30px;
 }
 
 .text {
   position: relative;
-  text-align: center;
-  z-index: 1;
-  left: 10%;
+  z-index: 2;
+  color: white;
 }
 
 .text h1 {
   margin: 0;
-  color: white;
   font-size: 34px;
 }
 
 .text p {
   margin: 5px 0 0;
-  color: white;
   font-size: 19px;
   font-weight: 300;
 }

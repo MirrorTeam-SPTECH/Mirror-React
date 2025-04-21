@@ -11,7 +11,9 @@ export function Favoritos({ nome, valor, descricao, imagem }) {
         <div>
           <h2>{nome}</h2>
           <h4>{valor}</h4>
-          <h4>{descricao}</h4>
+          <p>Descrição</p>
+          <hr />
+          <h4 className="descricao">{descricao}</h4>
         </div>
       </div>
     </div>
