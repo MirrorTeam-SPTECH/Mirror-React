@@ -1,0 +1,105 @@
+.credentials-wrapper {
+    font-family: Arial, sans-serif;
+    background-color: #1e1e1e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  
+  .payment-card {
+    width: 380px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .payment-summary {
+    background-color: #ffffff;
+    padding: 24px;
+    text-align: center;
+  }
+  
+  .payment-summary h2 {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: #000;
+  }
+  
+  .price-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #333;
+  }
+  
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid #ccc;
+    color: #000;
+  }
+  
+  .payment-form {
+    background-color: #2e2e2e;
+    padding: 24px 30px 28px; /* aumenta padding horizontal */
+    color: white;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    text-align: center;
+  }
+  
+  .payment-form label {
+    font-size: 13px;
+    display: block;
+    margin-bottom: 4px;
+    text-align: left;
+    color: #fff;
+  }
+  
+  .payment-form input {
+    width: 100%;
+    padding: 10px 12px; /* menor altura */
+    border-radius: 10px;
+    border: none;
+    margin-bottom: 14px;
+    font-size: 14px;
+    outline: none;
+    box-shadow: inset 0 0 0 1px #ccc;
+  }
+  
+  .row {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .input-group {
+    flex: 1;
+  }
+  
+  .checkout-btn {
+    background-color: #00c447;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 15px;
+    border: none;
+    border-radius: 32px;
+    font-size: 16px;
+    width: 100%;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .checkout-btn:hover {
+    background-color: #00b03f;
+  }
+  

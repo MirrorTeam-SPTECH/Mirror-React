@@ -1,0 +1,55 @@
+.card-erro {
+    background: #ffffff;
+    color: #c10000;
+    width: 350px;
+    height: 350px;
+    margin: 40px auto;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    font-family: Arial, sans-serif;
+  }
+  
+  .icon-erro {
+    font-size: 48px;
+    background-color: #ffebeb;
+    color: #c10000;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+  }
+  
+  .mensagem-erro {
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 50px;
+  }
+  
+  .btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    border: 2px solid transparent;
+  }
+  
+  .tentar {
+    background-color: #c10000;
+    color: #fff;
+    border-color: #c10000;
+  }
+  
+  .voltar {
+    background-color: transparent;
+    color: #c10000;
+    border: 2px solid #c10000;
+  }
