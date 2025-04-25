@@ -1,4 +1,4 @@
-import "./CardPagamentoRealizado.css"
+import "../styles/CardPagamentoRealizado.css"
 
 const CardPagamentoRealizado = () => {
   return (

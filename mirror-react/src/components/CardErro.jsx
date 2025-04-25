@@ -1,5 +1,5 @@
 import React from 'react';
-import './CardErro.css';
+import '../styles/CardErro.css';
 
 const CardErro = () => {
   return (

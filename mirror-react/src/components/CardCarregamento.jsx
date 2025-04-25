@@ -1,4 +1,4 @@
-import "./CardCarregamento.css"
+import "../styles/CardCarregamento.css"
 
 const CardCarregamento = () => {
   return (

@@ -1,5 +1,5 @@
 import { Trash2 } from "lucide-react"
-import "./CardValorTotal.css"
+import "../styles/CardValorTotal.css"
 
 const CardValorTotal = () => {
   return (

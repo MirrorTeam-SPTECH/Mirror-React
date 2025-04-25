@@ -1,4 +1,4 @@
-import "./CardQRcode.css"
+import "../styles/CardQRcode.css"
 
 const CardQRcode = () => {
   return (
