@@ -1,6 +1,7 @@
+// src/pages/Home.jsx
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { Header } from "../components/Header";
 import { Pesquisa } from "../components/Pesquisa";
 import { NavigationBar } from "../components/NavigationBar";
@@ -20,53 +21,17 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [produtoSelecionado, setProdutoSelecionado] = useState(null);
   const [etapaAtual, setEtapaAtual] = useState(null);
-  const [categoriaAtiva, setCategoriaAtiva] = useState(null);
-  const refs = useRef({});
 
-  // Skeleton
   useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 2000);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setLoading(false), 2000);
+    return () => clearTimeout(timer);
   }, []);
 
-  // Scroll para categoria ativa
-  useEffect(() => {
-    if (categoriaAtiva && refs.current[categoriaAtiva]) {
-      refs.current[categoriaAtiva].scrollIntoView({ behavior: "smooth" });
-    }
-  }, [categoriaAtiva]);
-
-  if (loading) {
-    return (
-      <div className="containerProjeto">
-        <div className="skeleton header-skeleton" />
-        <div className="skeleton pesquisa-skeleton" />
-        <div className="skeleton nav-skeleton" />
-        {todasCategorias.map((_, i) => (
-          <div className="skeleton lista-produto-skeleton" key={i}>
-            <div className="categoria-titulo-skeleton skeleton" />
-            <div className="produtos-grid-skeleton">
-              {Array(5)
-                .fill(0)
-                .map((_, j) => (
-                  <div className="produto-card-skeleton skeleton" key={j} />
-                ))}
-            </div>
-          </div>
-        ))}
-        <div className="skeleton sub-nav-skeleton" />
-      </div>
-    );
-  }
-
-  // Navegação de etapas
   const handleClickProduto = (produto) => {
-    setProdutoSelecionado({
-      ...produto,
-      preco: Number(produto.preco.replace(",", ".")),
-    });
+    setProdutoSelecionado({ ...produto, preco: produto.preco });
     setEtapaAtual("lancheSelecionado");
   };
+
   const handleAvancarCarrinho = () => setEtapaAtual("carrinho");
   const handleAvancarPagamento = () => setEtapaAtual("pagamento");
   const handlePix = () => setEtapaAtual("pix");
@@ -82,18 +47,35 @@ export default function Home() {
 
   return (
     <div className="containerProjeto">
-      {!produtoSelecionado ? (
+      {loading ? (
+        <>
+          <div className="skeleton header-skeleton" />
+          <div className="skeleton pesquisa-skeleton" />
+          <div className="skeleton nav-skeleton" />
+
+          {todasCategorias.map((_, i) => (
+            <div className="skeleton lista-produto-skeleton" key={i}>
+              <div className="categoria-titulo-skeleton skeleton" />
+              <div className="produtos-grid-skeleton">
+                {Array(5)
+                  .fill(0)
+                  .map((_, j) => (
+                    <div className="produto-card-skeleton skeleton" key={j} />
+                  ))}
+              </div>
+            </div>
+          ))}
+
+          <div className="skeleton sub-nav-skeleton" />
+        </>
+      ) : produtoSelecionado == null ? (
         <>
           <Header titulo="Bem vindos!" p="Vamos fazer seu pedido" />
           <Pesquisa />
-          <NavigationBar
-            categorias={todasCategorias.map((c) => c.titulo)}
-            onSelectCategoria={setCategoriaAtiva}
-          />
+          <NavigationBar />
           <ListaProdutos
             categorias={todasCategorias}
             onProdutoClick={handleClickProduto}
-            refs={refs}
           />
           <SubNavigation />
         </>
@@ -101,23 +83,24 @@ export default function Home() {
         <>
           <Header titulo="Bem vindos!" p="Vamos fazer seu pedido" />
           <Pesquisa />
-
-          <div style={{ display: "flex", gap: "24px", marginTop: "1rem" }}>
+          <div style={{ display: "flex", marginTop: "0", gap: "0px" }}>
             <div style={{ flex: 3 }}>
-              <NavigationBar
-                categorias={todasCategorias.map((c) => c.titulo)}
-                onSelectCategoria={setCategoriaAtiva}
-              />
+              <NavigationBar />
               <ListaProdutos
                 categorias={todasCategorias}
                 onProdutoClick={handleClickProduto}
                 compact
-                refs={refs}
               />
               <SubNavigation />
             </div>
 
-            <div style={{ flex: 1, paddingTop: "1rem", paddingRight: "2rem" }}>
+            <div
+              style={{
+                flex: 1,
+                paddingTop: "1rem",
+                paddingRight: "4.5rem",
+              }}
+            >
               {etapaAtual === "lancheSelecionado" && (
                 <CardLancheSelecionado
                   produto={produtoSelecionado}
@@ -151,16 +134,10 @@ export default function Home() {
               )}
               {etapaAtual === "carregamento" && <CardCarregamento />}
               {etapaAtual === "realizado" && (
-                <CardPagamentoRealizado produto={produtoSelecionado} />
-              )}
-
-              {(etapaAtual === "realizado" || etapaAtual === "carregamento") && (
-                <button
-                  onClick={handleVoltarHome}
-                  className="mt-4 px-4 py-2 bg-gray-200 rounded"
-                >
-                
-                </button>
+                <CardPagamentoRealizado
+                  produto={produtoSelecionado}
+                  onVoltar={handleVoltarHome}
+                />
               )}
             </div>
           </div>
