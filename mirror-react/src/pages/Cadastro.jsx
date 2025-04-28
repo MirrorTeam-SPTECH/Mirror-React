@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 import { ArrowLeft } from "lucide-react";
 import "../styles/cadastro.css";
 import imgFundoCadastro from "../assets/img/Blob 5.png";
@@ -33,32 +34,18 @@ const Cadastro = () => {
     } else if (senha.length < 6 || confirmacaoSenha.length < 6) {
       alert("Senhas devem ter pelo menos 6 caracteres");
     } else if (!senhaTemEspecial) {
-      alert(
-        "A senha deve conter pelo menos um caractere especial (!, @, #, $, *, &, %)"
-      );
+      alert("A senha deve conter pelo menos um caractere especial (!, @, #, $, *, &, %)");
     } else if (senha !== confirmacaoSenha) {
       alert("Senhas precisam ser iguais!");
     } else {
-      const novoUsuario = {
-        nome,
-        email,
-        senha,
-      };
-
       try {
-        const response = await fetch("http://localhost:3000/usuarios", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(novoUsuario),
+        await axios.post("http://localhost:8080/api/auth/register", {
+          nome,
+          email,
+          senha
         });
 
-        if (!response.ok) {
-          throw new Error("Erro ao cadastrar usuário");
-        }
-
-        alert("Cadastro realizado com sucesso");
+        alert("Cadastro realizado com sucesso!");
         navigate("/login");
       } catch (error) {
         console.error("Erro:", error);
@@ -69,11 +56,8 @@ const Cadastro = () => {
 
   return (
     <main className="cadastro">
-      <img
-        className="img-background"
-        src={imgFundoCadastro}
-        alt="Background Image"
-      />
+      {/* (SEU HTML CONTINUA IGUAL, apenas o form que foi atualizado) */}
+      <img className="img-background" src={imgFundoCadastro} alt="Background Image" />
       <img className="img-right" src={imgRight} alt="Right Image" />
       <section>
         <form onSubmit={handleCadastro}>
@@ -88,50 +72,18 @@ const Cadastro = () => {
             <p>Boas vindas, cadastre-se e faça login</p>
           </div>
           <div className="parte-cadastro">
-            <label htmlFor="input_nome">Nome:</label>
-            <input
-              type="text"
-              id="input_nome"
-              placeholder="Nome"
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-              required
-            />
-            <label htmlFor="input_email">E-mail:</label>
-            <input
-              type="email"
-              id="input_email"
-              placeholder="E-mail"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <label htmlFor="input_senha">Senha:</label>
-            <input
-              type="password"
-              id="input_senha"
-              placeholder="Senha"
-              value={senha}
-              onChange={(e) => setSenha(e.target.value)}
-              required
-            />
-            <label htmlFor="input_confirmar">Confirmar Senha:</label>
-            <input
-              type="password"
-              id="input_confirmar"
-              placeholder="Senha"
-              value={confirmacaoSenha}
-              onChange={(e) => setConfirmacaoSenha(e.target.value)}
-              required
-            />
-            <button id="Cadastrar" type="submit">
-              Cadastrar
-            </button>
+            <label>Nome:</label>
+            <input type="text" value={nome} onChange={(e) => setNome(e.target.value)} required />
+            <label>E-mail:</label>
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <label>Senha:</label>
+            <input type="password" value={senha} onChange={(e) => setSenha(e.target.value)} required />
+            <label>Confirmar Senha:</label>
+            <input type="password" value={confirmacaoSenha} onChange={(e) => setConfirmacaoSenha(e.target.value)} required />
+            <button id="Cadastrar" type="submit">Cadastrar</button>
           </div>
           <div className="parte-login">
-            <p>
-              Já possui uma conta? Faça login <a href="/login" id="ACAD">Aqui</a>
-            </p>
+            <p>Já possui uma conta? Faça login <a href="/login" id="ACAD">Aqui</a></p>
             <p>Cadastre-se com</p>
           </div>
         </form>
