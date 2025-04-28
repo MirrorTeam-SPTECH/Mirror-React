@@ -1,44 +1,82 @@
-// src/App.jsx  
-import React from "react";  
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";  
+// src/App.jsx
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import Home from "./pages/Home";  
-import Favoritos from "./pages/Favoritos";  
-import SiteInstitucional from "./pages/SiteInstitucional"; 
-import "./App.css";
+import Home from "./pages/Home";
+import Favoritos from "./pages/Favoritos";
+import SiteInstitucional from "./pages/SiteInstitucional";
 import Login from "./pages/login";
 import Cadastro from "./pages/Cadastro";
-import CardCarrinho from "./components/CardCarrinho";
-import CardValorTotal from "./components/CardValorTotal"
+
+// Telas independentes passíveis de rota
+import CardLancheSelecionado from "./components/CardLancheSelecionado";
+import CardValorTotal from "./components/CardValorTotal";
 import CardPagamento from "./components/CardPagamento";
-import CardCredenciais from "./components/CardCredencias";
-import CardQRcode from "./components/CardQRcode";
+import CardCredenciais from "./components/CardCredenciais";      
 import CardPagamentoRealizado from "./components/CardPagamentoRealizado";
 import CardCarregamento from "./components/CardCarregamento";
+import CardQRcode from "./components/CardQRcode";
 import CardErro from "./components/CardErro";
 
-function App() {  
-    return (  
-        <Router>  
-            <Routes>  
-                <Route path="/" element={<SiteInstitucional />} />  
-                <Route path="/login" element={<Login />} />  
-                <Route path="/Cadastro" element={<Cadastro />} />  
-                <Route path="/favoritos" element={<Favoritos />} />  
-                <Route path="/home" element={< Home/>} />  
-                <Route path="/CardCarrinho" element={<CardCarrinho />} />
-                <Route path="/CardValorTotal" element={<CardValorTotal />} />
-                <Route path="/CardPagamento" element={<CardPagamento />} />
-                <Route path="/CardCredenciais" element={<CardCredenciais />} />
-                <Route path="/CardPagamentoRealizado" element={<CardPagamentoRealizado />} />
-                <Route path="/CardCarregamento" element={<CardCarregamento />} />
-                <Route path="/CardQRcode" element={<CardQRcode />} />
-                <Route path="/CardErro" element={<CardErro />} />
-                
+import "./App.css";
 
-            </Routes>  
-        </Router>  
-    );  
-}  
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<SiteInstitucional />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/cadastro" element={<Cadastro />} />
+        <Route path="/favoritos" element={<Favoritos />} />
+        <Route path="/home" element={<Home />} />
 
-export default App;  
+        <Route
+          path="/cardCarrinho"
+          element={
+            <CardLancheSelecionado
+              produto={{ nome: "Teste", preco: "18,00", imagem: "" }}
+              onAvancar={() => {}}
+            />
+          }
+        />
+        <Route path="/cardValorTotal" element={<CardValorTotal />} />
+
+        <Route
+          path="/cardPagamento"
+          element={
+            <CardPagamento
+              produto={{ nome: "Teste", preco: "18,00" }}
+              onPix={() => {}}
+              onCartao={() => {}}
+            />
+          }
+        />
+
+        <Route
+          path="/cardCredenciais"
+          element={
+            <CardCredenciais
+              produto={{ nome: "Teste", preco: "18,00" }}
+              onConfirmar={() => {}}
+            />
+          }
+        />
+
+        <Route path="/cardPagamentoRealizado" element={<CardPagamentoRealizado />} />
+        <Route path="/cardCarregamento" element={<CardCarregamento />} />
+        <Route
+          path="/cardQRcode"
+          element={
+            <CardQRcode
+              produto={{ nome: "Teste", preco: "18,00" }}
+              onConfirmar={() => {}}
+            />
+          }
+        />
+        <Route path="/cardErro" element={<CardErro />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;

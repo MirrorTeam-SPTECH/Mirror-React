@@ -1,6 +1,6 @@
-import "../styles/CardQRcode.css"
+import "../styles/CardQRcode.css";
 
-const CardQRcode = () => {
+export default function CardQRcode({ produto, onConfirmar }) {
   return (
     <div className="qrcode-wrapper">
       <div className="card-pix">
@@ -22,10 +22,10 @@ const CardQRcode = () => {
           </p>
         </div>
         <button className="btn copiar">Copiar Código QR</button>
-        <button className="btn pagar">Confirmar Pagamento</button>
+        <button className="btn pagar" onClick={onConfirmar}>
+          Confirmar Pagamento
+        </button>
       </div>
     </div>
-  )
+  );
 }
-
-export default CardQRcode

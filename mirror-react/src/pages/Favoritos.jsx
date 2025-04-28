@@ -72,13 +72,13 @@ export default function FavoritosPage() {
         </>
       ) : (
         // Versão real completa da página
-        <>
+        <div className="flex flex-col gap=32px">
           <Header titulo="Bem vindos!" p="Vamos fazer seu pedido" />
           <div className="favoritos-page-container">
-            <h1>Favoritos</h1>
+            <h1 className="text-3xl font-bold">Favoritos</h1>
             <div className="div_favoritos-wrapper">
               <button className="btn-carrossel esquerda" onClick={() => scrollCarrossel("esquerda")}>
-                <ChevronLeft color="white" size={20} absoluteStrokeWidth={false} />
+                <ChevronLeft color="red" size={20} absoluteStrokeWidth={false} />
               </button>
 
               <div className="div_favoritos" id="carrosselFavoritos">
@@ -94,12 +94,12 @@ export default function FavoritosPage() {
               </div>
 
               <button className="btn-carrossel direita" onClick={() => scrollCarrossel("direita")}>
-                <ChevronRight color="white" size={20} absoluteStrokeWidth={false} />
+                <ChevronRight color="red" size={20} absoluteStrokeWidth={false} />
               </button>
             </div>
           </div>
           <SubNavigation />
-        </>
+        </div>
       )}
     </div>
   )

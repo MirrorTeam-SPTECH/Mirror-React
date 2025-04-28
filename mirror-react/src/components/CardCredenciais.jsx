@@ -1,6 +1,6 @@
-import "../styles/CardCredenciais.css"
+import "../styles/CardCredenciais.css";
 
-const CardCredenciais = () => {
+export default function CardCredenciais({ produto, onConfirmar }) {
   return (
     <div className="credentials-wrapper">
       <div className="payment-card">
@@ -8,7 +8,7 @@ const CardCredenciais = () => {
           <h2>Finalizar compra</h2>
           <div className="price-row">
             <span>Subtotal</span>
-            <span>R$ 69,00</span>
+            <span>R$ {produto.preco}</span>
           </div>
           <div className="price-row">
             <span>Taxa de entrega</span>
@@ -16,7 +16,7 @@ const CardCredenciais = () => {
           </div>
           <div className="total-row">
             <span>Total</span>
-            <span>R$ 70,00</span>
+            <span>R$ {(Number(produto.preco.replace(",", ".")) + 1).toFixed(2)}</span>
           </div>
         </div>
 
@@ -35,11 +35,11 @@ const CardCredenciais = () => {
             </div>
           </div>
 
-          <button className="checkout-btn">Finalizar compra</button>
+          <button className="checkout-btn" onClick={onConfirmar}>
+            Finalizar compra
+          </button>
         </div>
       </div>
     </div>
-  )
+  );
 }
-
-export default CardCredenciais

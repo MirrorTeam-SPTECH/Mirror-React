@@ -10,6 +10,7 @@
   max-height: 55vh;
   overflow-y: auto;
   box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
 }
 
 .listaProdutos {
@@ -37,7 +38,7 @@
   margin-bottom: 1rem;
   margin-top: 0;
   text-align: start;
-  color: #fff;
+  color: #CC0000;
   padding-left: 10px;
   border-left: 4px solid #ff9800;
 }
@@ -49,6 +50,11 @@
   align-items: center;
   gap: 10px;
   width: 100%;
+  grid-template-columns: repeat(6, 1fr);
+}
+
+.compact .lista {
+  grid-template-columns: repeat(4, 1fr);
 }
 
 .cardProduto {
@@ -56,7 +62,6 @@
   padding: 5px;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  text-align: center;
   transition: transform 0.2s;
   height: 135px;
  
@@ -64,6 +69,7 @@
   height: 180px;
   flex: 0 0 auto;
   box-sizing: border-box;
+  text-align: start;
 }
 
 .cardProduto:hover {
@@ -71,18 +77,22 @@
 }
 
 .nome {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
   color: #333;
+  font-weight: 540;
 }
 
 .tempo {
-  font-size: 10px;
+  font-size: 9.5px;
   color: #888;
+  font-weight: 300;
 }
 
 .preco {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: bold;
   color: #10b981;
+  font-weight: 500;
 }
+

@@ -1,55 +1,51 @@
-import { useState } from "react"
-import "../styles/CardCarrinho.css";
+// src/components/CardCarrinho.jsx
+import React from "react"
+import { Trash2 } from "lucide-react"
+import "../styles/CardCarrinho.css"
 
-function CardCarrinho() {
-  const [quantity, setQuantity] = useState(1)
-  const [isFavorite, setIsFavorite] = useState(false)
-
-  const decreaseQuantity = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1)
-    }
-  }
-
-  const increaseQuantity = () => {
-    setQuantity(quantity + 1)
-  }
-
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite)
-  }
-
+export function CardCarrinho({ produto, onAvancar }) {
   return (
-    <div className="card">
-      <div className="card-image">
-        <div className="heart-icon" onClick={toggleFavorite}>
-          {isFavorite ? "❤️" : "♡"}
+    <div className="carrinho-container">
+      <h3 className="carrinho-titulo">Carrinho</h3>
+
+      <div className="item-card">
+        <div className="item-info">
+          <img
+            src={produto.imagem || "/placeholder.svg?height=70&width=70"}
+            alt={produto.nome}
+            className="item-imagem"
+          />
+          <div className="item-detalhes">
+            <span className="item-nome">{produto.nome}</span>
+            <span className="item-preco">R$ {produto.preco}</span>
+          </div>
         </div>
-        <img src="/placeholder.svg?height=140&width=140" alt="Chef's Chicken" />
+        <button className="botao-lixeira">
+          <Trash2 size={18} />
+        </button>
       </div>
 
-      <div className="card-content">
-        <div className="card-title">
-          <h2>Chef's Chicken</h2>
-          <p className="price">R$ 37,00</p>
+      <div className="detalhes-container">
+        <h4 className="detalhes-titulo">Detalhes</h4>
+
+        <div className="linha-preco">
+          <span>Subtotal</span>
+          <span>R$ {produto.subtotal || produto.preco}</span>
+        </div>
+        <div className="linha-preco">
+          <span>Taxa de entrega</span>
+          <span>R$ {produto.taxaEntrega || "1,00"}</span>
         </div>
 
-        <div className="quantity">
-          <button onClick={decreaseQuantity}>-</button>
-          <span>{quantity}</span>
-          <button onClick={increaseQuantity}>+</button>
+        <div className="linha-total">
+          <span>Total</span>
+          <span>R$ {produto.total || produto.preco}</span>
         </div>
 
-        <div className="description">
-          <strong>Descrição</strong>
-          <div className="divider"></div>
-          <p>Pão brioche, Molho especial, Frango empanado, Molho chicken</p>
-        </div>
-
-        <button className="add-to-cart">Adicionar ao carrinho →</button>
+        <button className="botao-finalizar" onClick={onAvancar}>
+          Finalizar compra
+        </button>
       </div>
     </div>
   )
 }
-
-export default CardCarrinho

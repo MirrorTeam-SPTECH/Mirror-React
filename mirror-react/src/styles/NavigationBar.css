@@ -14,7 +14,7 @@
     list-style: none;
     padding: 10px;
 
-    button {
+    .Bold {
       padding: 6px 15px;
       border: 2px solid #c00;
       border-radius: 8px;
@@ -23,14 +23,13 @@
       cursor: pointer;
       background: transparent;
       transition: all 0.3s ease-in-out;
-      font-weight: 100;
-    }
+      font-weight: 500;
 
-    button:hover,
-    button.active {
-      background: #c00;
-      color: white;
-      transition: 0.3s ease-in-out;
+      &#active:hover {
+        background: #c00;
+        color: white;
+        transition: 0.3s ease-in-out;
+      }
     }
   }
 }
