@@ -7,7 +7,7 @@ import Favoritos from "./pages/Favoritos";
 import SiteInstitucional from "./pages/SiteInstitucional";
 import Login from "./pages/login";
 import Cadastro from "./pages/Cadastro";
-
+import "./App.css";
 // Telas independentes passíveis de rota
 import CardLancheSelecionado from "./components/CardLancheSelecionado";
 import CardValorTotal from "./components/CardValorTotal";
@@ -17,8 +17,7 @@ import CardPagamentoRealizado from "./components/CardPagamentoRealizado";
 import CardCarregamento from "./components/CardCarregamento";
 import CardQRcode from "./components/CardQRcode";
 import CardErro from "./components/CardErro";
-
-import "./App.css";
+import FooterSite from "./components/FooterSite";
 
 function App() {
   return (
@@ -75,7 +74,9 @@ function App() {
         />
         <Route path="/cardErro" element={<CardErro />} />
       </Routes>
+
     </Router>
+    
   );
 }
 

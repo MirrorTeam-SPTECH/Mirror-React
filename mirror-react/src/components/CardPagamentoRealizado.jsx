@@ -1,6 +1,7 @@
-import "../styles/CardPagamentoRealizado.css"
+import React from "react";
+import "../styles/CardPagamentoRealizado.css";
 
-const CardPagamentoRealizado = () => {
+export default function CardPagamentoRealizado({ produto }) {
   return (
     <div className="success-wrapper">
       <div className="success-card">
@@ -8,15 +9,13 @@ const CardPagamentoRealizado = () => {
         <p className="message">
           Pedido feito com sucesso
           <br />
-          será entregue entre 30 a 40 minutos
+          Será entregue em <strong>{produto.tempoPreparo}</strong>
           <br />
-          Obrigado pela preferência
+          Obrigado pela preferência!
         </p>
         <button className="track-order">Acompanhar Pedido</button>
         <button className="back-home">Voltar para o início</button>
       </div>
     </div>
-  )
+  );
 }
-
-export default CardPagamentoRealizado

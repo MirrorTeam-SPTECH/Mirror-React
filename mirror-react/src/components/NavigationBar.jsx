@@ -1,15 +1,21 @@
-import '../styles/NavigationBar.css';
+import React from "react";
+import "../styles/NavigationBar.css";
 
-
-export function NavigationBar() {
-    return (
-        <div className="container-navBar">
-            <ul class="menu ">
-                <li><button className="Bold" id='active'>Hamburgueres</button></li>
-                <li><button className='Bold' id='active'>Espetinhos</button></li>
-                <li><button className='Bold' id='active'>Acompanhamentos</button></li>
-                <li><button className='Bold' id='active'>Bebidas</button></li>
-            </ul>
-        </div>
-    );
+export function NavigationBar({ categorias, onSelectCategoria }) {
+  return (
+    <div className="container-navBar">
+      <ul className="menu">
+        {categorias.map((titulo) => (
+          <li key={titulo}>
+            <button
+              className="Bold"
+              onClick={() => onSelectCategoria(titulo)}
+            >
+              {titulo}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }

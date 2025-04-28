@@ -1,22 +1,20 @@
-import { CardProduto } from "./CardProduto"
-import styles from "../styles/ListaProdutos.module.css"
+import React from "react";
+import { CardProduto } from "./CardProduto";
+import styles from "../styles/ListaProdutos.module.css";
 
-export function ListaProdutos({ categorias, onProdutoClick, compact }) {
+export function ListaProdutos({ categorias, onProdutoClick, compact, refs }) {
   return (
     <div className={styles.containerListaProdutos}>
       <div className={styles.listaProdutos}>
-        {categorias.map((categoria, ci) => (
-          <div key={ci} className={styles.categoriaContainer}>
-            <div className="flex flex-row items-center justify-start mb-2 mt-2 gap-2  ">
-              <span className="h-[25px] w-[6px] bg-amber-400 "></span>
-           <h2 className="text-[1.3rem] font-bold  mt-0 text-start text-[#CC0000] pl-[10px]">
-  {categoria.titulo}
-</h2>
-</div>
+        {categorias.map((categoria) => (
+          <div
+            key={categoria.titulo}
+            className={styles.categoriaContainer}
+            ref={(el) => (refs.current[categoria.titulo] = el)}
+          >
+            <h2 className={styles.titulo}>{categoria.titulo}</h2>
             <div
-              className={`${styles.lista} ${
-                compact ? styles.compact : ""
-              }`}
+              className={`${styles.lista} ${compact ? styles.compact : ""}`}
             >
               {categoria.produtos.map((produto) => (
                 <CardProduto
@@ -33,5 +31,5 @@ export function ListaProdutos({ categorias, onProdutoClick, compact }) {
         ))}
       </div>
     </div>
-  )
+  );
 }
