@@ -31,5 +31,24 @@
         transition: 0.3s ease-in-out;
       }
     }
+
+    .Use {
+      padding: 6px 15px;
+      border: 2px solid #FFFF;
+      border-radius: 8px;
+      color: #FFFF;
+      font-weight: bold;
+      cursor: pointer;
+      background: transparent;
+      transition: all 0.3s ease-in-out;
+      font-weight: 500;
+
+      &#actived:hover {
+        background: #ffff;
+        color: #c00;
+        transition: 0.3s ease-in-out;
+      }
+    }
   }
+
 }

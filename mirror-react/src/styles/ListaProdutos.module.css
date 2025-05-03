@@ -96,3 +96,8 @@
   font-weight: 500;
 }
 
+.expandido{
+  margin-top: 50px;
+  flex: 1;
+  max-height: 65vh;
+}

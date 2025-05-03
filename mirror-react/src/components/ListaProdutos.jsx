@@ -1,10 +1,20 @@
 // src/components/ListaProdutos.jsx
 import { CardProduto } from "./CardProduto";
 import styles from "../styles/ListaProdutos.module.css";
+import { useLocation } from "react-router-dom";
 
 export function ListaProdutos({ categorias, onProdutoClick, compact }) {
+  const location = useLocation();
+
+  // Verifica se está em alguma rota de gerenciamento
+  const isGerenciamento = location.pathname.startsWith("/novoPedido") || location.pathname.startsWith("/cardapioEditar");
+
   return (
-    <div className={styles.containerListaProdutos}>
+    <div
+      className={`${styles.containerListaProdutos} ${
+        isGerenciamento ? styles.expandido : ""
+      }`}
+    >
       <div className={styles.listaProdutos}>
         {categorias.map((categoria, ci) => (
           <div key={ci} className={styles.categoriaContainer}>

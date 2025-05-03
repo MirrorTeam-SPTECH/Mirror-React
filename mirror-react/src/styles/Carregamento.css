@@ -6,6 +6,7 @@
     overflow: hidden;
     margin: 0 auto;
     box-sizing: border-box;
+    line-height: 0;
   }
   
   /* Animação de pulso para todos os skeletons */
@@ -34,6 +35,16 @@
   
   /* Header Skeleton */
   .header-skeleton {
+    width: 90%;
+    height: 120px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    
+  }
+
+  .headerGerenciamento-skeleton {
     width: 90%;
     height: 120px;
     margin: 10px auto;

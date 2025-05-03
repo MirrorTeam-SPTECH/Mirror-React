@@ -22,4 +22,25 @@ html, body {
   font-family: "Montserrat", sans-serif;
 }
 
+.layout-cliente {
+  background-color: #EDEFF5;
+  min-height: 100vh;
+}
+
+.layout-gerenciamento {
+  background: linear-gradient(
+    to bottom,
+    red 0%,
+    red 38%,
+    #EDEFF5 30%,
+    #EDEFF5 100%
+  );
+  color: white;
+  min-height: 100vh;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+
+
 
