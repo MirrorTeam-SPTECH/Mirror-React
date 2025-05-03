@@ -5,9 +5,8 @@ import { useEffect, useState } from "react";
 import HeaderGerenciamento from "../components/HeaderGerenciamento"
 import ControlePedidos from "../components/ControlePedidos";
 import { Pesquisa } from "../components/Pesquisa";
-import { NavigationBar } from "../components/NavigationBar";
+import NavBarGerenciamento from "../components/NavBarGerenciamento";
 import { ListaProdutos } from "../components/ListaProdutos";
-import { SubNavigation } from "../components/SubNavigation";
 import CardLancheSelecionado from "../components/CardLancheSelecionado";
 import { CardCarrinho } from "../components/CardCarrinho";
 import CardPagamento from "../components/CardPagamento";
@@ -69,10 +68,10 @@ export default function Home() {
         </>
       ) : produtoSelecionado == null ? (
         <>
-           <HeaderGerenciamento activePage="pedidos" />
+          <HeaderGerenciamento activePage="pedidos" />
           <ControlePedidos titulo="Novo Pedido" esconderBotoes={true} />
           <Pesquisa />
-          <NavigationBar />
+          <NavBarGerenciamento />
           <ListaProdutos
             categorias={todasCategorias}
             onProdutoClick={handleClickProduto}
@@ -80,12 +79,12 @@ export default function Home() {
         </>
       ) : (
         <>
-           <HeaderGerenciamento activePage="pedidos" />
+          <HeaderGerenciamento activePage="pedidos" />
           <ControlePedidos titulo="Novo Pedido" esconderBotoes={true} />
           <Pesquisa />
           <div style={{ display: "flex", marginTop: "0", gap: "0px" }}>
             <div style={{ flex: 3 }}>
-              <NavigationBar />
+              <NavBarGerenciamento />
               <ListaProdutos
                 categorias={todasCategorias}
                 onProdutoClick={handleClickProduto}
