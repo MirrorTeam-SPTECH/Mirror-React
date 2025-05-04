@@ -1,79 +1,43 @@
-"use client"
-
-import { useState, useEffect } from "react"
-import { Header } from "../components/Header"
-import { Favoritos } from "../components/CardFavoritos"
-import { SubNavigation } from "../components/SubNavigation"
-import produtosData from "../data/produtos.json"
-import "../styles/Favoritos.css"
-import "../styles/FavoritosLoading.css"
-import "../styles/Carregamento.css"
-import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react"
+import { useState, useEffect } from "react";
+import { Header } from "../components/Header";
+import { Favoritos } from "../components/CardFavoritos";
+import { SubNavigation } from "../components/SubNavigation";
+import produtosData from "../data/produtos.json";
+import "../styles/Favoritos.css";
+import "../styles/FavoritosLoading.css";
+import "../styles/Carregamento.css";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 function scrollCarrossel(direcao) {
-  const carrossel = document.getElementById("carrosselFavoritos")
-  const larguraCard = 350
+  const carrossel = document.getElementById("carrosselFavoritos");
+  const larguraCard = 350;
   if (direcao === "direita") {
-    carrossel.scrollLeft += larguraCard
+    carrossel.scrollLeft += larguraCard;
   } else {
-    carrossel.scrollLeft -= larguraCard
+    carrossel.scrollLeft -= larguraCard;
   }
 }
 
 export default function FavoritosPage() {
-  const [favoritos, setFavoritos] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [favoritos, setFavoritos] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulando um tempo de carregamento
-    const timer = setTimeout(() => {
-      // Neste exemplo, usamos todos os hamburgueres como favoritos.
-      setFavoritos(produtosData.hamburgueres || [])
-      setLoading(false)
-    }, 2000) // 2 segundos de loading
-
-    return () => clearTimeout(timer)
-  }, [])
+    const favoritosIds = JSON.parse(localStorage.getItem("favoritos")) || [];
+    const favoritosFiltrados = produtosData.hamburgueres.filter((produto) =>
+      favoritosIds.includes(produto.id)
+    );
+    setFavoritos(favoritosFiltrados);
+    setLoading(false);
+  }, []);
 
   return (
     <div>
       {loading ? (
-        // Versão skeleton completa da página
-        <>
-          <div className="skeleton header-skeleton"></div>
-          <div className="favoritos-page-container">
-            <div className="titulo-favoritos-skeleton skeleton"></div>
-            <div className="div_favoritos-wrapper">
-              <button className="btn-carrossel esquerda" disabled>
-                <span>&lt;</span>
-              </button>
-
-              <div className="div_favoritos">
-                {/* Renderiza 4 cards skeleton */}
-                {[1, 2, 3, 4].map((_, index) => (
-                  <div key={index} className="favorito-card-skeleton">
-                    <div className="favorito-imagem-skeleton skeleton"></div>
-                    <div className="favorito-textos-skeleton">
-                      <div className="favorito-nome-skeleton skeleton"></div>
-                      <div className="favorito-descricao-skeleton skeleton"></div>
-                      <div className="favorito-descricao-skeleton skeleton"></div>
-                      <div className="favorito-preco-skeleton skeleton"></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <button className="btn-carrossel direita" disabled>
-                <span>&gt;</span>
-              </button>
-            </div>
-          </div>
-          <div className="skeleton sub-nav-skeleton"></div>
-        </>
+        <div>Carregando...</div>
       ) : (
-        // Versão real completa da página
         <div className="flex flex-col gap=32px">
-          <Header titulo="Bem vindos!" p="Vamos fazer seu pedido" />
+          <Header titulo="Favoritos" p="Seus itens favoritos" />
           <div className="favoritos-page-container">
             <h1 className="text-3xl font-bold">Favoritos</h1>
             <div className="div_favoritos-wrapper">
@@ -102,5 +66,5 @@ export default function FavoritosPage() {
         </div>
       )}
     </div>
-  )
+  );
 }

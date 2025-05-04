@@ -1,8 +1,32 @@
-import styles from "../styles/ListaProdutos.module.css"
+import { useState } from "react";
+import HeartButton from "../components/Shared/HeartButton";
+import styles from "../styles/ListaProdutos.module.css";
 
-export function CardProduto({ nome, tempo, preco, imagem, onClick }) {
+export function CardProduto({ id, nome, tempo, preco, imagem, onClick, isGerenciamento }) {
+  const [isSelected, setIsSelected] = useState(false);
+
+  const toggleSelect = () => {
+    setIsSelected(!isSelected);
+  };
+
   return (
-    <div className={styles.cardProduto} onClick={onClick}>
+    <div
+      className={`${styles.cardProduto} ${isSelected ? styles.selected : ""}`}
+      onClick={onClick}
+    >
+      {isGerenciamento ? (
+        <div
+          className={`${styles.selectButton} ${isSelected ? styles.active : ""}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleSelect();
+          }}
+        >
+          {isSelected ? "" : ""}
+        </div>
+      ) : (
+        <HeartButton produtoId={id} />
+      )}
       {imagem && (
         <img
           src={imagem}
@@ -14,5 +38,5 @@ export function CardProduto({ nome, tempo, preco, imagem, onClick }) {
       <p className={styles.tempo}>{tempo}</p>
       <p className={styles.preco}>R$ {preco}</p>
     </div>
-  )
+  );
 }

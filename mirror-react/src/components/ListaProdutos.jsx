@@ -1,4 +1,3 @@
-// src/components/ListaProdutos.jsx
 import { CardProduto } from "./CardProduto";
 import styles from "../styles/ListaProdutos.module.css";
 import { useLocation } from "react-router-dom";
@@ -6,8 +5,9 @@ import { useLocation } from "react-router-dom";
 export function ListaProdutos({ categorias, onProdutoClick, compact }) {
   const location = useLocation();
 
-  // Verifica se está em alguma rota de gerenciamento
-  const isGerenciamento = location.pathname.startsWith("/novoPedido") || location.pathname.startsWith("/cardapioEditar");
+  const isGerenciamento =
+    location.pathname.startsWith("/novoPedido") ||
+    location.pathname.startsWith("/cardapioEditar");
 
   return (
     <div
@@ -28,11 +28,13 @@ export function ListaProdutos({ categorias, onProdutoClick, compact }) {
               {categoria.produtos.map((produto) => (
                 <CardProduto
                   key={produto.id}
+                  id={produto.id}
                   nome={produto.nome}
                   tempo={produto.tempoPreparo}
                   preco={produto.preco}
                   imagem={produto.imagem}
                   onClick={() => onProdutoClick(produto)}
+                  isGerenciamento={isGerenciamento}
                 />
               ))}
             </div>
