@@ -10,10 +10,10 @@ import Cadastro from "./pages/Cadastro";
 import Perfil from "./pages/Perfil";
 import NovoPedido from "./pages/NovoPedido";
 import CardapioEditar from "./pages/CardapioEditar";
+import HistoricoPedidos from "./pages/HistoricoPedido";
 // Layouts
 import LayoutCliente from "./layouts/LayoutCliente";
 import LayoutGerenciamento from "./layouts/LayoutGerenciamento";
-
 // Outros componentes
 import CardLancheSelecionado from "./components/CardLancheSelecionado";
 import CardValorTotal from "./components/CardValorTotal";
@@ -39,12 +39,14 @@ function App() {
           <Route path="/favoritos" element={<Favoritos />} />
           <Route path="/home" element={<Home />} />
           <Route path="/perfil" element={<Perfil />} />
+          <Route path="historicoPedido" element={<HistoricoPedidos />} />
         </Route>
 
         {/* Layout Gerenciamento */}
         <Route  element={<LayoutGerenciamento />}>
           <Route path="novoPedido" element={<NovoPedido />} />
           <Route path="cardapioEditar" element={<CardapioEditar />} />
+          
         </Route>
 
         {/* Rotas diretas de componentes */}
