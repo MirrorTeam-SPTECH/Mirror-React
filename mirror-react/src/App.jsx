@@ -11,6 +11,7 @@ import Perfil from "./pages/Perfil";
 import NovoPedido from "./pages/NovoPedido";
 import CardapioEditar from "./pages/CardapioEditar";
 import HistoricoPedidos from "./pages/HistoricoPedido";
+import Fidelidade from "./pages/Fidelidade";
 // Layouts
 import LayoutCliente from "./layouts/LayoutCliente";
 import LayoutGerenciamento from "./layouts/LayoutGerenciamento";
@@ -40,6 +41,7 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/perfil" element={<Perfil />} />
           <Route path="historicoPedido" element={<HistoricoPedidos />} />
+          <Route path="fidelidade" element={<Fidelidade />} />
         </Route>
 
         {/* Layout Gerenciamento */}
