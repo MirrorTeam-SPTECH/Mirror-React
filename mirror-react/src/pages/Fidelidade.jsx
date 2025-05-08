@@ -18,9 +18,8 @@ export default function FidelidadePage() {
     setLoading(false);
   }, []);
 
-  const renderBloco = (titulo, items, isLeftBlock = false) => (
+  const renderBloco = (items, isLeftBlock = false) => (
     <div className="bloco-central">
-      <h2 className="text-xl font-semibold">{titulo}</h2>
       {isLeftBlock ? (
         <div className="circulos-container">
           <h3 className="text-lg font-medium">Seus pontos</h3>
@@ -38,9 +37,7 @@ export default function FidelidadePage() {
       ) : (
         <div className="premio-container">
           <h3 className="text-lg font-medium">Seu Prêmio</h3>
-          <div className="imagem-premio">
-            {/* Espaço reservado para a imagem */}
-          </div>
+          <div className="imagem-premio"></div>
           <p className="descricao-premio">
             Aqui vai a descrição do prêmio. Substitua este texto pela descrição real.
           </p>
@@ -69,8 +66,8 @@ export default function FidelidadePage() {
           <Header titulo="Cada pedido te aproxima" p="de mais sabores" />
           <div className="fidelidade-page-container">
             <div className="blocos-centrais-container">
-              {renderBloco("Bloco 1", fidelidade.slice(0, Math.ceil(fidelidade.length / 2)), true)}
-              {renderBloco("Bloco 2", fidelidade.slice(Math.ceil(fidelidade.length / 2)))}
+              {renderBloco(fidelidade.slice(0, Math.ceil(fidelidade.length / 2)), true)}
+              {renderBloco(fidelidade.slice(Math.ceil(fidelidade.length / 2)))}
             </div>
           </div>
           <SubNavigation />
