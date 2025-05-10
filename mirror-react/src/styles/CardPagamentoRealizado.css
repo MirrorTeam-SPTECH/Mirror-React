@@ -4,10 +4,9 @@
     background: white;
     border-radius: 20px;
     padding: 20px;
-    width: 375px;
+    width: 350px;
     height: 410px;
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
   
   .icon {

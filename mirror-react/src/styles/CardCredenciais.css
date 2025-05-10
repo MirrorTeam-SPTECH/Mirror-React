@@ -1,10 +1,9 @@
 
   
   .payment-card {
-    width: 380px;
+    width: 350px;
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
   }
   
   .payment-summary {
@@ -64,7 +63,6 @@
     margin-bottom: 14px;
     font-size: 14px;
     outline: none;
-    box-shadow: inset 0 0 0 1px #ccc;
   }
   
   .row {

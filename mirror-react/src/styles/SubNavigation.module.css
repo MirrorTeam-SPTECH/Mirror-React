@@ -1,41 +1,42 @@
-.containerSubNavigation{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    margin-top: 20px;
+.containerSubNavigation {
+  display: flex;
+  bottom: 25px;
+  right: -50%;
+  left: -50%;
+  position: fixed;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
 }
 
-.SubNavigation{
-    display: flex;
-    background-color: #FFFF;
-    width: 700px;
-    border-radius: 38px;
-    height: 40px;
-    justify-content: space-evenly;
-    align-items: center;
+.SubNavigation {
+  display: flex;
+  background-color: #ffff;
+  width: 600px;
+  border-radius: 38px;
+  height: 40px;
+  justify-content: space-evenly;
+  align-items: center;
 
+  button {
+    background-color: transparent;
+    border: none;
+    color: #717171;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
 
-    button{
-        background-color: transparent;
-        border: none;
-        color: #717171;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease-in-out;
-
-        /* &:hover{
+    /* &:hover{
             color: #000000;
             transform: scale(1.1);
         } */
 
-        img{
-            height: 20px;
-            width: auto;
-        }
+    img {
+      height: 20px;
+      width: auto;
     }
-
-
+  }
 }

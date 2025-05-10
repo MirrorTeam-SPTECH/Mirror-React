@@ -9,11 +9,10 @@
 }
 
 .card {
-  width: 375px;
+  width: 350px;
   background: #fff;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
 .card-image {

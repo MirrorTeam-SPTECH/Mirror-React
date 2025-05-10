@@ -40,8 +40,8 @@ function App() {
           <Route path="/favoritos" element={<Favoritos />} />
           <Route path="/home" element={<Home />} />
           <Route path="/perfil" element={<Perfil />} />
-          <Route path="historicoPedido" element={<HistoricoPedidos />} />
-          <Route path="fidelidade" element={<Fidelidade />} />
+          <Route path="/historicoPedido" element={<HistoricoPedidos />} />
+          <Route path="/fidelidade" element={<Fidelidade />} />
         </Route>
 
         {/* Layout Gerenciamento */}

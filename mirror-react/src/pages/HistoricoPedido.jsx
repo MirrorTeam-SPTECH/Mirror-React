@@ -32,11 +32,6 @@ const orders = [
         price: "R$ 37,00",
         image: "/img/lanche.png",
       },
-      {
-        name: "Chef's Chicken",
-        price: "R$ 37,00",
-        image: "/img/lanche.png",
-      },
     ],
   },
   {
@@ -123,6 +118,8 @@ export default function HistoricoPedidos() {
           ))}
         </div>
       </main>
+
+      
       
       <SubNavigation />
     </div>

@@ -1,5 +1,4 @@
-
-import produtosData from "../data/produtos.json"
+import produtosData from "../data/produtos.json";
 
 export const todasCategorias = [
   { titulo: "Hamburgueres", produtos: produtosData.hamburgueres || [] },
@@ -7,4 +6,4 @@ export const todasCategorias = [
   { titulo: "Adicionais", produtos: produtosData.adicionais || [] },
   { titulo: "Bebidas", produtos: produtosData.bebidas || [] },
   { titulo: "Porções", produtos: produtosData.porcoes || [] },
-]
+];
