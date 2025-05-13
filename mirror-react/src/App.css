@@ -25,6 +25,9 @@ html, body {
 .layout-cliente {
   background-color: #EDEFF5;
   min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
 
 .layout-gerenciamento {

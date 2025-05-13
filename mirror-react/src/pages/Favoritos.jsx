@@ -43,7 +43,7 @@ export default function FavoritosPage() {
       {loading ? (
         <div>Carregando...</div>
       ) : (
-        <div className="flex flex-col gap=32px">
+        <div className="flex flex-col h-screen gap=32px">
           <Header titulo="Favoritos" p="Seus itens favoritos" />
           <div className="favoritos-page-container">
             <h1 className="text-3xl font-bold">Favoritos</h1>

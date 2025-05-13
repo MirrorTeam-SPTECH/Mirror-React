@@ -1,0 +1,143 @@
+.container_imagem {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    width: 100%;
+    height: 60%;
+}
+
+.container_textos {
+    display: flex;
+    text-align: start;
+    width: 100%;
+    height: 40%;
+    color: black;
+    font-family: inherit;
+    padding: 0px 16px;
+    box-sizing: border-box;
+    font-weight: 500;
+}
+
+.descricao {
+    font-weight: 10;
+}
+
+hr {
+    background: linear-gradient(to right, #DF001B 50%, #C8C8C8 50%);
+    border: none;
+    height: 3px;
+    border-radius: 6px;
+}
+
+.imagem {
+    width: 200px;
+    height: auto;
+    object-fit: cover;
+}
+
+.fidelidade-page-container {
+    display: flex;
+    flex-direction: column;
+    text-align: start;
+    margin-top: 3%;
+}
+
+.fidelidade-page-container h1 {
+    color: #A40000;
+    margin-left: 3%;
+    padding-bottom: 10px;
+    margin-top: -10px;
+}
+
+.blocos-centrais-container {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+}
+
+.bloco-central {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 450px;
+    padding: 16px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.bloco-central:first-child {
+    flex: 0 0 65%;
+}
+
+.bloco-central:last-child {
+    flex: 0 0 25%;
+}
+
+.fidelidade-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.circulos-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.circulos-container h3 {
+    margin: 0 0 16px 0;
+    text-align: center;
+    color: #333;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.linha-circulos {
+    display: flex;
+    justify-content: center;
+    gap: 70px;
+    margin-bottom: 30px;
+}
+
+.circulo {
+    width: 100px;
+    height: 100px;
+    background-color: #ccc;
+    border-radius: 50%;
+}
+
+.premio-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin: 16px 0;
+}
+
+.premio-container h3 {
+    margin: 0 0 16px 0;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.imagem-premio {
+    width: 80%;
+    height: 250px;
+    background-color: #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    margin: 30px;
+}
+
+.descricao-premio {
+    font-size: 16px;
+    color: #555;
+    margin: 0;
+}

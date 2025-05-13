@@ -46,7 +46,7 @@ export default function Home() {
   };
 
   return (
-    <div className="containerProjeto">
+    <div className="containerProjeto h-screen">
       {loading ? (
         <>
           <div className="skeleton header-skeleton" />
@@ -83,8 +83,8 @@ export default function Home() {
         <>
           <Header titulo="Bem vindos!" p="Vamos fazer seu pedido" />
           <Pesquisa />
-          <div style={{ display: "flex", marginTop: "0", gap: "0px" }}>
-            <div style={{ flex: 3 }}>
+          <div className="flex w-[100%] ">
+            <div className="flex-3 w-[70%]">
               <NavigationBar />
               <ListaProdutos
                 categorias={todasCategorias}
@@ -94,13 +94,7 @@ export default function Home() {
               <SubNavigation />
             </div>
 
-            <div
-              style={{
-                flex: 1,
-                paddingTop: "1rem",
-                paddingRight: "4.5rem",
-              }}
-            >
+            <div className="flex-1 relative right-15 top-5 w-[30%] flex flex-col items-center justify-center">
               {etapaAtual === "lancheSelecionado" && (
                 <CardLancheSelecionado
                   produto={produtoSelecionado}
