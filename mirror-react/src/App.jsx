@@ -10,12 +10,9 @@ import Cadastro from "./pages/Cadastro";
 import Perfil from "./pages/Perfil";
 import NovoPedido from "./pages/NovoPedido";
 import CardapioEditar from "./pages/CardapioEditar";
-<<<<<<< HEAD
-import Relatorios from "./pages/Relatorios";
-=======
 import HistoricoPedidos from "./pages/HistoricoPedido";
 import Fidelidade from "./pages/Fidelidade";
->>>>>>> ad1df1538022a2859ad4aca6046f61768b682dee
+import Relatorios from "./pages/Relatorios";
 // Layouts
 import LayoutCliente from "./layouts/LayoutCliente";
 import LayoutGerenciamento from "./layouts/LayoutGerenciamento";
@@ -47,24 +44,18 @@ function App() {
           <Route path="/favoritos" element={<Favoritos />} />
           <Route path="/home" element={<Home />} />
           <Route path="/perfil" element={<Perfil />} />
-<<<<<<< HEAD
 
-=======
           <Route path="/historicoPedido" element={<HistoricoPedidos />} />
           <Route path="/fidelidade" element={<Fidelidade />} />
->>>>>>> ad1df1538022a2859ad4aca6046f61768b682dee
         </Route>
 
         {/* Layout Gerenciamento */}
         <Route  element={<LayoutGerenciamento />}>
           <Route path="novoPedido" element={<NovoPedido />} />
           <Route path="cardapioEditar" element={<CardapioEditar />} />
-<<<<<<< HEAD
           <Route path="/cardGerenciamento" element={<CardsGerenciamento />} />
           <Route path="relatorios" element={<Relatorios />} />
-=======
           
->>>>>>> ad1df1538022a2859ad4aca6046f61768b682dee
         </Route>
 
         {/* Rotas diretas de componentes */}

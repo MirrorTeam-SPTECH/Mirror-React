@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 import { Header } from "../components/Header";
 import { Pesquisa } from "../components/Pesquisa";
-import  NavigationBar  from "../components/NavigationBar";
+import NavigationBar from "../components/NavigationBar";
 import { ListaProdutos } from "../components/ListaProdutos";
 import { SubNavigation } from "../components/SubNavigation";
 import CardLancheSelecionado from "../components/CardLancheSelecionado";
@@ -21,6 +21,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [produtoSelecionado, setProdutoSelecionado] = useState(null);
   const [etapaAtual, setEtapaAtual] = useState(null);
+  const [metodoPagamento, setMetodoPagamento] = useState(null);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 2000);
@@ -28,18 +29,35 @@ export default function Home() {
   }, []);
 
   const handleClickProduto = (produto) => {
-    setProdutoSelecionado({ ...produto, preco: produto.preco });
-    setEtapaAtual("lancheSelecionado");
+    if (produtoSelecionado?.id === produto.id) {
+      setProdutoSelecionado(null);
+      setEtapaAtual(null);
+    } else {
+      setProdutoSelecionado({ ...produto, preco: produto.preco });
+      setEtapaAtual("lancheSelecionado");
+    }
   };
 
   const handleAvancarCarrinho = () => setEtapaAtual("carrinho");
   const handleAvancarPagamento = () => setEtapaAtual("pagamento");
-  const handlePix = () => setEtapaAtual("pix");
-  const handleCartao = () => setEtapaAtual("credenciais");
+
+  const handlePix = () => {
+    setMetodoPagamento("pix");
+    setEtapaAtual("carregamento");
+    setTimeout(() => setEtapaAtual("realizado"), 2000);
+  };
+
+  const handleCartao = () => {
+    setMetodoPagamento("balcao");
+    setEtapaAtual("carregamento");
+    setTimeout(() => setEtapaAtual("realizado"), 2000);
+  };
+
   const handleCarregamento = () => {
     setEtapaAtual("carregamento");
     setTimeout(() => setEtapaAtual("realizado"), 2000);
   };
+
   const handleVoltarHome = () => {
     setProdutoSelecionado(null);
     setEtapaAtual(null);
@@ -71,7 +89,21 @@ export default function Home() {
       ) : produtoSelecionado == null ? (
         <>
           <Header titulo="Bem vindos!" p="Vamos fazer seu pedido" />
-          <Pesquisa />
+          <Pesquisa
+            categorias={todasCategorias}
+            onProdutoEncontrado={(titulo) => {
+              const categoriaId = titulo
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+                .replace(/\s+/g, ""); // Normaliza o título para gerar o ID
+
+              const categoriaElement = document.getElementById(categoriaId);
+              if (categoriaElement) {
+                categoriaElement.scrollIntoView({ behavior: "smooth" });
+              }
+            }}
+          />
           <NavigationBar />
           <ListaProdutos
             categorias={todasCategorias}
@@ -82,7 +114,21 @@ export default function Home() {
       ) : (
         <>
           <Header titulo="Bem vindos!" p="Vamos fazer seu pedido" />
-          <Pesquisa />
+          <Pesquisa
+            categorias={todasCategorias}
+            onProdutoEncontrado={(titulo) => {
+              const categoriaId = titulo
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+                .replace(/\s+/g, ""); // Normaliza o título para gerar o ID
+
+              const categoriaElement = document.getElementById(categoriaId);
+              if (categoriaElement) {
+                categoriaElement.scrollIntoView({ behavior: "smooth" });
+              }
+            }}
+          />
           <div className="flex w-[100%] ">
             <div className="flex-3 w-[70%]">
               <NavigationBar />
@@ -99,6 +145,7 @@ export default function Home() {
                 <CardLancheSelecionado
                   produto={produtoSelecionado}
                   onAvancar={handleAvancarCarrinho}
+                  onClose={handleVoltarHome}
                 />
               )}
               {etapaAtual === "carrinho" && (
@@ -120,16 +167,11 @@ export default function Home() {
                   onConfirmar={handleCarregamento}
                 />
               )}
-              {etapaAtual === "credenciais" && (
-                <CardCredenciais
-                  produto={produtoSelecionado}
-                  onConfirmar={handleCarregamento}
-                />
-              )}
               {etapaAtual === "carregamento" && <CardCarregamento />}
               {etapaAtual === "realizado" && (
                 <CardPagamentoRealizado
                   produto={produtoSelecionado}
+                  metodoPagamento={metodoPagamento}
                   onVoltar={handleVoltarHome}
                 />
               )}

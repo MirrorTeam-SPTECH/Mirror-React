@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Plus, Minus } from "lucide-react";
-import "../styles/CardLancheSelecionado.css";
+import { Plus, Minus, ArrowLeft } from "lucide-react";
 import HeartButton from "./Shared/HeartButton";
+import "../styles/CardLancheSelecionado.css"; // Importando o CSS específico para este componente
 
-export default function CardLancheSelecionado({ produto, onAvancar }) {
+export default function CardLancheSelecionado({ produto, onAvancar, onClose }) {
   const [quantity, setQuantity] = useState(1);
 
   const decreaseQuantity = () => {
@@ -15,8 +15,18 @@ export default function CardLancheSelecionado({ produto, onAvancar }) {
   return (
     <div className="container">
       <div className="card">
-        <div className="card-image">
+        {/* Botões no topo */}
+        <div className="card-header">
+          {/* Botão de voltar */}
+          <button className="btn-back" onClick={onClose}>
+            <ArrowLeft size={20} />
+          </button>
+
+          {/* Botão de coração */}
           <HeartButton />
+        </div>
+
+        <div className="card-image">
           <img
             src={produto.imagem || "/placeholder.svg?height=140&width=140"}
             alt={produto.nome}

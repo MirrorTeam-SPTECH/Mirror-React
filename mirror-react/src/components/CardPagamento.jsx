@@ -49,7 +49,7 @@ export default function CardPagamento({
           <button className="method-button" onClick={onCartao}>
             <div className="method-info">
               <span className="method-icon">💳</span>
-              <span className="method-text">Cartão</span>
+              <span className="method-text">Balcão</span>
             </div>
             <div className="method-arrow">➔</div>
           </button>
