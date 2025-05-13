@@ -2,7 +2,7 @@ import { useState } from "react";
 import HeartButton from "../components/Shared/HeartButton";
 import styles from "../styles/ListaProdutos.module.css";
 
-export function CardProduto({ id, nome, tempo, preco, imagem, onClick, isGerenciamento }) {
+export function CardProduto({ id, nome, tempo, preco, imagem, categoria, onClick, isGerenciamento }) {
   const [isSelected, setIsSelected] = useState(false);
 
   const toggleSelect = () => {
@@ -25,7 +25,7 @@ export function CardProduto({ id, nome, tempo, preco, imagem, onClick, isGerenci
           {isSelected ? "" : ""}
         </div>
       ) : (
-        <HeartButton produtoId={id} />
+        <HeartButton produtoId={id} categoria={categoria} />
       )}
       {imagem && (
         <img

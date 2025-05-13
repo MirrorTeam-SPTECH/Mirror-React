@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 import { Header } from "../components/Header";
 import { Pesquisa } from "../components/Pesquisa";
-import { NavigationBar } from "../components/NavigationBar";
+import  NavigationBar  from "../components/NavigationBar";
 import { ListaProdutos } from "../components/ListaProdutos";
 import { SubNavigation } from "../components/SubNavigation";
 import CardLancheSelecionado from "../components/CardLancheSelecionado";

@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 import  HeaderGerenciamento  from "../components/HeaderGerenciamento"
 import { Pesquisa } from "../components/Pesquisa";
-import  NavBarGerenciamento  from "../components/NavBarGerenciamento";
+import NavigationBar from "../components/NavigationBar";
 import ControlePedidos from "../components/ControlePedidos";
 import { ListaProdutos } from "../components/ListaProdutos";
 import CardLancheSelecionado from "../components/CardLancheSelecionado";
@@ -72,7 +72,7 @@ export default function Home() {
           <HeaderGerenciamento activePage="cardapio" />  
           <ControlePedidos titulo="Editar Cardápio" />
           <Pesquisa />
-          <NavBarGerenciamento />
+          <NavigationBar />
           <ListaProdutos
             categorias={todasCategorias}
             onProdutoClick={handleClickProduto}
@@ -85,7 +85,7 @@ export default function Home() {
           <Pesquisa />
           <div style={{ display: "flex", marginTop: "0", gap: "0px" }}>
             <div style={{ flex: 3 }}>
-              <NavBarGerenciamento />
+          <NavigationBar />
               <ListaProdutos
                 categorias={todasCategorias}
                 onProdutoClick={handleClickProduto}

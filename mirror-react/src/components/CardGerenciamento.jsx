@@ -1,21 +1,21 @@
-import { useState } from "react"
-import { Plus, Minus } from "lucide-react"
-import "../styles/CardsGerenciamento.css"
-import ButtonGerenciamento from "../components/Shared/ButtonGerenciamento"  // Importando o componente de botões
+import { useState } from "react";
+import { Plus, Minus } from "lucide-react";
+import "../styles/CardsGerenciamento.css";
+import ButtonGerenciamento from "../components/Shared/ButtonGerenciamento";
 
-export default function CardsGerenciamento({ produto, onAction }) {
-  const [quantity, setQuantity] = useState(1)
-  const [isFavorite, setIsFavorite] = useState(false)
+export default function CardsGerenciamento({ produto = {}, onAction }) {
+  const [quantity, setQuantity] = useState(1);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const decreaseQuantity = () => {
-    if (quantity > 1) setQuantity(quantity - 1)
-  }
-  const increaseQuantity = () => setQuantity(quantity + 1)
-  const toggleFavorite = () => setIsFavorite((fav) => !fav)
+    if (quantity > 1) setQuantity(quantity - 1);
+  };
+  const increaseQuantity = () => setQuantity(quantity + 1);
+  const toggleFavorite = () => setIsFavorite((fav) => !fav);
 
   const handleAction = (action) => {
-    onAction(action, produto)
-  }
+    if (onAction) onAction(action, produto);
+  };
 
   return (
     <div className="container">
@@ -26,15 +26,15 @@ export default function CardsGerenciamento({ produto, onAction }) {
           </div>
           <img
             src={produto.imagem || "/placeholder.svg?height=140&width=140"}
-            alt={produto.nome}
+            alt={produto.nome || "Produto sem nome"}
             className="product-img"
           />
         </div>
 
         <div className="card-content">
           <div className="card-title">
-            <h2>{produto.nome}</h2>
-            <p className="price">R$ {produto.preco}</p>
+            <h2>{produto.nome || "Produto sem nome"}</h2>
+            <p className="price">R$ {produto.preco || "0,00"}</p>
           </div>
 
           <div className="quantity">
@@ -50,7 +50,7 @@ export default function CardsGerenciamento({ produto, onAction }) {
           <div className="description">
             <strong>Descrição</strong>
             <hr className="divider" />
-            <p>{produto.descricao}</p>
+            <p>{produto.descricao || "Sem descrição disponível"}</p>
           </div>
 
           <ButtonGerenciamento onClick={() => handleAction("update")} variant="primary">
@@ -67,5 +67,5 @@ export default function CardsGerenciamento({ produto, onAction }) {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Header } from "../components/Header";
 import { Favoritos } from "../components/CardFavoritos";
 import { SubNavigation } from "../components/SubNavigation";
-import produtosData from "../data/produtos.json";
+import { todasCategorias } from "../utils/Categorias";
 import "../styles/Favoritos.css";
 import "../styles/FavoritosLoading.css";
 import "../styles/Carregamento.css";
@@ -24,8 +24,15 @@ export default function FavoritosPage() {
 
   useEffect(() => {
     const favoritosIds = JSON.parse(localStorage.getItem("favoritos")) || [];
-    const favoritosFiltrados = produtosData.hamburgueres.filter((produto) =>
-      favoritosIds.includes(produto.id)
+    const todosProdutos = todasCategorias.flatMap((categoria) =>
+      categoria.produtos.map((produto) => ({
+        ...produto,
+        categoria: categoria.titulo,
+        produtoKey: `${categoria.titulo}-${produto.id}`,
+      }))
+    );
+    const favoritosFiltrados = todosProdutos.filter((produto) =>
+      favoritosIds.includes(produto.produtoKey)
     );
     setFavoritos(favoritosFiltrados);
     setLoading(false);
@@ -44,11 +51,10 @@ export default function FavoritosPage() {
               <button className="btn-carrossel esquerda" onClick={() => scrollCarrossel("esquerda")}>
                 <ChevronLeft color="red" size={20} absoluteStrokeWidth={false} />
               </button>
-
               <div className="div_favoritos" id="carrosselFavoritos">
                 {favoritos.map((item) => (
                   <Favoritos
-                    key={item.id}
+                    key={item.produtoKey}
                     nome={item.nome}
                     valor={`R$ ${item.preco}`}
                     descricao={item.descricao}
@@ -56,7 +62,6 @@ export default function FavoritosPage() {
                   />
                 ))}
               </div>
-
               <button className="btn-carrossel direita" onClick={() => scrollCarrossel("direita")}>
                 <ChevronRight color="red" size={20} absoluteStrokeWidth={false} />
               </button>

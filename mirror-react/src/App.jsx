@@ -10,6 +10,7 @@ import Cadastro from "./pages/Cadastro";
 import Perfil from "./pages/Perfil";
 import NovoPedido from "./pages/NovoPedido";
 import CardapioEditar from "./pages/CardapioEditar";
+import Relatorios from "./pages/Relatorios";
 // Layouts
 import LayoutCliente from "./layouts/LayoutCliente";
 import LayoutGerenciamento from "./layouts/LayoutGerenciamento";
@@ -24,7 +25,10 @@ import CardCarregamento from "./components/CardCarregamento";
 import CardQRcode from "./components/CardQRcode";
 import CardErro from "./components/CardErro";
 
+import CardsGerenciamento from "./components/CardGerenciamento";
+
 import "./App.css";
+
 
 function App() {
   return (
@@ -39,12 +43,15 @@ function App() {
           <Route path="/favoritos" element={<Favoritos />} />
           <Route path="/home" element={<Home />} />
           <Route path="/perfil" element={<Perfil />} />
+
         </Route>
 
         {/* Layout Gerenciamento */}
         <Route  element={<LayoutGerenciamento />}>
           <Route path="novoPedido" element={<NovoPedido />} />
           <Route path="cardapioEditar" element={<CardapioEditar />} />
+          <Route path="/cardGerenciamento" element={<CardsGerenciamento />} />
+          <Route path="relatorios" element={<Relatorios />} />
         </Route>
 
         {/* Rotas diretas de componentes */}

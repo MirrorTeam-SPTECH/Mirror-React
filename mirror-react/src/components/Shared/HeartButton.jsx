@@ -2,23 +2,25 @@ import { useState, useEffect } from "react";
 import { Heart } from "lucide-react";
 import "../../styles/HeartButton.css";
 
-export default function HeartButton({ produtoId, onToggle }) {
+export default function HeartButton({ produtoId, categoria, onToggle }) {
   const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
     const favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
-    setIsFavorite(favoritos.includes(produtoId));
-  }, [produtoId]);
+    const produtoKey = `${categoria}-${produtoId}`;
+    setIsFavorite(favoritos.includes(produtoKey));
+  }, [produtoId, categoria]);
 
   const toggleFavorite = (e) => {
     e.stopPropagation();
     const favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+    const produtoKey = `${categoria}-${produtoId}`;
     let updatedFavoritos;
 
-    if (favoritos.includes(produtoId)) {
-      updatedFavoritos = favoritos.filter((id) => id !== produtoId);
+    if (favoritos.includes(produtoKey)) {
+      updatedFavoritos = favoritos.filter((id) => id !== produtoKey);
     } else {
-      updatedFavoritos = [...favoritos, produtoId];
+      updatedFavoritos = [...favoritos, produtoKey];
     }
 
     localStorage.setItem("favoritos", JSON.stringify(updatedFavoritos));
