@@ -11,34 +11,35 @@ export function ListaProdutos({ categorias, onProdutoClick, compact }) {
   const normalizeId = (titulo) =>
     titulo
       .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^\w\s-]/g, "") // remove acentos e caracteres especiais
       .toLowerCase()
       .replace(/\s+/g, "");
 
-  const renderCategoria = (categoria, index) => {
-    const categoriaId = normalizeId(categoria.titulo);
+  const renderCategoria = (categoriaData) => {
+    const categoriaKey = normalizeId(categoriaData.titulo);
 
     return (
       <div
-        key={index}
-        id={categoriaId} // Define o ID dinâmico
+        key={categoriaKey}
+        id={categoriaKey}
         className={styles.categoriaContainer}
       >
         <div className="flex flex-row items-center justify-start mb-2 mt-2 gap-2">
           <span className="h-[25px] w-[6px] bg-amber-400"></span>
           <h2 className="text-[1.3rem] font-bold text-start text-[#CC0000]">
-            {categoria.titulo}
+            {categoriaData.titulo}
           </h2>
         </div>
         <div className={`${styles.lista} ${compact ? styles.compact : ""}`}>
-          {categoria.produtos.map((produto) => (
+          {categoriaData.produtos.map((produto) => (
             <CardProduto
-              key={produto.id}
+              key={`${categoriaKey}-${produto.id}`}
               id={produto.id}
               nome={produto.nome}
               tempo={produto.tempoPreparo}
               preco={produto.preco}
               imagem={produto.imagem}
+              categoria={categoriaKey}        // passa a categoria para o CardProduto
               onClick={() => onProdutoClick(produto)}
               isGerenciamento={isGerenciamento}
             />

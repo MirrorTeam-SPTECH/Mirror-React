@@ -7,31 +7,34 @@ export default function HeartButton({ produtoId, categoria, onToggle }) {
 
   useEffect(() => {
     const favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
-    const produtoKey = `${categoria}-${produtoId}`;
-    setIsFavorite(favoritos.includes(produtoKey));
+    const found = favoritos.some(fav => fav && fav.id === produtoId && fav.categoria === categoria);
+    setIsFavorite(found);
   }, [produtoId, categoria]);
 
   const toggleFavorite = (e) => {
     e.stopPropagation();
-    const favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
-    const produtoKey = `${categoria}-${produtoId}`;
-    let updatedFavoritos;
+    let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+    favoritos = favoritos.filter(Boolean); // remove nulls/undefined
+    const isAlreadyFavorite = favoritos.some(fav => fav && fav.id === produtoId && fav.categoria === categoria);
 
-    if (favoritos.includes(produtoKey)) {
-      updatedFavoritos = favoritos.filter((id) => id !== produtoKey);
+    if (isAlreadyFavorite) {
+      favoritos = favoritos.filter(fav => fav && !(fav.id === produtoId && fav.categoria === categoria));
     } else {
-      updatedFavoritos = [...favoritos, produtoKey];
+      favoritos.push({ id: produtoId, categoria });
     }
 
-    localStorage.setItem("favoritos", JSON.stringify(updatedFavoritos));
+    localStorage.setItem("favoritos", JSON.stringify(favoritos));
     setIsFavorite(!isFavorite);
-
     if (onToggle) onToggle(!isFavorite);
   };
 
   return (
     <div className="heart-icon" onClick={toggleFavorite}>
-      <Heart size={20} color={isFavorite ? "#e46363" : "#e46363"} fill={isFavorite ? "#e46363" : "none"} />
+      <Heart
+        size={20}
+        color={isFavorite ? "#e46363" : "#e46363"}
+        fill={isFavorite ? "#e46363" : "none"}
+      />
     </div>
   );
 }

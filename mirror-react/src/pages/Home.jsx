@@ -11,7 +11,6 @@ import CardLancheSelecionado from "../components/CardLancheSelecionado";
 import { CardCarrinho } from "../components/CardCarrinho";
 import CardPagamento from "../components/CardPagamento";
 import CardQRCode from "../components/CardQRcode";
-import CardCredenciais from "../components/CardCredenciais";
 import CardCarregamento from "../components/CardCarregamento";
 import CardPagamentoRealizado from "../components/CardPagamentoRealizado";
 import { todasCategorias } from "../utils/Categorias";
@@ -22,11 +21,21 @@ export default function Home() {
   const [produtoSelecionado, setProdutoSelecionado] = useState(null);
   const [etapaAtual, setEtapaAtual] = useState(null);
   const [metodoPagamento, setMetodoPagamento] = useState(null);
+  const [favoritos, setFavoritos] = useState(() => {
+    // Carrega os favoritos do localStorage ao iniciar
+    const storedFavoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+    return storedFavoritos;
+  });
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 2000);
     return () => clearTimeout(timer);
   }, []);
+
+  // Atualiza o localStorage sempre que os favoritos mudarem
+  useEffect(() => {
+    localStorage.setItem("favoritos", JSON.stringify(favoritos));
+  }, [favoritos]);
 
   const handleClickProduto = (produto) => {
     if (produtoSelecionado?.id === produto.id) {
@@ -36,6 +45,21 @@ export default function Home() {
       setProdutoSelecionado({ ...produto, preco: produto.preco });
       setEtapaAtual("lancheSelecionado");
     }
+  };
+
+  const handleFavoritar = (produtoId, categoria) => {
+    setFavoritos((prevFavoritos) => {
+      const isFavorito = prevFavoritos.some((fav) => fav.id === produtoId);
+      if (isFavorito) {
+        // Remove dos favoritos
+        return prevFavoritos.filter((fav) => fav.id !== produtoId);
+      } else {
+        // Adiciona aos favoritos
+        const categoriaEncontrada = todasCategorias.find((cat) => cat.titulo === categoria);
+        const produto = categoriaEncontrada?.produtos.find((prod) => prod.id === produtoId);
+        return produto ? [...prevFavoritos, produto] : prevFavoritos;
+      }
+    });
   };
 
   const handleAvancarCarrinho = () => setEtapaAtual("carrinho");
@@ -86,6 +110,25 @@ export default function Home() {
 
           <div className="skeleton sub-nav-skeleton" />
         </>
+      ) : etapaAtual === "favoritos" ? (
+        <>
+          <Header titulo="Favoritos" p="Seus produtos favoritos" />
+          <NavigationBar />
+          <ListaProdutos
+            categorias={[
+              {
+                titulo: "Favoritos",
+                produtos: favoritos.map((fav) => {
+                  const categoria = todasCategorias.find((cat) => cat.titulo === fav.categoria);
+                  return categoria?.produtos.find((prod) => prod.id === fav.produtoId);
+                }).filter(Boolean), // Remove produtos inválidos
+              },
+            ]}
+            onProdutoClick={handleClickProduto}
+            onFavoritar={handleFavoritar}
+          />
+          <SubNavigation />
+        </>
       ) : produtoSelecionado == null ? (
         <>
           <Header titulo="Bem vindos!" p="Vamos fazer seu pedido" />
@@ -108,6 +151,7 @@ export default function Home() {
           <ListaProdutos
             categorias={todasCategorias}
             onProdutoClick={handleClickProduto}
+            onFavoritar={handleFavoritar}
           />
           <SubNavigation />
         </>
@@ -135,6 +179,7 @@ export default function Home() {
               <ListaProdutos
                 categorias={todasCategorias}
                 onProdutoClick={handleClickProduto}
+                onFavoritar={handleFavoritar}
                 compact
               />
               <SubNavigation />

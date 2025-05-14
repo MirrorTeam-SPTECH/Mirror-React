@@ -2,11 +2,29 @@ import { useState } from "react";
 import HeartButton from "../components/Shared/HeartButton";
 import styles from "../styles/ListaProdutos.module.css";
 
-export function CardProduto({ id, nome, tempo, preco, imagem, categoria, onClick, isGerenciamento }) {
+export function CardProduto({
+  id,
+  nome,
+  tempo,
+  preco,
+  imagem,
+  categoria,
+  onClick,
+  onFavoritar, // função que recebe (id, categoria, isNowFavorite)
+  isGerenciamento,
+}) {
   const [isSelected, setIsSelected] = useState(false);
 
-  const toggleSelect = () => {
-    setIsSelected(!isSelected);
+  const toggleSelect = (e) => {
+    e.stopPropagation();
+    setIsSelected(prev => !prev);
+  };
+
+  // Callback executado quando o HeartButton alterna favorito
+  const handleToggleFavorite = (isNowFavorite) => {
+    if (onFavoritar) {
+      onFavoritar(id, categoria, isNowFavorite);
+    }
   };
 
   return (
@@ -17,16 +35,18 @@ export function CardProduto({ id, nome, tempo, preco, imagem, categoria, onClick
       {isGerenciamento ? (
         <div
           className={`${styles.selectButton} ${isSelected ? styles.active : ""}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            toggleSelect();
-          }}
+          onClick={toggleSelect}
         >
-          {isSelected ? "" : ""}
+          {isSelected ? "Selecionado" : ""}
         </div>
       ) : (
-        <HeartButton produtoId={id} categoria={categoria} />
+        <HeartButton
+          produtoId={id}
+          categoria={categoria}
+          onToggle={handleToggleFavorite}
+        />
       )}
+
       {imagem && (
         <img
           src={imagem}
@@ -34,6 +54,7 @@ export function CardProduto({ id, nome, tempo, preco, imagem, categoria, onClick
           className="w-auto h-[120px] object-cover rounded-[12px] mb-3"
         />
       )}
+
       <p className={styles.nome}>{nome}</p>
       <p className={styles.tempo}>{tempo}</p>
       <p className={styles.preco}>R$ {preco}</p>
