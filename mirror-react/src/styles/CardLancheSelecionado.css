@@ -13,6 +13,8 @@
   background: #fff;
   border-radius: 20px;
   overflow: hidden;
+  max-height: 510px;
+  height: 510px;
 }
 
 .card-image {
@@ -144,11 +146,12 @@
   font-size: 14px;
   color: #333;
   line-height: 1.4;
+  margin-top: 15px;
 }
 
 .btn-observacoes {
   width: 100%;
-  padding: 12px;
+  padding-top: 15px;
   background-color: transparent;
   color: #d40000;
   border: 2px solid #d40000;
@@ -158,6 +161,7 @@
   cursor: pointer;
   margin-bottom: 12px;
   transition: background 0.3s, color 0.3s;
+  margin-top: 10px;
 }
 
 .btn-observacoes:hover {

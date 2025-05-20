@@ -17,6 +17,8 @@ import Relatorios from "./pages/Relatorios";
 import LayoutCliente from "./layouts/LayoutCliente";
 import LayoutGerenciamento from "./layouts/LayoutGerenciamento";
 // Outros componentes
+import PedidoPage from "./components/PedidoPage";
+
 import CardLancheSelecionado from "./components/CardLancheSelecionado";
 import CardValorTotal from "./components/CardValorTotal";
 import CardPagamento from "./components/CardPagamento";
@@ -25,17 +27,16 @@ import CardPagamentoRealizado from "./components/CardPagamentoRealizado";
 import CardCarregamento from "./components/CardCarregamento";
 import CardQRcode from "./components/CardQRcode";
 import CardErro from "./components/CardErro";
+import CardAdicionais from "./components/CardAdicionais";
 
 import CardsGerenciamento from "./components/CardGerenciamento";
 
 import "./App.css";
 
-
 function App() {
   return (
     <Router>
       <Routes>
-
         {/* Layout Cliente */}
         <Route element={<LayoutCliente />}>
           <Route path="/" element={<SiteInstitucional />} />
@@ -47,15 +48,15 @@ function App() {
 
           <Route path="/historicoPedido" element={<HistoricoPedidos />} />
           <Route path="/fidelidade" element={<Fidelidade />} />
+          <Route path="/pedido" element={<PedidoPage />} />
         </Route>
 
         {/* Layout Gerenciamento */}
-        <Route  element={<LayoutGerenciamento />}>
+        <Route element={<LayoutGerenciamento />}>
           <Route path="novoPedido" element={<NovoPedido />} />
           <Route path="cardapioEditar" element={<CardapioEditar />} />
-          <Route path="/cardGerenciamento" element={<CardsGerenciamento />} />
+          <Route path="/cardGerenciamento" element={<CardsGerenciamento  titulo="Editar" />}/>
           <Route path="relatorios" element={<Relatorios />} />
-          
         </Route>
 
         {/* Rotas diretas de componentes */}
@@ -88,7 +89,10 @@ function App() {
             />
           }
         />
-        <Route path="/cardPagamentoRealizado" element={<CardPagamentoRealizado />} />
+        <Route
+          path="/cardPagamentoRealizado"
+          element={<CardPagamentoRealizado />}
+        />
         <Route path="/cardCarregamento" element={<CardCarregamento />} />
         <Route
           path="/cardQRcode"
@@ -100,7 +104,46 @@ function App() {
           }
         />
         <Route path="/cardErro" element={<CardErro />} />
-        
+        <Route
+          path="/cardAdicionais"
+          element={
+            <CardAdicionais
+              produto={{
+                nome: "Chef’s Chicken",
+                preco: "37,00",
+                quantity: 1,
+                adicionais: [
+                  {
+                    id: 1,
+                    nome: "Queijo",
+                    preco: 2,
+                    imagem: "/img/adicionais.png",
+                  },
+                  {
+                    id: 2,
+                    nome: "Queijo Cheddar",
+                    preco: 4,
+                    imagem: "/img/adicionais.png",
+                  },
+                  {
+                    id: 3,
+                    nome: "Hamburguer",
+                    preco: 6,
+                    imagem: "/img/adicionais.png",
+                  },
+                  {
+                    id: 5,
+                    nome: "Bacon",
+                    preco: 4,
+                    imagem: "/img/adicionais.png",
+                  },
+                ],
+              }}
+              onAvancar={(item) => console.log("Avançou com:", item)}
+              onVoltar={() => console.log("Voltar acionado")}
+            />
+          }
+        />
       </Routes>
     </Router>
   );

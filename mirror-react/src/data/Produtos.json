@@ -115,6 +115,33 @@
       "descricao": "Pão de alho crocante com toque de ervas e manteiga"
     }
   ],
+  "adicionais":[
+    {
+      "id": 1,
+      "nome": "Queijo",
+      "preco": 2,
+      "imagem": "/img/adicionais.png"
+    },
+    {
+      "id": 2,
+      "nome": "Queijo Cheddar",
+      "preco": 4,
+      "imagem": "/img/adicionais.png"
+    },
+    {
+      "id": 3,
+      "nome": "Hamburguer",
+      "preco": 6,
+      "imagem": "/img/adicionais.png"
+        },
+    {
+      "id": 4,
+      "nome": "Bacon",
+      "preco": 4,
+      "imagem": "/img/adicionais.png"
+    }
+  ],
+
     "bebidas": [
       {
         "id": 1,

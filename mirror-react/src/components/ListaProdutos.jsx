@@ -39,8 +39,8 @@ export function ListaProdutos({ categorias, onProdutoClick, compact }) {
               tempo={produto.tempoPreparo}
               preco={produto.preco}
               imagem={produto.imagem}
-              categoria={categoriaKey}        // passa a categoria para o CardProduto
-              onClick={() => onProdutoClick(produto)}
+              categoria={categoriaKey} // passa a categoria para o CardProduto
+              onClick={() => onProdutoClick(produto)} // usa a função recebida por props
               isGerenciamento={isGerenciamento}
             />
           ))}

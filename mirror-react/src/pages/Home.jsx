@@ -1,91 +1,150 @@
-// src/pages/Home.jsx
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
-import { Header } from "../components/Header";
-import { Pesquisa } from "../components/Pesquisa";
-import NavigationBar from "../components/NavigationBar";
-import { ListaProdutos } from "../components/ListaProdutos";
-import { SubNavigation } from "../components/SubNavigation";
-import CardLancheSelecionado from "../components/CardLancheSelecionado";
-import { CardCarrinho } from "../components/CardCarrinho";
-import CardPagamento from "../components/CardPagamento";
-import CardQRCode from "../components/CardQRcode";
-import CardCarregamento from "../components/CardCarregamento";
-import CardPagamentoRealizado from "../components/CardPagamentoRealizado";
-import { todasCategorias } from "../utils/Categorias";
-import "../styles/Carregamento.css";
+import { useEffect, useState } from "react"
+import { Header } from "../components/Header"
+import { Pesquisa } from "../components/Pesquisa"
+import NavigationBar from "../components/NavigationBar"
+import { ListaProdutos } from "../components/ListaProdutos"
+import { SubNavigation } from "../components/SubNavigation"
+import CardLancheSelecionado from "../components/CardLancheSelecionado"
+import CardAdicionais from "../components/CardAdicionais"
+import { CardCarrinho } from "../components/CardCarrinho"
+import CardPagamento from "../components/CardPagamento"
+import CardQRCode from "../components/CardQRcode"
+import CardCarregamento from "../components/CardCarregamento"
+import CardPagamentoRealizado from "../components/CardPagamentoRealizado"
+import { todasCategorias } from "../utils/Categorias"
+import "../styles/Carregamento.css"
+
+// Função para enviar notificação para o gerenciamento
+const notificarGerenciamento = (pedido) => {
+  // Em uma aplicação real, isso seria feito via WebSocket ou outra tecnologia de tempo real
+  // Por enquanto, vamos usar localStorage para simular a comunicação
+  const notificacao = {
+    id: Math.random().toString(36).substring(2, 9),
+    timestamp: new Date().toISOString(),
+    pedido: pedido,
+    lido: false,
+  }
+
+  // Salva a notificação no localStorage
+  const notificacoes = JSON.parse(localStorage.getItem("notificacoesPedidos") || "[]")
+  notificacoes.push(notificacao)
+  localStorage.setItem("notificacoesPedidos", JSON.stringify(notificacoes))
+
+ 
+}
 
 export default function Home() {
-  const [loading, setLoading] = useState(true);
-  const [produtoSelecionado, setProdutoSelecionado] = useState(null);
-  const [etapaAtual, setEtapaAtual] = useState(null);
-  const [metodoPagamento, setMetodoPagamento] = useState(null);
+  const [loading, setLoading] = useState(true)
+  const [produtoSelecionado, setProdutoSelecionado] = useState(null)
+  const [produtoComAdicionais, setProdutoComAdicionais] = useState(null)
+  const [produtoCarrinho, setProdutoCarrinho] = useState(null)
+  const [etapaAtual, setEtapaAtual] = useState(null)
+  const [metodoPagamento, setMetodoPagamento] = useState(null)
   const [favoritos, setFavoritos] = useState(() => {
-    // Carrega os favoritos do localStorage ao iniciar
-    const storedFavoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
-    return storedFavoritos;
-  });
+    const storedFavoritos = JSON.parse(localStorage.getItem("favoritos")) || []
+    return storedFavoritos
+  })
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2000);
-    return () => clearTimeout(timer);
-  }, []);
+    const timer = setTimeout(() => setLoading(false), 2000)
+    return () => clearTimeout(timer)
+  }, [])
 
-  // Atualiza o localStorage sempre que os favoritos mudarem
   useEffect(() => {
-    localStorage.setItem("favoritos", JSON.stringify(favoritos));
-  }, [favoritos]);
+    localStorage.setItem("favoritos", JSON.stringify(favoritos))
+  }, [favoritos])
+
+  // Para debug - mostra o estado atual do produtoCarrinho sempre que ele mudar
+  useEffect(() => {
+    if (produtoCarrinho) {
+      console.log("Estado atual do produtoCarrinho:", produtoCarrinho)
+    }
+  }, [produtoCarrinho])
 
   const handleClickProduto = (produto) => {
     if (produtoSelecionado?.id === produto.id) {
-      setProdutoSelecionado(null);
-      setEtapaAtual(null);
+      setProdutoSelecionado(null)
+      setProdutoComAdicionais(null)
+      setProdutoCarrinho(null)
+      setEtapaAtual(null)
     } else {
-      setProdutoSelecionado({ ...produto, preco: produto.preco });
-      setEtapaAtual("lancheSelecionado");
+      setProdutoSelecionado({ ...produto, preco: produto.preco })
+      setProdutoComAdicionais(null)
+      setProdutoCarrinho(null)
+      setEtapaAtual("lancheSelecionado")
     }
-  };
+  }
 
   const handleFavoritar = (produtoId, categoria) => {
     setFavoritos((prevFavoritos) => {
-      const isFavorito = prevFavoritos.some((fav) => fav.id === produtoId);
+      const isFavorito = prevFavoritos.some((fav) => fav.id === produtoId)
       if (isFavorito) {
-        // Remove dos favoritos
-        return prevFavoritos.filter((fav) => fav.id !== produtoId);
+        return prevFavoritos.filter((fav) => fav.id !== produtoId)
       } else {
-        // Adiciona aos favoritos
-        const categoriaEncontrada = todasCategorias.find((cat) => cat.titulo === categoria);
-        const produto = categoriaEncontrada?.produtos.find((prod) => prod.id === produtoId);
-        return produto ? [...prevFavoritos, produto] : prevFavoritos;
+        const categoriaEncontrada = todasCategorias.find((cat) => cat.titulo === categoria)
+        const produto = categoriaEncontrada?.produtos.find((prod) => prod.id === produtoId)
+        return produto ? [...prevFavoritos, produto] : prevFavoritos
       }
-    });
-  };
+    })
+  }
 
-  const handleAvancarCarrinho = () => setEtapaAtual("carrinho");
-  const handleAvancarPagamento = () => setEtapaAtual("pagamento");
+  const handleAvancarAdicionais = (produtoComQuantidade) => {
+    console.log("Home recebeu do CardLancheSelecionado:", produtoComQuantidade)
+    setProdutoComAdicionais(produtoComQuantidade)
+    setEtapaAtual("adicionais")
+  }
+
+  const handleIrParaObservacoes = (produtoComQuantidade) => {
+    console.log("Home recebeu do CardLancheSelecionado para observações:", produtoComQuantidade)
+    setProdutoComAdicionais(produtoComQuantidade)
+    setEtapaAtual("adicionais")
+  }
+
+  const handleAvancarCarrinho = (produtoFinalizado) => {
+    console.log("Home recebeu do CardAdicionais:", produtoFinalizado)
+    setProdutoCarrinho(produtoFinalizado)
+    setEtapaAtual("carrinho")
+  }
+
+  const handleVoltarLancheSelecionado = () => {
+    setEtapaAtual("lancheSelecionado")
+  }
+
+  const handleAvancarPagamento = () => setEtapaAtual("pagamento")
 
   const handlePix = () => {
-    setMetodoPagamento("pix");
-    setEtapaAtual("carregamento");
-    setTimeout(() => setEtapaAtual("realizado"), 2000);
-  };
+    setMetodoPagamento("pix")
+    setEtapaAtual("qrcode") // Vai para o QRCode quando for PIX
+  }
 
   const handleCartao = () => {
-    setMetodoPagamento("balcao");
-    setEtapaAtual("carregamento");
-    setTimeout(() => setEtapaAtual("realizado"), 2000);
-  };
+    setMetodoPagamento("balcao")
+    // Notifica o gerenciamento sobre o novo pedido
+    notificarGerenciamento(produtoCarrinho)
+    // Vai direto para a tela de pedido realizado
+    setEtapaAtual("realizado")
+  }
 
-  const handleCarregamento = () => {
-    setEtapaAtual("carregamento");
-    setTimeout(() => setEtapaAtual("realizado"), 2000);
-  };
+  const handleConfirmarPagamento = () => {
+    setEtapaAtual("carregamento")
+    setTimeout(() => setEtapaAtual("realizado"), 2000)
+  }
 
   const handleVoltarHome = () => {
-    setProdutoSelecionado(null);
-    setEtapaAtual(null);
-  };
+    setProdutoSelecionado(null)
+    setProdutoComAdicionais(null)
+    setProdutoCarrinho(null)
+    setEtapaAtual(null)
+  }
+
+  const handleRemoverDoCarrinho = () => {
+    setProdutoSelecionado(null)
+    setProdutoComAdicionais(null)
+    setProdutoCarrinho(null)
+    setEtapaAtual(null)
+  }
 
   return (
     <div className="containerProjeto h-screen">
@@ -94,7 +153,6 @@ export default function Home() {
           <div className="skeleton header-skeleton" />
           <div className="skeleton pesquisa-skeleton" />
           <div className="skeleton nav-skeleton" />
-
           {todasCategorias.map((_, i) => (
             <div className="skeleton lista-produto-skeleton" key={i}>
               <div className="categoria-titulo-skeleton skeleton" />
@@ -107,7 +165,6 @@ export default function Home() {
               </div>
             </div>
           ))}
-
           <div className="skeleton sub-nav-skeleton" />
         </>
       ) : etapaAtual === "favoritos" ? (
@@ -118,10 +175,7 @@ export default function Home() {
             categorias={[
               {
                 titulo: "Favoritos",
-                produtos: favoritos.map((fav) => {
-                  const categoria = todasCategorias.find((cat) => cat.titulo === fav.categoria);
-                  return categoria?.produtos.find((prod) => prod.id === fav.produtoId);
-                }).filter(Boolean), // Remove produtos inválidos
+                produtos: favoritos,
               },
             ]}
             onProdutoClick={handleClickProduto}
@@ -137,13 +191,12 @@ export default function Home() {
             onProdutoEncontrado={(titulo) => {
               const categoriaId = titulo
                 .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/[^\w\s]/g, "")
                 .toLowerCase()
-                .replace(/\s+/g, ""); // Normaliza o título para gerar o ID
-
-              const categoriaElement = document.getElementById(categoriaId);
+                .replace(/\s+/g, "")
+              const categoriaElement = document.getElementById(categoriaId)
               if (categoriaElement) {
-                categoriaElement.scrollIntoView({ behavior: "smooth" });
+                categoriaElement.scrollIntoView({ behavior: "smooth" })
               }
             }}
           />
@@ -163,17 +216,16 @@ export default function Home() {
             onProdutoEncontrado={(titulo) => {
               const categoriaId = titulo
                 .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/[^\w\s]/g, "")
                 .toLowerCase()
-                .replace(/\s+/g, ""); // Normaliza o título para gerar o ID
-
-              const categoriaElement = document.getElementById(categoriaId);
+                .replace(/\s+/g, "")
+              const categoriaElement = document.getElementById(categoriaId)
               if (categoriaElement) {
-                categoriaElement.scrollIntoView({ behavior: "smooth" });
+                categoriaElement.scrollIntoView({ behavior: "smooth" })
               }
             }}
           />
-          <div className="flex w-[100%] ">
+          <div className="flex w-full">
             <div className="flex-3 w-[70%]">
               <NavigationBar />
               <ListaProdutos
@@ -189,34 +241,36 @@ export default function Home() {
               {etapaAtual === "lancheSelecionado" && (
                 <CardLancheSelecionado
                   produto={produtoSelecionado}
-                  onAvancar={handleAvancarCarrinho}
+                  onAvancar={handleAvancarAdicionais}
                   onClose={handleVoltarHome}
+                  onObservacoes={handleIrParaObservacoes}
+                />
+              )}
+              {etapaAtual === "adicionais" && (
+                <CardAdicionais
+                  produto={produtoComAdicionais}
+                  onAvancar={handleAvancarCarrinho}
+                  onVoltar={handleVoltarLancheSelecionado}
                 />
               )}
               {etapaAtual === "carrinho" && (
                 <CardCarrinho
-                  produto={produtoSelecionado}
+                  produto={produtoCarrinho}
                   onAvancar={handleAvancarPagamento}
+                  onRemover={handleRemoverDoCarrinho}
                 />
               )}
               {etapaAtual === "pagamento" && (
-                <CardPagamento
-                  produto={produtoSelecionado}
-                  onPix={handlePix}
-                  onCartao={handleCartao}
-                />
+                <CardPagamento produto={produtoCarrinho} onPix={handlePix} onCartao={handleCartao} />
               )}
-              {etapaAtual === "pix" && (
-                <CardQRCode
-                  produto={produtoSelecionado}
-                  onConfirmar={handleCarregamento}
-                />
+              {etapaAtual === "qrcode" && (
+                <CardQRCode produto={produtoCarrinho} onConfirmar={handleConfirmarPagamento} />
               )}
-              {etapaAtual === "carregamento" && <CardCarregamento />}
+              {etapaAtual === "carregamento" && <CardCarregamento metodo={metodoPagamento} />}
               {etapaAtual === "realizado" && (
                 <CardPagamentoRealizado
-                  produto={produtoSelecionado}
-                  metodoPagamento={metodoPagamento}
+                  produto={produtoCarrinho}
+                  metodo={metodoPagamento}
                   onVoltar={handleVoltarHome}
                 />
               )}
@@ -225,5 +279,5 @@ export default function Home() {
         </>
       )}
     </div>
-  );
+  )
 }
