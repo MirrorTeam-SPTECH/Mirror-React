@@ -1,6 +1,10 @@
+// src/components/CardQRcode.jsx
+"use client";
+
+import React from "react";
 import "../styles/CardQRcode.css";
 
-export default function CardQRcode({ produto, onConfirmar }) {
+export default function CardQRcode({ onConfirmar }) {
   return (
     <div className="qrcode-wrapper">
       <div className="card-pix">

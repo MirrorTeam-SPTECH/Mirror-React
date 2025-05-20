@@ -3,7 +3,7 @@ import { Plus, Minus } from "lucide-react";
 import "../styles/CardsGerenciamento.css";
 import ButtonGerenciamento from "../components/Shared/ButtonGerenciamento";
 
-export default function CardsGerenciamento({ produto = {}, onAction }) {
+export default function CardsGerenciamento({ produto = {}, onAction, titulo }) {
   const [quantity, setQuantity] = useState(1);
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -33,7 +33,7 @@ export default function CardsGerenciamento({ produto = {}, onAction }) {
 
         <div className="card-content">
           <div className="card-title">
-            <h2>{produto.nome || "Produto sem nome"}</h2>
+            <h2>{titulo}</h2>
             <p className="price">R$ {produto.preco || "0,00"}</p>
           </div>
 

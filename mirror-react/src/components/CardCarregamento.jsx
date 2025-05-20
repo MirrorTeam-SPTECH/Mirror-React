@@ -1,13 +1,13 @@
-import "../styles/CardCarregamento.css"
+// src/components/CardCarregamento.jsx
+"use client";
 
-const CardCarregamento = () => {
+import React from "react";
+import "../styles/CardCarregamento.css";
+
+export default function CardCarregamento() {
   return (
-    <div className="loading-screen">
-      <div className="loading-card">
-        <div className="spinner"></div>
-      </div>
+    <div className="w-[350px] h-128 bg-white rounded-2xl shadow-md flex items-center justify-center">
+      <div className="spinner"></div>
     </div>
-  )
+  );
 }
-
-export default CardCarregamento

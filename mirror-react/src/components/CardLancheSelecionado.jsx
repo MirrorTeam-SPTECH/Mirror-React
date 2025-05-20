@@ -1,29 +1,68 @@
-import { useState } from "react";
-import { Plus, Minus, ArrowLeft } from "lucide-react";
-import HeartButton from "./Shared/HeartButton";
-import "../styles/CardLancheSelecionado.css"; // Importando o CSS específico para este componente
+"use client"
 
-export default function CardLancheSelecionado({ produto, onAvancar, onClose }) {
-  const [quantity, setQuantity] = useState(1);
+import { useState } from "react"
+import { Plus, Minus, ArrowLeft } from "lucide-react"
+import HeartButton from "./Shared/HeartButton"
+import "../styles/CardLancheSelecionado.css"
+
+export default function CardLancheSelecionado({ produto, onAvancar, onClose, onObservacoes }) {
+  const [quantity, setQuantity] = useState(1)
 
   const decreaseQuantity = () => {
-    if (quantity > 1) setQuantity(quantity - 1);
-  };
+    if (quantity > 1) setQuantity((q) => q - 1)
+  }
+  const increaseQuantity = () => setQuantity((q) => q + 1)
 
-  const increaseQuantity = () => setQuantity(quantity + 1);
+  // Calcula preços:
+  const unitPrice =
+    typeof produto.preco === "string" ? Number.parseFloat(produto.preco.replace(",", ".")) : produto.preco
+  const subtotalNum = unitPrice * quantity
+  const entregaNum = 0.0
+  const totalNum = subtotalNum + entregaNum
+
+  // Formata strings
+  const subtotal = subtotalNum.toFixed(2).replace(".", ",")
+  const total = totalNum.toFixed(2).replace(".", ",")
+  const taxaEntrega = entregaNum.toFixed(2).replace(".", ",")
+
+  // Prepara o objeto com os dados atualizados
+  const prepararDadosAtualizados = () => {
+    return {
+      ...produto,
+      quantity,
+      subtotal,
+      taxaEntrega,
+      total,
+      // Adicionando valores numéricos para facilitar cálculos futuros
+      subtotalNum,
+      entregaNum,
+      totalNum,
+      unitPrice,
+    }
+  }
+
+  // Dispara o objeto COMPLETO para o pai
+  const handleAdd = () => {
+    const itemComDados = prepararDadosAtualizados()
+    console.log("▶️ CardLancheSelecionado vai enviar:", itemComDados)
+    onAvancar(itemComDados)
+  }
+
+  // CORREÇÃO: Passa os dados atualizados para as observações
+  const handleObservacoes = () => {
+    const itemComDados = prepararDadosAtualizados()
+    console.log("▶️ CardLancheSelecionado vai para observações:", itemComDados)
+    onObservacoes(itemComDados)
+  }
 
   return (
     <div className="container">
       <div className="card">
-        {/* Botões no topo */}
         <div className="card-header">
-          {/* Botão de voltar */}
           <button className="btn-back" onClick={onClose}>
             <ArrowLeft size={20} />
           </button>
-
-          {/* Botão de coração */}
-          <HeartButton />
+          <HeartButton produtoId={produto.id} categoria={produto.categoria} />
         </div>
 
         <div className="card-image">
@@ -37,7 +76,7 @@ export default function CardLancheSelecionado({ produto, onAvancar, onClose }) {
         <div className="card-content">
           <div className="card-title">
             <h2>{produto.nome}</h2>
-            <p className="price">R$ {produto.preco}</p>
+            <p className="price">R$ {total}</p>
           </div>
 
           <div className="quantity">
@@ -56,12 +95,14 @@ export default function CardLancheSelecionado({ produto, onAvancar, onClose }) {
             <p>{produto.descricao}</p>
           </div>
 
-          <button className="btn-observacoes">Observações →</button>
-          <button className="add-to-cart" onClick={onAvancar}>
+          <button className="btn-observacoes" onClick={handleObservacoes}>
+            Observações →
+          </button>
+          <button className="add-to-cart" onClick={handleAdd}>
             Adicionar ao carrinho →
           </button>
         </div>
       </div>
     </div>
-  );
+  )
 }

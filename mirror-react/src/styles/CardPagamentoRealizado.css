@@ -1,63 +1,53 @@
+/* src/styles/CardPagamentoRealizado.css */
 
-  
-  .success-card {
-    background: white;
-    border-radius: 20px;
-    padding: 20px;
-    width: 350px;
-    height: 410px;
-    text-align: center;
-  }
-  
-  .icon {
-    font-size: 50px;
-    color: #00a000;
-    margin-bottom: 40px;
-    margin-top: 30px;
-  }
-  
-  .message {
-    font-size: 16px;
-    color: #333;
-    margin-bottom: 20px;
-    line-height: 1.5;
-    margin-bottom: 60px;
-  }
-  
-  
-  
-  .track-order {
-    background-color: #00a000;
-    color: white;
-    
-    font-weight: bold;
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    border-radius: 30px;
-    border: none;
-    cursor: pointer;
-    margin-bottom: 10px;
-  }
-  
-  .track-order:hover {
-    background-color: #008000;
-  }
-  
-  .back-home {
-    background-color: white;
-    color: #00a000;
-    border: 2px solid #00a000;
-    font-weight: bold;
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    border-radius: 30px;
-    cursor: pointer;
-    margin-bottom: 10px;
-  }
-  
-  .back-home:hover {
-    background-color: #f0f0f0;
-  }
-  
+.success-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 350px;
+}
+
+.success-card {
+  background: white;
+  border-radius: 20px;
+  width: 350px;
+  height: 32rem;       /* 32rem = 512px by default, same as h-128 */
+  max-height: 32rem;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.25rem;    /* igual a 20px */
+}
+
+.icon {
+  font-size: 3rem;     /* 50px aproximadamente */
+  color: #00a000;
+  margin-top: 1.875rem; /* 30px */
+}
+
+.message {
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.5;
+  margin: 1rem 0 2rem;  /* espaço acima e abaixo */
+  flex-grow: 1;         /* ocupa espaço central */
+}
+
+.back-home {
+  background-color: white;
+  color: #00a000;
+  border: 2px solid #00a000;
+  font-weight: bold;
+  width: 100%;
+  padding: 0.75rem;     /* 12px */
+  font-size: 1rem;
+  border-radius: 1.875rem; /* 30px */
+  cursor: pointer;
+  margin-bottom: 0.625rem; /* 10px */
+}
+
+.back-home:hover {
+  background-color: #f0f0f0;
+}
