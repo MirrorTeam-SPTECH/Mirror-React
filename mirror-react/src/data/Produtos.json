@@ -5,7 +5,7 @@
       "nome": "X-Churrasco",
       "tempoPreparo": "20-25 min",
       "preco": "30,00",
-      "imagem": "/img/Hamb.png",
+      "imagem": "/img/combo-1.png",
       "descricao": "Pão francês, espeto de carne, misto ou frango, vinagrete e queijo"
     },
     {
@@ -13,7 +13,7 @@
       "nome": "X-Burguer",
       "tempoPreparo": "20-25 min",  
       "preco": "28,00",
-      "imagem": "/img/Hamb.png",
+      "imagem": "/img/combo-2.png",
       "descricao": "Pão brioche, 180g de hambúrguer artenasal, maionese e queijo"
     },
     {
@@ -21,7 +21,7 @@
       "nome": "X-Salada",
       "tempoPreparo": "20-25 min",
       "preco": "30,00",
-      "imagem": "/img/Hamb.png",
+      "imagem": "/img/combo-3.png",
       "descricao": "Pão brioche, 180g de hambúrguer artenasal, maionese, queijo, alface e tomate"
     },
     {
@@ -29,7 +29,7 @@
       "nome": "X-Bacon",
       "tempoPreparo": "20-25 min",
       "preco": "32,00",
-      "imagem": "/img/Hamb.png",
+      "imagem": "/img/combo-4.png",
       "descricao": "Pão brioche, 180g de hambúrguer artenasal, bacon, maionese, queijo, alface e tomate"
     },
     {
@@ -37,7 +37,7 @@
       "nome": "X-Cheedar Bacon",
       "tempoPreparo": "20-25 min",
       "preco": "34,00",
-      "imagem": "/img/Hamb.png",
+      "imagem": "/img/combo-5.png",
       "descricao": "Pão brioche, 180g de hambúrguer artenasal, bacon, maionese, queijo cheaddar, alface e tomate"
     },
     {
@@ -45,7 +45,7 @@
       "nome": "X-Egg Bacon",
       "tempoPreparo": "20-25 min",
       "preco": "34,00",
-      "imagem": "/img/Hamb.png",
+      "imagem": "/img/combo-6.png",
       "descricao": "Pão brioche, 180g de hambúrguer artenasal, maionese, queijo, bacon, ovo, alface e tomate"
     }
   ],
@@ -255,7 +255,7 @@
             "id": 1,
             "nome": "Fritas",
             "preco": 10,
-            "imagem": "/img/porcaoFritas.png",
+            "imagem": "/img/porcao-fritas.png",
             "tempoPreparo": "10-15 min"
           },
       {
