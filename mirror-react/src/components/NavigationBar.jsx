@@ -12,6 +12,16 @@ export default function NavigationBar() {
   return (
     <div className="container-navBar">
       <ul className="menu">
+         <li>
+          <button
+
+            className="Bold"
+            id="active"
+            onClick={() => handleScroll("combos")}
+          >
+            Combos
+          </button>
+        </li>
         <li>
           <button
 
