@@ -30,6 +30,7 @@ import CardErro from "./components/CardErro";
 import CardAdicionais from "./components/CardAdicionais";
 
 import CardsGerenciamento from "./components/CardGerenciamento";
+import DeleteConfirmation from "./components/DeleteConfirmation";
 
 import "./App.css";
 
@@ -57,6 +58,7 @@ function App() {
           <Route path="cardapioEditar" element={<CardapioEditar />} />
           <Route path="/cardGerenciamento" element={<CardsGerenciamento  titulo="Editar" />}/>
           <Route path="relatorios" element={<Relatorios />} />
+          <Route path="deleteCard" element={<DeleteConfirmation />} />
         </Route>
 
         {/* Rotas diretas de componentes */}
