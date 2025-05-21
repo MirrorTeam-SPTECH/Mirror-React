@@ -95,7 +95,7 @@
       "nome": "Frango",
       "preco": 16,
       "tempoPreparo": "10-15 min",
-      "imagem": "/img/espeto-linguica.png",
+      "imagem": "/img/espeto-frango.png",
       "descricao": "Espeto de frango suculento, com toque especial de ervas"
     },
     {
@@ -111,7 +111,7 @@
       "nome": "Pão de Alho",
       "preco": 8,
       "tempoPreparo": "5-10 min",
-      "imagem": "/img/espetinhos.png",
+      "imagem": "/img/espeto-paodealho.png",
       "descricao": "Pão de alho crocante com toque de ervas e manteiga"
     }
   ],
@@ -120,25 +120,25 @@
       "id": 1,
       "nome": "Queijo",
       "preco": 2,
-      "imagem": "/img/adicionais.png"
+      "imagem": "/img/adicional-queijo.png"
     },
     {
       "id": 2,
       "nome": "Queijo Cheddar",
       "preco": 4,
-      "imagem": "/img/adicionais.png"
+      "imagem": "/img/adicional-cheddar.png"
     },
     {
       "id": 3,
       "nome": "Hamburguer",
       "preco": 6,
-      "imagem": "/img/adicionais.png"
+      "imagem": "/img/adicional-hamburguer.png"
         },
     {
       "id": 4,
       "nome": "Bacon",
       "preco": 4,
-      "imagem": "/img/adicionais.png"
+      "imagem": "/img/adicional-bacon.png"
     }
   ],
 
