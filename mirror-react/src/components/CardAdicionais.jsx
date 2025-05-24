@@ -1,7 +1,9 @@
-"use client"
+"use client";
 
-import { useState, useMemo } from "react"
-import { ArrowLeft } from "lucide-react"
+import { useState, useMemo } from "react";
+import ButtonBack from "../components/Shared/ButtonBack"
+
+
 
 export default function CardAdicionais({ produto, onAvancar, onVoltar }) {
   // Usando os adicionais corretos conforme fornecido
@@ -30,46 +32,46 @@ export default function CardAdicionais({ produto, onAvancar, onVoltar }) {
       preco: 4,
       imagem: "/img/adicionais.png",
     },
-  ]
+  ];
 
   // Estado para controlar as quantidades de cada adicional
   const [quantidades, setQuantidades] = useState(
-    adicionaisDisponiveis.reduce((acc, item) => ({ ...acc, [item.id]: 0 }), {}),
-  )
+    adicionaisDisponiveis.reduce((acc, item) => ({ ...acc, [item.id]: 0 }), {})
+  );
 
-  // Obtém a quantidade do produto que foi selecionada na tela anterior
-  const quantity = produto.quantity || 1
+  // Estado para as observações
+  const [observacoes, setObservacoes] = useState("");
 
   // Calcula o total dos adicionais
   const totalAdicionais = useMemo(() => {
     return adicionaisDisponiveis.reduce((total, item) => {
-      return total + (quantidades[item.id] || 0) * item.preco
-    }, 0)
-  }, [quantidades, adicionaisDisponiveis])
+      return total + (quantidades[item.id] || 0) * item.preco;
+    }, 0);
+  }, [quantidades, adicionaisDisponiveis]);
 
   // CORREÇÃO: Usa o subtotalNum que já vem calculado com a quantidade correta
-  const precoBase = produto.subtotalNum || 0
+  const precoBase = produto.subtotalNum || 0;
 
   // Calcula o subtotal (preço base + adicionais)
-  const subtotalNum = precoBase + totalAdicionais
-  const subtotal = subtotalNum.toFixed(2).replace(".", ",")
+  const subtotalNum = precoBase + totalAdicionais;
+  const subtotal = subtotalNum.toFixed(2).replace(".", ",");
 
   // Funções para aumentar e diminuir a quantidade
   const aumentarQuantidade = (id) => {
     setQuantidades((prev) => ({
       ...prev,
       [id]: (prev[id] || 0) + 1,
-    }))
-  }
+    }));
+  };
 
   const diminuirQuantidade = (id) => {
     if (quantidades[id] > 0) {
       setQuantidades((prev) => ({
         ...prev,
         [id]: prev[id] - 1,
-      }))
+      }));
     }
-  }
+  };
 
   // Função para avançar para o carrinho
   const handleAvancar = () => {
@@ -79,12 +81,12 @@ export default function CardAdicionais({ produto, onAvancar, onVoltar }) {
       .map((item) => ({
         ...item,
         quantidade: quantidades[item.id],
-      }))
+      }));
 
     // CORREÇÃO: Usa o entregaNum que vem do produto
-    const entregaNum = produto.entregaNum || 0.0
-    const totalNum = subtotalNum + entregaNum
-    const total = totalNum.toFixed(2).replace(".", ",")
+    const entregaNum = produto.entregaNum || 0.0;
+    const totalNum = subtotalNum + entregaNum;
+    const total = totalNum.toFixed(2).replace(".", ",");
 
     // Prepara o objeto para enviar ao carrinho
     const produtoComAdicionais = {
@@ -95,37 +97,27 @@ export default function CardAdicionais({ produto, onAvancar, onVoltar }) {
       subtotalNum,
       total,
       totalNum,
-    }
+      observacoes, // Adiciona as observações ao objeto
+    };
 
-    console.log("CardAdicionais vai enviar:", produtoComAdicionais)
-    onAvancar(produtoComAdicionais)
-  }
+    console.log("CardAdicionais vai enviar:", produtoComAdicionais);
+    onAvancar(produtoComAdicionais);
+  };
 
   return (
     <div className="w-[350px] h-127 bg-white rounded-2xl overflow-hidden shadow-md flex flex-col font-['Montserrat']">
-      {/* Cabeçalho */}
-      <div className="flex items-center !p-4">
-        <button
-          className="bg-transparent border-none cursor-pointer flex items-center justify-center !p-0"
-          onClick={onVoltar}
-        >
-          <ArrowLeft size={24} />
-        </button>
-      </div>
-
-      {/* Nome e preço do produto */}
-      <div className="!px-12 !pb-6 !-m-7">
-        <h2 className="text-2xl font-bold !m-0 text-gray-800">{produto.nome}</h2>
-        <p className="text-xl !mt-2 !mb-0 text-gray-800">
-          R${" "}
-          {produto.subtotal ||
-            (typeof produto.preco === "string" ? produto.preco : produto.preco?.toFixed(2).replace(".", ","))}
-          {quantity > 1 ? ` (${quantity}x)` : ""}
-        </p>
+      <div className="flex !-ml-2 absolute">
+      <ButtonBack onClose={onVoltar} />
+</div>
+      {/* Nome do produto (sem preço) */}
+      <div className="!px-5 !pb-2 flex justify-center !mt-5">
+        <h2 className="text-2xl font-bold !m-0 text-gray-800 text-center">
+          {produto.nome}
+        </h2>
       </div>
 
       {/* Abas */}
-      <div className="!px-5 !mt-4 relative">
+      <div className="!px-4  relative">
         <div className="inline-block !pb-2 font-semibold text-gray-800 border-b-3 border-red-600 !pr-3">
           <span>Descrição</span>
         </div>
@@ -133,12 +125,19 @@ export default function CardAdicionais({ produto, onAvancar, onVoltar }) {
       </div>
 
       {/* Lista de adicionais */}
-      <div className="!px-5 !py-4 max-h-[300px] overflow-y-auto">
+      <div className="!px-5 !py-2 max-h-[300px] overflow-y-auto">
         {adicionaisDisponiveis.map((adicional) => (
-          <div key={adicional.id} className="flex justify-between items-center !mb-4">
+          <div
+            key={adicional.id}
+            className="flex justify-between items-center !mb-4"
+          >
             <div className="flex flex-col">
-              <span className="text-base font-medium text-gray-800">{adicional.nome}</span>
-              <span className="text-sm text-gray-500">R$ {adicional.preco.toFixed(2).replace(".", ",")}</span>
+              <span className="text-base font-medium text-gray-800">
+                {adicional.nome}
+              </span>
+              <span className="text-sm text-gray-500">
+                R$ {adicional.preco.toFixed(2).replace(".", ",")}
+              </span>
             </div>
             <div className="flex items-center gap-3">
               <button
@@ -161,19 +160,32 @@ export default function CardAdicionais({ produto, onAvancar, onVoltar }) {
         ))}
       </div>
 
+      {/* Campo de observações */}
+      <div className="!px-5 !-pb-5">
+        <div className=" flex justify-center">
+          <textarea
+            value={observacoes}
+            onChange={(e) => setObservacoes(e.target.value)}
+            placeholder="Alguma observação sobre o seu pedido? Ex: sem cebola, sem alface..."
+            className="w-full !pt-5  flex items-center text-sm border border-gray-300 rounded-md min-h-[10px] resize-none focus:outline-none focus:ring-1 focus:ring-green-600 focus:border-green-600 text-gray-800"
+          />
+        </div>
+        <div className="w-full  bg-gray-200 !mt-4"></div>
+      </div>
+
       {/* Subtotal e botão de adicionar ao carrinho */}
-      <div className="!px-5 !pb-5 !mt-auto">
+      <div className="!px-5 !pb-2 !mt-auto">
         <div className="flex justify-between !mb-4">
           <span className="font-medium text-gray-800">Subtotal</span>
           <span className="font-semibold text-gray-800">R$ {subtotal}</span>
         </div>
         <button
-          className="w-full bg-green-600 text-white border-none rounded-full !py-4 text-base font-semibold cursor-pointer flex items-center justify-center hover:bg-green-700 transition-colors"
+          className="w-full h-10 bg-green-600 text-white border-none rounded-full !py-4 text-base font-semibold cursor-pointer flex items-center justify-center hover:bg-green-700 transition-colors"
           onClick={handleAvancar}
         >
           Adicionar ao carrinho <span className="!ml-2">→</span>
         </button>
       </div>
     </div>
-  )
+  );
 }

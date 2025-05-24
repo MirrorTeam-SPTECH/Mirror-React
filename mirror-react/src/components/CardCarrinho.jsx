@@ -2,8 +2,9 @@
 "use client"
 
 import { Trash2 } from "lucide-react"
+import ButtonBack from "./Shared/ButtonBack"
 
-export function CardCarrinho({ produto, onAvancar, onRemover }) {
+export function CardCarrinho({ produto, onAvancar, onRemover, onVoltar, onClose }) {
   // Se não há produto, renderiza estado vazio mantendo altura
   if (!produto) {
     return (
@@ -44,7 +45,10 @@ export function CardCarrinho({ produto, onAvancar, onRemover }) {
   return (
     <div className="w-[350px] h-128 bg-white rounded-2xl shadow-md flex flex-col font-['Montserrat']">
       {/* Topo */}
-      <div className="flex-none !p-5">
+      <div className="flex relative !p-5 justify-center">
+      <div className="flex absolute left-1 top-0.5 ">
+            <ButtonBack onClose={onVoltar || onClose} />
+      </div>
         <h3 className="text-2xl font-bold !m-0 text-gray-800">Carrinho</h3>
       </div>
 

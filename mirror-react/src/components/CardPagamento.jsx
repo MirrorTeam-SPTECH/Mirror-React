@@ -1,7 +1,8 @@
 // src/components/CardPagamento.jsx
 "use client"
+import ButtonBack from "../components/Shared/ButtonBack"
 
-export default function CardPagamento({ produto, onPix, onCartao, pedido }) {
+export default function CardPagamento({ produto, onPix, onCartao, pedido, onClose}) {
   console.log("CardPagamento recebeu:", produto)
 
   // Se não tiver produto, renderiza estado vazio mantendo altura fixa igual ao CardCarrinho
@@ -50,7 +51,10 @@ export default function CardPagamento({ produto, onPix, onCartao, pedido }) {
   return (
     <div className="w-[350px] h-128 flex flex-col font-['Montserrat']">
       {/* Topo */}
-      <div className="flex-none !p-5 bg-white rounded-t-2xl shadow-md">
+      <div className="flex justify-center !p-5 bg-white rounded-t-2xl shadow-md">
+        <div className="flex absolute left-1 top-0.5 ">
+                    <ButtonBack onClose={onClose} />
+              </div>
         <h2 className="text-2xl font-bold !m-0 text-gray-800">Finalizar compra</h2>
       </div>
 

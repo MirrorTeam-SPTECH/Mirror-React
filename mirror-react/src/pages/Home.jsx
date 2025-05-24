@@ -16,24 +16,20 @@ import CardPagamentoRealizado from "../components/CardPagamentoRealizado"
 import { todasCategorias } from "../utils/Categorias"
 import "../styles/Carregamento.css"
 
-// Função para enviar notificação para o gerenciamento
-const notificarGerenciamento = (pedido) => {
-  // Em uma aplicação real, isso seria feito via WebSocket ou outra tecnologia de tempo real
-  // Por enquanto, vamos usar localStorage para simular a comunicação
-  const notificacao = {
-    id: Math.random().toString(36).substring(2, 9),
-    timestamp: new Date().toISOString(),
-    pedido: pedido,
-    lido: false,
-  }
+// const notificarGerenciamento = (pedido) => {
+//   const notificacao = {
+//     id: Math.random().toString(36).substring(2, 9),
+//     timestamp: new Date().toISOString(),
+//     pedido: pedido,
+//     lido: false,
+//   }
 
-  // Salva a notificação no localStorage
-  const notificacoes = JSON.parse(localStorage.getItem("notificacoesPedidos") || "[]")
-  notificacoes.push(notificacao)
-  localStorage.setItem("notificacoesPedidos", JSON.stringify(notificacoes))
+//   const notificacoes = JSON.parse(localStorage.getItem("notificacoesPedidos") || "[]")
+//   notificacoes.push(notificacao)
+//   localStorage.setItem("notificacoesPedidos", JSON.stringify(notificacoes))
 
  
-}
+// }
 
 export default function Home() {
   const [loading, setLoading] = useState(true)
@@ -120,17 +116,17 @@ export default function Home() {
   }
 
   const handleCartao = () => {
-    setMetodoPagamento("balcao")
-    // Notifica o gerenciamento sobre o novo pedido
-    notificarGerenciamento(produtoCarrinho)
-    // Vai direto para a tela de pedido realizado
-    setEtapaAtual("realizado")
-  }
+  setMetodoPagamento("balcao");
+  setEtapaAtual("carregamento"); // Vai para carregamento
+  setTimeout(() => setEtapaAtual("realizado"), 2000); // Depois de 2s, vai para realizado
+};
 
   const handleConfirmarPagamento = () => {
     setEtapaAtual("carregamento")
     setTimeout(() => setEtapaAtual("realizado"), 2000)
   }
+
+  
 
   const handleVoltarHome = () => {
     setProdutoSelecionado(null)
@@ -244,6 +240,7 @@ export default function Home() {
                   onAvancar={handleAvancarAdicionais}
                   onClose={handleVoltarHome}
                   onObservacoes={handleIrParaObservacoes}
+                  onAdicionarCarrinho={handleAvancarCarrinho}
                 />
               )}
               {etapaAtual === "adicionais" && (
@@ -258,10 +255,16 @@ export default function Home() {
                   produto={produtoCarrinho}
                   onAvancar={handleAvancarPagamento}
                   onRemover={handleRemoverDoCarrinho}
+                  onClose={handleVoltarHome}
                 />
               )}
               {etapaAtual === "pagamento" && (
-                <CardPagamento produto={produtoCarrinho} onPix={handlePix} onCartao={handleCartao} />
+                <CardPagamento 
+                produto={produtoCarrinho} 
+                onPix={handlePix} 
+                onCartao={handleCartao}
+                onClose={handleVoltarHome}
+                />
               )}
               {etapaAtual === "qrcode" && (
                 <CardQRCode produto={produtoCarrinho} onConfirmar={handleConfirmarPagamento} />

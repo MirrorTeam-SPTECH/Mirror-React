@@ -7,10 +7,14 @@ export function SubNavigation() {
     <div className={styles.containerSubNavigation}>
       <div className={styles.SubNavigation}>
         <button>
+          <Link to={"/historicoPedido"}>
           <TruckIcon color="#1C1C1C" size={20} absoluteStrokeWidth={false} />
+        </Link>
         </button>
         <button>
+        <Link to={"/fidelidade"}>
           <ShoppingCartIcon color="#1C1C1C" size={20} absoluteStrokeWidth={false} />
+        </Link>
         </button>
         <button>
         <Link to={"/home"}>

@@ -4,8 +4,10 @@ import { useState } from "react"
 import { Plus, Minus, ArrowLeft } from "lucide-react"
 import HeartButton from "./Shared/HeartButton"
 import "../styles/CardLancheSelecionado.css"
+import "../components/Shared/ButtonBack"
+import ButtonBack from "../components/Shared/ButtonBack"
 
-export default function CardLancheSelecionado({ produto, onAvancar, onClose, onObservacoes }) {
+export default function CardLancheSelecionado({ produto, onObservacoes,  onClose, onAdicionarCarrinho }) {
   const [quantity, setQuantity] = useState(1)
 
   const decreaseQuantity = () => {
@@ -43,10 +45,9 @@ export default function CardLancheSelecionado({ produto, onAvancar, onClose, onO
 
   // Dispara o objeto COMPLETO para o pai
   const handleAdd = () => {
-    const itemComDados = prepararDadosAtualizados()
-    console.log("▶️ CardLancheSelecionado vai enviar:", itemComDados)
-    onAvancar(itemComDados)
-  }
+  const itemComDados = prepararDadosAtualizados()
+  onAdicionarCarrinho(itemComDados) // Nova prop
+}
 
   // CORREÇÃO: Passa os dados atualizados para as observações
   const handleObservacoes = () => {
@@ -59,9 +60,7 @@ export default function CardLancheSelecionado({ produto, onAvancar, onClose, onO
     <div className="container">
       <div className="card">
         <div className="card-header">
-          <button className="btn-back" onClick={onClose}>
-            <ArrowLeft size={20} />
-          </button>
+          <ButtonBack onClose={onClose} />
           <HeartButton produtoId={produto.id} categoria={produto.categoria} />
         </div>
 
@@ -96,7 +95,7 @@ export default function CardLancheSelecionado({ produto, onAvancar, onClose, onO
           </div>
 
           <button className="btn-observacoes" onClick={handleObservacoes}>
-            Observações →
+            Adicionais →
           </button>
           <button className="add-to-cart" onClick={handleAdd}>
             Adicionar ao carrinho →

@@ -35,8 +35,8 @@ export default function FidelidadePage() {
           </div>
         </div>
       ) : (
-        <div className="premio-container">
-          <h3 className="text-lg font-medium">Seu Prêmio</h3>
+        <div className="premio-container ">
+          <h3 className="text-lg font-medium flex items-start">Seu Prêmio</h3>
           <div className="imagem-premio"></div>
           <p className="descricao-premio">
             Aqui vai a descrição do prêmio. Substitua este texto pela descrição real.
@@ -62,7 +62,7 @@ export default function FidelidadePage() {
       {loading ? (
         <div>Carregando...</div>
       ) : (
-        <div className="flex flex-col gap-32px">
+        <div className="flex flex-col !-mt-25">
           <Header titulo="Cada pedido te aproxima" p="de mais sabores" />
           <div className="fidelidade-page-container">
             <div className="blocos-centrais-container">
@@ -72,7 +72,7 @@ export default function FidelidadePage() {
           </div>
           <SubNavigation />
         </div>
-      )}
+      )}  
     </div>
   );
 }
