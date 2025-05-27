@@ -16,20 +16,6 @@ import CardPagamentoRealizado from "../components/CardPagamentoRealizado"
 import { todasCategorias } from "../utils/Categorias"
 import "../styles/Carregamento.css"
 
-// const notificarGerenciamento = (pedido) => {
-//   const notificacao = {
-//     id: Math.random().toString(36).substring(2, 9),
-//     timestamp: new Date().toISOString(),
-//     pedido: pedido,
-//     lido: false,
-//   }
-
-//   const notificacoes = JSON.parse(localStorage.getItem("notificacoesPedidos") || "[]")
-//   notificacoes.push(notificacao)
-//   localStorage.setItem("notificacoesPedidos", JSON.stringify(notificacoes))
-
- 
-// }
 
 export default function Home() {
   const [loading, setLoading] = useState(true)
@@ -229,6 +215,7 @@ export default function Home() {
                 onProdutoClick={handleClickProduto}
                 onFavoritar={handleFavoritar}
                 compact
+                 isGerenciamento={false}
               />
               <SubNavigation />
             </div>

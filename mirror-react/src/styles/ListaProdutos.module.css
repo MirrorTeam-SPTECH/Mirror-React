@@ -32,6 +32,8 @@
 
 }
 
+
+
 .titulo {
   font-size: 1.3rem;
   font-weight: bold;
@@ -76,6 +78,29 @@
   transform: translateY(-4px);
 }
 
+.topRightButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 20;
+  pointer-events: auto;
+}
+
+.selected {
+  border: 2px solid #e46363;
+  background-color: #fff0f0;
+  box-shadow: 0 0 0 3px rgba(228, 99, 99, 0.3);
+}
+
+.produto-card.selecionado {
+  border: 2px solid red;
+  background-color: #ffe6e6;
+}
+
+.produto-card.selecionado select {
+  background-color: #ffe6e6;
+  border-color: red;
+}
 
 
 .btn-back {

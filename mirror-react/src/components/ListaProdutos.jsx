@@ -40,8 +40,8 @@ export function ListaProdutos({ categorias, onProdutoClick, compact }) {
               preco={produto.preco}
               imagem={produto.imagem}
               categoria={categoriaKey} // passa a categoria para o CardProduto
-              onClick={() => onProdutoClick(produto)} // usa a função recebida por props
               isGerenciamento={isGerenciamento}
+              onClick={!isGerenciamento ? () => onProdutoClick(produto) : undefined}
             />
           ))}
         </div>

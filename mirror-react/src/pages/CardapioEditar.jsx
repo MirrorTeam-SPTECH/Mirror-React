@@ -1,58 +1,33 @@
-// src/pages/Home.jsx
 "use client";
 
 import { useEffect, useState } from "react";
-import  HeaderGerenciamento  from "../components/HeaderGerenciamento"
+import HeaderGerenciamento from "../components/HeaderGerenciamento";
 import { Pesquisa } from "../components/Pesquisa";
 import NavigationBar from "../components/NavigationBar";
 import ControlePedidos from "../components/ControlePedidos";
 import { ListaProdutos } from "../components/ListaProdutos";
-import CardLancheSelecionado from "../components/CardLancheSelecionado";
-import { CardCarrinho } from "../components/CardCarrinho";
-import CardPagamento from "../components/CardPagamento";
-import CardQRCode from "../components/CardQRcode";
-import CardCredenciais from "../components/CardCredenciais";
-import CardCarregamento from "../components/CardCarregamento";
-import CardPagamentoRealizado from "../components/CardPagamentoRealizado";
+import CreateCard from "../components/CreateCard";
+import EditCard from "../components/EditCard";
+import DeleteConfirmation from "../components/DeleteConfirmation";
 import { todasCategorias } from "../utils/Categorias";
 import "../styles/Carregamento.css";
 
-export default function Home() {
+export default function CardapioEditar() {
   const [loading, setLoading] = useState(true);
-  const [produtoSelecionado, setProdutoSelecionado] = useState(null);
-  const [etapaAtual, setEtapaAtual] = useState(null);
+  const [cardAberto, setCardAberto] = useState(null);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 2000);
     return () => clearTimeout(timer);
   }, []);
 
-  const handleClickProduto = (produto) => {
-    setProdutoSelecionado({ ...produto, preco: produto.preco });
-    setEtapaAtual("lancheSelecionado");
-  };
-
-  const handleAvancarCarrinho = () => setEtapaAtual("carrinho");
-  const handleAvancarPagamento = () => setEtapaAtual("pagamento");
-  const handlePix = () => setEtapaAtual("pix");
-  const handleCartao = () => setEtapaAtual("credenciais");
-  const handleCarregamento = () => {
-    setEtapaAtual("carregamento");
-    setTimeout(() => setEtapaAtual("realizado"), 2000);
-  };
-  const handleVoltarHome = () => {
-    setProdutoSelecionado(null);
-    setEtapaAtual(null);
-  };
-
   return (
     <div className="containerProjeto">
       {loading ? (
         <>
-        <div className="skeleton headerGerenciamento-skeleton"></div>
+          <div className="skeleton headerGerenciamento-skeleton"></div>
           <div className="skeleton pesquisa-skeleton" />
           <div className="skeleton nav-skeleton" />
-
           {todasCategorias.map((_, i) => (
             <div className="skeleton lista-produto-skeleton" key={i}>
               <div className="categoria-titulo-skeleton skeleton" />
@@ -65,80 +40,32 @@ export default function Home() {
               </div>
             </div>
           ))}
-
-        </>
-      ) : produtoSelecionado == null ? (
-        <>
-          <HeaderGerenciamento activePage="cardapio" />  
-          <ControlePedidos titulo="Editar Cardápio" />
-          <Pesquisa />
-          <NavigationBar />
-          <ListaProdutos
-            categorias={todasCategorias}
-            onProdutoClick={handleClickProduto}
-          />
         </>
       ) : (
         <>
-          <HeaderGerenciamento activePage="cardapio" />  
-          <ControlePedidos titulo="Editar Cardápio" />
+          <HeaderGerenciamento activePage="cardapio" />
+          <ControlePedidos
+            titulo="Editar Cardápio"
+            onCriar={() => setCardAberto("criar")}
+            onAtualizar={() => setCardAberto("editar")}
+            onDeletar={() => setCardAberto("deletar")}
+          />
           <Pesquisa />
-          <div style={{ display: "flex", marginTop: "0", gap: "0px" }}>
-            <div style={{ flex: 3 }}>
-          <NavigationBar />
+          <div className="flex w-full !mb-0">
+            <div className={cardAberto ? "flex-3 w-[70%]" : "w-full"}>
+              <NavigationBar />
               <ListaProdutos
                 categorias={todasCategorias}
-                onProdutoClick={handleClickProduto}
-                compact
+                isGerenciamento={true}
               />
             </div>
-
-            <div
-              style={{
-                flex: 1,
-                paddingTop: "1rem",
-                paddingRight: "4.5rem",
-              }}
-            >
-              {etapaAtual === "lancheSelecionado" && (
-                <CardLancheSelecionado
-                  produto={produtoSelecionado}
-                  onAvancar={handleAvancarCarrinho}
-                />
-              )}
-              {etapaAtual === "carrinho" && (
-                <CardCarrinho
-                  produto={produtoSelecionado}
-                  onAvancar={handleAvancarPagamento}
-                />
-              )}
-              {etapaAtual === "pagamento" && (
-                <CardPagamento
-                  produto={produtoSelecionado}
-                  onPix={handlePix}
-                  onCartao={handleCartao}
-                />
-              )}
-              {etapaAtual === "pix" && (
-                <CardQRCode
-                  produto={produtoSelecionado}
-                  onConfirmar={handleCarregamento}
-                />
-              )}
-              {etapaAtual === "credenciais" && (
-                <CardCredenciais
-                  produto={produtoSelecionado}
-                  onConfirmar={handleCarregamento}
-                />
-              )}
-              {etapaAtual === "carregamento" && <CardCarregamento />}
-              {etapaAtual === "realizado" && (
-                <CardPagamentoRealizado
-                  produto={produtoSelecionado}
-                  onVoltar={handleVoltarHome}
-                />
-              )}
-            </div>
+            {cardAberto && (
+              <div className="flex-1 !-mt-25 !mr-17 w-[30%] flex flex-col items-center justify-center">
+                {cardAberto === "criar" && <CreateCard onClose={() => setCardAberto(null)} />}
+                {cardAberto === "editar" && <EditCard onClose={() => setCardAberto(null)} />}
+                {cardAberto === "deletar" && <DeleteConfirmation onClose={() => setCardAberto(null)} />}
+              </div>
+            )}
           </div>
         </>
       )}

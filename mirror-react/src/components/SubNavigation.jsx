@@ -1,34 +1,68 @@
 import styles from "../styles/SubNavigation.module.css";
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Heart, House, ShoppingCartIcon, TruckIcon, UserRound } from "lucide-react";
 
 export function SubNavigation() {
+  const location = useLocation();
+
+  const navItems = [
+    { to: "/historicoPedido", icon: <TruckIcon color="#1C1C1C" size={20} absoluteStrokeWidth={false} />, key: "historicoPedido" },
+    { to: "/fidelidade", icon: <ShoppingCartIcon color="#1C1C1C" size={20} absoluteStrokeWidth={false} />, key: "fidelidade" },
+    { to: "/home", icon: <House color="#1C1C1C" size={20} absoluteStrokeWidth={false} />, key: "home" },
+    { to: "/favoritos", icon: <Heart color="#1C1C1C" size={20} absoluteStrokeWidth={false} />, key: "favoritos" },
+    { to: "/perfil", icon: <UserRound color="#1C1C1C" size={20} absoluteStrokeWidth={false} />, key: "perfil" },
+  ];
+
   return (
     <div className={styles.containerSubNavigation}>
       <div className={styles.SubNavigation}>
-        <button>
-          <Link to={"/historicoPedido"}>
-          <TruckIcon color="#1C1C1C" size={20} absoluteStrokeWidth={false} />
-        </Link>
-        </button>
-        <button>
-        <Link to={"/fidelidade"}>
-          <ShoppingCartIcon color="#1C1C1C" size={20} absoluteStrokeWidth={false} />
-        </Link>
-        </button>
-        <button>
-        <Link to={"/home"}>
-          <House color="#1C1C1C" size={20} absoluteStrokeWidth={false} />
-          </Link>
-        </button>
-        <button>
-          <Link to={"/favoritos"}>
-          <Heart color="#1C1C1C" size={20} absoluteStrokeWidth={false} />
-          </Link>
-        </button>
-        <button>
-          <UserRound color="#1C1C1C" size={20} absoluteStrokeWidth={false} />
-        </button>
+        {navItems.map((item) => {
+          const isActive = location.pathname === item.to;
+          return (
+            <div
+              key={item.key}
+              style={{
+                position: "relative",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 40,
+                height: 40,
+              }}
+            >
+              <Link
+                to={item.to}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: 40,
+                  height: 40,
+                  position: "relative",
+                  zIndex: 1,
+                }}
+              >
+                {isActive && (
+                  <span
+                    style={{
+                     position: "absolute",
+                      width: 15,
+                      height: 15,
+                      top: 17,
+                      left: 5,
+                      borderRadius: "50%",
+                      background: "#e30613",
+                      zIndex: 0,
+                    }}
+                  />
+                )}
+                <span style={{ position: "relative", zIndex: 2 }}>
+                  {item.icon}
+                </span>
+              </Link>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

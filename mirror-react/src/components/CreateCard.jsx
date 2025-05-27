@@ -86,7 +86,7 @@ export default function CreateCard({ produto = null, onSave, onCancel, mode = "c
   }
 
   return (
-    <div className="w-[350px] h-128 bg-white rounded-2xl shadow-md flex flex-col font-['Montserrat']">
+    <div className="w-[350px] h-115 bg-white rounded-2xl shadow-md flex flex-col font-['Montserrat']">
 
         
       <div className="flex justify-between items-center !p-4 border-b border-gray-200">
@@ -101,9 +101,8 @@ export default function CreateCard({ produto = null, onSave, onCancel, mode = "c
         </button>
       </div>
 <div className="!mb-3">
-          <label className="block text-xs font-medium text-gray-700 !mb-1">Imagem do Produto</label>
-          <div className="flex flex-col items-center">
-            <div className="w-full h-[80px] border border-gray-300 rounded-md overflow-hidden !mb-1 flex items-center justify-center bg-gray-100">
+          <div className="flex flex-col !mt-2 items-center">
+            <div className="w-[50%] h-[80px] border border-gray-300 rounded-md overflow-hidden !mb-1 flex items-center justify-center bg-gray-100">
               <img
                 src={previewImage || "/placeholder.svg"}
                 alt="Preview"
@@ -117,7 +116,7 @@ export default function CreateCard({ produto = null, onSave, onCancel, mode = "c
                 name="imagem"
                 accept="image/*"
                 onChange={handleImageChange}
-                className="w-full text-xs text-gray-500 file:mr-2 file:!py-1 file:!px-2 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
+                className="w-full  text-xs text-gray-500 file:mr-2 file:!py-1 file:!px-2 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
               />
             )}
           </div>
@@ -135,7 +134,7 @@ export default function CreateCard({ produto = null, onSave, onCancel, mode = "c
             onChange={handleChange}
             placeholder="Digite o nome do produto"
             disabled={mode === "view"}
-            className="w-full !p-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[#e30613] focus:border-[#e30613] text-gray-800"
+            className="w-full h-8 !p-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[#e30613] focus:border-[#e30613] text-gray-800"
           />
           {errors.nome && <p className="text-[#e30613] text-xs !mt-1">{errors.nome}</p>}
         </div>
@@ -152,7 +151,7 @@ export default function CreateCard({ produto = null, onSave, onCancel, mode = "c
             onChange={handleChange}
             placeholder="0,00"
             disabled={mode === "view"}
-            className="w-full !p-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[#e30613] focus:border-[#e30613] text-gray-800"
+            className="w-full h-8 !p-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[#e30613] focus:border-[#e30613] text-gray-800"
           />
           {errors.preco && <p className="text-[#e30613] text-xs !mt-1">{errors.preco}</p>}
         </div>
@@ -167,7 +166,7 @@ export default function CreateCard({ produto = null, onSave, onCancel, mode = "c
             value={form.tempoPreparo}
             onChange={handleChange}
             disabled={mode === "view"}
-            className="w-full !p-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[#e30613] focus:border-[#e30613] text-gray-800"
+            className="w-full h-8 !p-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[#e30613] focus:border-[#e30613] text-gray-800"
           >
             <option value="5-10 min">5-10 minutos</option>
             <option value="10-15 min">10-15 minutos</option>
@@ -177,7 +176,7 @@ export default function CreateCard({ produto = null, onSave, onCancel, mode = "c
           </select>
         </div>
 </div>
-        <div className="!mb-3">
+        <div className="!mb-1">
           <label htmlFor="descricao" className="block text-xs font-medium text-gray-700 !mb-1">
             Descrição
           </label>

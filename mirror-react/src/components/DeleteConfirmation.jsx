@@ -20,8 +20,8 @@ export default function DeleteConfirmation({ produto = {}, onConfirm, onCancel }
   }
 
   return (
-    <div className="w-[350px] h-128 bg-white rounded-2xl shadow-md flex flex-col font-['Montserrat']">
-      <div className="text-[#e30613] !mt-8 !mb-6 flex justify-center">
+    <div className="w-[350px] h-115 bg-white rounded-2xl shadow-md flex flex-col font-['Montserrat']">
+      <div className="text-[#e30613]  !mb-6 flex justify-center">
         <AlertTriangle size={48} />
       </div>
       <div className="!px-6 flex-1 flex flex-col">
@@ -43,7 +43,7 @@ export default function DeleteConfirmation({ produto = {}, onConfirm, onCancel }
           {error && <p className="text-[#e30613] text-xs text-left !mt-1">{error}</p>}
         </div>
 
-        <div className="flex justify-center gap-3 !mt-auto !mb-8">
+        <div className="flex justify-center gap-3 !mb-8">
           <button
             className="!px-4 !py-2.5 border border-gray-300 bg-white text-gray-700 rounded-md hover:bg-gray-50 font-medium"
             onClick={onCancel}

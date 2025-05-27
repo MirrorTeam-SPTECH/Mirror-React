@@ -1,5 +1,6 @@
 import { useState } from "react";
 import HeartButton from "../components/Shared/HeartButton";
+import ButtonSelect from "../components/Shared/ButtonSelect";
 import styles from "../styles/ListaProdutos.module.css";
 
 export function CardProduto({
@@ -33,12 +34,19 @@ export function CardProduto({
       onClick={onClick}
     >
       {isGerenciamento ? (
+         <>
         <div
           className={`${styles.selectButton} ${isSelected ? styles.active : ""}`}
           onClick={toggleSelect}
         >
           {isSelected ? "Selecionado" : ""}
         </div>
+        <ButtonSelect 
+        produtoId={id}
+        categoria={categoria}
+        selected={isSelected} 
+        onClick={toggleSelect} />
+       </>
       ) : (
         <HeartButton
           produtoId={id}

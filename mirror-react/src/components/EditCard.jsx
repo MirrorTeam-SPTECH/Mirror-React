@@ -17,7 +17,6 @@ export default function EditCard({ produto = null, onSave, onCancel }) {
   const [errors, setErrors] = useState({})
   const [previewImage, setPreviewImage] = useState("")
 
-  // Atualiza o formulário quando o produto muda
   useEffect(() => {
     if (produto) {
       setForm({
@@ -34,8 +33,6 @@ export default function EditCard({ produto = null, onSave, onCancel }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target
-
-    // Tratamento especial para preço (aceitar apenas números)
     if (name === "preco") {
       const precoValue = value.replace(/[^0-9.,]/g, "")
       setForm({
@@ -70,18 +67,16 @@ export default function EditCard({ produto = null, onSave, onCancel }) {
     if (!form.nome.trim()) newErrors.nome = "Nome é obrigatório"
     if (!form.preco || form.preco <= 0) newErrors.preco = "Preço deve ser maior que zero"
     if (!form.descricao.trim()) newErrors.descricao = "Descrição é obrigatória"
-
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-
     if (validateForm()) {
       onSave({
         ...form,
-        preco: Number(form.preco), // Garantir que é um número
+        preco: Number(form.preco),
       })
       setEditMode(false)
     }
@@ -91,7 +86,6 @@ export default function EditCard({ produto = null, onSave, onCancel }) {
     setEditMode(!editMode)
   }
 
-  // Formata o preço para exibição
   const formatarPreco = (preco) => {
     if (typeof preco === "number") {
       return preco.toFixed(2).replace(".", ",")
@@ -100,7 +94,7 @@ export default function EditCard({ produto = null, onSave, onCancel }) {
   }
 
   return (
-    <div className="w-[350px] h-128 bg-white rounded-2xl shadow-md flex flex-col font-['Montserrat']">
+    <div className="w-[350px] h-115 bg-white rounded-2xl shadow-md flex flex-col font-['Montserrat']">
       <div className="flex justify-between items-center !p-4 border-b border-gray-200">
         <h2 className="text-lg font-bold !m-0 text-gray-800">Detalhes do Produto</h2>
         <button
@@ -111,94 +105,12 @@ export default function EditCard({ produto = null, onSave, onCancel }) {
         </button>
       </div>
 
-      <form onSubmit={handleSubmit} className="!px-4 !py-2 overflow-y-auto flex-1">
-        <div className="!mb-3">
-          <label htmlFor="nome" className="block text-xs font-medium text-gray-700 !mb-1">
-            Nome do Produto
-          </label>
-          <input
-            type="text"
-            id="nome"
-            name="nome"
-            value={form.nome}
-            onChange={handleChange}
-            disabled={!editMode}
-            className={`w-full !p-2 text-sm border ${
-              editMode ? "border-gray-300" : "border-transparent bg-gray-100"
-            } rounded-md focus:outline-none focus:ring-1 focus:ring-[#e30613] focus:border-[#e30613] text-gray-800`}
-          />
-          {errors.nome && editMode && <p className="text-[#e30613] text-xs !mt-1">{errors.nome}</p>}
-        </div>
-
-<div className="flex flex-row gap-2">
-        <div className="!mb-3">
-          <label htmlFor="preco" className="block text-xs font-medium text-gray-700 !mb-1">
-            Preço (R$)
-          </label>
-          <input
-            type="text"
-            id="preco"
-            name="preco"
-            value={editMode ? form.preco : formatarPreco(form.preco)}
-            onChange={handleChange}
-            disabled={!editMode}
-            className={`w-full !p-2 text-sm border ${
-              editMode ? "border-gray-300" : "border-transparent bg-gray-100"
-            } rounded-md focus:outline-none focus:ring-1 focus:ring-[#e30613] focus:border-[#e30613] text-gray-800`}
-          />
-          {errors.preco && editMode && <p className="text-[#e30613] text-xs !mt-1">{errors.preco}</p>}
-        </div>
-
-        <div className="!mb-3">
-          <label htmlFor="tempoPreparo" className="block text-xs font-medium text-gray-700 !mb-1">
-            Tempo de Preparo
-          </label>
-          {editMode ? (
-            <select
-              id="tempoPreparo"
-              name="tempoPreparo"
-              value={form.tempoPreparo}
-              onChange={handleChange}
-              className="w-full !p-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[#e30613] focus:border-[#e30613] text-gray-800"
-            >
-              <option value="5-10 min">5-10 minutos</option>
-              <option value="10-15 min">10-15 minutos</option>
-              <option value="15-20 min">15-20 minutos</option>
-              <option value="20-30 min">20-30 minutos</option>
-              <option value="+30 min">Mais de 30 minutos</option>
-            </select>
-          ) : (
-            <input
-              type="text"
-              value={form.tempoPreparo}
-              disabled
-              className="w-full !p-2 text-sm border border-transparent bg-gray-100 rounded-md text-gray-800"
-            />
-          )}
-        </div>
-</div>
-
-        <div className="!mb-3">
-          <label htmlFor="descricao" className="block text-xs font-medium text-gray-700 !mb-1">
-            Descrição
-          </label>
-          <textarea
-            id="descricao"
-            name="descricao"
-            value={form.descricao}
-            onChange={handleChange}
-            disabled={!editMode}
-            className={`w-full !p-2 text-sm border ${
-              editMode ? "border-gray-300" : "border-transparent bg-gray-100"
-            } rounded-md min-h-[60px] resize-none focus:outline-none focus:ring-1 focus:ring-[#e30613] focus:border-[#e30613] text-gray-800`}
-          />
-          {errors.descricao && editMode && <p className="text-[#e30613] text-xs !mt-1">{errors.descricao}</p>}
-        </div>
-
+      <form onSubmit={handleSubmit} className="flex flex-col flex-1 !px-4 !py-2 overflow-y-auto">
+        {/* Imagem */}
         <div className="!mb-3">
           <label className="block text-xs font-medium text-gray-700 !mb-1">Imagem do Produto</label>
           <div className="flex flex-col items-center">
-            <div className="w-full h-[80px] border border-gray-300 rounded-md overflow-hidden !mb-1 flex items-center justify-center bg-gray-100">
+            <div className="w-[50%] h-[80px] border border-gray-300 rounded-md overflow-hidden !mb-1 flex items-center justify-center bg-gray-100">
               <img
                 src={previewImage || "/placeholder.svg"}
                 alt="Preview"
@@ -212,13 +124,99 @@ export default function EditCard({ produto = null, onSave, onCancel }) {
                 name="imagem"
                 accept="image/*"
                 onChange={handleImageChange}
-                className="w-full text-xs text-gray-500 file:mr-2 file:!py-1 file:!px-2 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
+                className="w-full h-8 text-xs text-gray-500 file:mr-2 file:!py-1 file:!px-2 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
               />
             )}
           </div>
         </div>
 
-        <div className="flex justify-end !mt-auto !mb-2 gap-2">
+        {/* Nome */}
+        <div className="!mb-2">
+          <label htmlFor="nome" className="block text-xs font-medium text-gray-700 !mb-1">
+            Nome do Produto
+          </label>
+          <input
+            type="text"
+            id="nome"
+            name="nome"
+            value={form.nome}
+            onChange={handleChange}
+            disabled={!editMode}
+            className={`w-full h-8 !p-2 text-sm border ${
+              editMode ? "border-gray-300" : "border-transparent bg-gray-100"
+            } rounded-md focus:outline-none focus:ring-1 focus:ring-[#e30613] focus:border-[#e30613] text-gray-800`}
+          />
+          {errors.nome && editMode && <p className="text-[#e30613] text-xs !mt-1">{errors.nome}</p>}
+        </div>
+
+        {/* Preço e Tempo de Preparo */}
+        <div className="flex flex-row gap-2 !mb-3">
+          <div className="w-1/2">
+            <label htmlFor="preco" className="block text-xs font-medium text-gray-700 !mb-1">
+              Preço (R$)
+            </label>
+            <input
+              type="text"
+              id="preco"
+              name="preco"
+              value={editMode ? form.preco : formatarPreco(form.preco)}
+              onChange={handleChange}
+              disabled={!editMode}
+              className={`w-full h-8 !p-2 text-sm border ${
+                editMode ? "border-gray-300" : "border-transparent bg-gray-100"
+              } rounded-md focus:outline-none focus:ring-1 focus:ring-[#e30613] focus:border-[#e30613] text-gray-800`}
+            />
+            {errors.preco && editMode && <p className="text-[#e30613] text-xs !mt-1">{errors.preco}</p>}
+          </div>
+          <div className="w-1/2">
+            <label htmlFor="tempoPreparo" className="block text-xs font-medium text-gray-700 !mb-1">
+              Tempo de Preparo
+            </label>
+            {editMode ? (
+              <select
+                id="tempoPreparo"
+                name="tempoPreparo"
+                value={form.tempoPreparo}
+                onChange={handleChange}
+                className="w-full !p-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[#e30613] focus:border-[#e30613] text-gray-800"
+              >
+                <option value="5-10 min">5-10 minutos</option>
+                <option value="10-15 min">10-15 minutos</option>
+                <option value="15-20 min">15-20 minutos</option>
+                <option value="20-30 min">20-30 minutos</option>
+                <option value="+30 min">Mais de 30 minutos</option>
+              </select>
+            ) : (
+              <input
+                type="text"
+                value={form.tempoPreparo}
+                disabled
+                className="w-full h-8 !p-2 text-sm border border-transparent bg-gray-100 rounded-md text-gray-800"
+              />
+            )}
+          </div>
+        </div>
+
+        {/* Descrição */}
+        <div className="!mb-3">
+          <label htmlFor="descricao" className="block text-xs font-medium text-gray-700 !mb-1">
+            Descrição
+          </label>
+          <textarea
+            id="descricao"
+            name="descricao"
+            value={form.descricao}
+            onChange={handleChange}
+            disabled={!editMode}
+            className={`w-full !p-2 text-sm border ${
+              editMode ? "border-gray-300" : "border-transparent bg-gray-100"
+            } rounded-md min-h-[45px] resize-none focus:outline-none focus:ring-1 focus:ring-[#e30613] focus:border-[#e30613] text-gray-800`}
+          />
+          {errors.descricao && editMode && <p className="text-[#e30613] text-xs !mt-1">{errors.descricao}</p>}
+        </div>
+
+        {/* Botões */}
+        <div className="flex justify-end !mb-2 gap-2">
           {editMode ? (
             <>
               <button
