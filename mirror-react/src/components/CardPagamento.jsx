@@ -1,6 +1,10 @@
 // src/components/CardPagamento.jsx
 "use client"
 import ButtonBack from "../components/Shared/ButtonBack"
+import axios from "axios";
+import React from "react"
+import { useState } from "react"
+
 
 export default function CardPagamento({ produto, onPix, onCartao, pedido, onClose}) {
   console.log("CardPagamento recebeu:", produto)
@@ -43,9 +47,79 @@ export default function CardPagamento({ produto, onPix, onCartao, pedido, onClos
       })
     );
   };
+
+  const parsePreco = (preco) => {
+  if (typeof preco === "string") {
+    return parseFloat(preco.replace(",", "."));
+  } else if (typeof preco === "number") {
+    return preco;
+  }
+  return 0;
+};
+
+  const calcularTotal = () => {
+  const precoBase = parsePreco(produto.preco);
+  const quantidade = produto.quantity || 1;
+
+  const totalAdicionais = adicionais.reduce((acc, adicional) => {
+    return acc + parsePreco(adicional.preco);
+  }, 0);
+
+
+  const total = (precoBase + totalAdicionais) * quantidade;
+
+  return total.toFixed(2);
+};
+
+
+
+const handlePagamentoPix = async () => {
+
+  const token = localStorage.getItem("token");
+
+   const totalCalculado = calcularTotal();
+
+  if (!token) {
+    alert("Você precisa estar logado para fazer o pagamento.");
+    return;
+  }
   
-  
-  
+  try {
+
+    const response = await axios.post(
+      "http://localhost:8080/api/checkout",
+      {
+        items: [
+          {
+            title: nome + (adicionais.length > 0 ? ` + ${adicionais.map(a => a.nome).join(", ")}` : ""),
+            quantity: quantity,
+            unit_price: parseFloat(totalCalculado) / quantity, // Preço unitário já com adicionais
+            currency_id: "BRL"
+          }
+        ]
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+
+    console.log("Resposta do backend:", response.data);
+
+    if (response.data.initPoint) {
+      // Redireciona para o checkout do Mercado Pago
+       setTimeout(() => {
+        window.location.href = response.data.initPoint;
+      }, 500);
+    } else {
+      alert("Não foi possível obter o link de pagamento.");
+    }
+  } catch (error) {
+    console.error("Erro ao iniciar pagamento:", error);
+    alert("Erro ao iniciar pagamento.");
+  }
+};
 
 
   return (
@@ -107,8 +181,8 @@ export default function CardPagamento({ produto, onPix, onCartao, pedido, onClos
         {/* Botão PIX */}
         <button
           className="w-full flex justify-between items-center !p-4 !mb-2.5 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors"
-          onClick={onPix}
-        >
+          onClick={handlePagamentoPix}
+        > 
           <div className="flex items-center gap-2.5">
             <span className="text-xl">💠</span>
             <span className="text-base font-medium text-gray-800">PIX</span>

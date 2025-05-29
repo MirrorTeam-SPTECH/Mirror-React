@@ -98,7 +98,7 @@ export default function Home() {
 
   const handlePix = () => {
     setMetodoPagamento("pix")
-    setEtapaAtual("qrcode") // Vai para o QRCode quando for PIX
+    setEtapaAtual("qrcode"); 
   }
 
   const handleCartao = () => {
