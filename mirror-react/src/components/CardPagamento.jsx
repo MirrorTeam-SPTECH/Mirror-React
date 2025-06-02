@@ -4,10 +4,13 @@ import ButtonBack from "../components/Shared/ButtonBack"
 import axios from "axios";
 import React from "react"
 import { useState } from "react"
+import CardCarregamento from "./CardCarregamento";
 
 
 export default function CardPagamento({ produto, onPix, onCartao, pedido, onClose}) {
   console.log("CardPagamento recebeu:", produto)
+
+  const [loading, setLoading] = useState(false);
 
   // Se não tiver produto, renderiza estado vazio mantendo altura fixa igual ao CardCarrinho
   if (!produto) {
@@ -74,6 +77,7 @@ export default function CardPagamento({ produto, onPix, onCartao, pedido, onClos
 
 
 const handlePagamentoPix = async () => {
+  setLoading(true); 
 
   const token = localStorage.getItem("token");
 
@@ -81,6 +85,7 @@ const handlePagamentoPix = async () => {
 
   if (!token) {
     alert("Você precisa estar logado para fazer o pagamento.");
+    setLoading(false);
     return;
   }
   
@@ -111,16 +116,21 @@ const handlePagamentoPix = async () => {
       // Redireciona para o checkout do Mercado Pago
        setTimeout(() => {
         window.location.href = response.data.initPoint;
-      }, 500);
+      }, 2000);
     } else {
       alert("Não foi possível obter o link de pagamento.");
+      setLoading(false);
     }
   } catch (error) {
     console.error("Erro ao iniciar pagamento:", error);
     alert("Erro ao iniciar pagamento.");
+    setLoading(false);
   }
 };
 
+  if (loading) {
+    return <CardCarregamento />;
+  }
 
   return (
     <div className="w-[350px] h-128 flex flex-col font-['Montserrat']">
