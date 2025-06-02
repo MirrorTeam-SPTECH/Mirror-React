@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@handsontable/react-wrapper": "^15.3.0",
     "@tailwindcss/vite": "^4.1.4",
     "axios": "^1.9.0",
+    "handsontable": "^15.3.0",
     "lucide-react": "^0.488.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

@@ -1,0 +1,17 @@
+.handsontable {
+  border-radius: 0.75rem;
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  display: flex;
+}
+.handsontable .htCore th {
+  color: rgb(43, 43, 43);
+  font-weight: bold;
+   padding: 0 32px;
+   width: 100%;
+   flex: 1;
+}
+.handsontable .htCore td {
+  color: #374151;
+}
