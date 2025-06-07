@@ -3,13 +3,11 @@
 import { useState } from "react"
 import axios from "axios"
 import ButtonBack from "../components/Shared/ButtonBack"
-
+import CardCarregamento from "./CardCarregamento"
 
 export default function CardPagamento({ produto, onCartao, onClose }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
-
-  console.log("CardPagamento recebeu:", produto)
 
   // Se não tiver produto, renderiza estado vazio mantendo altura fixa igual ao CardCarrinho
   if (!produto) {
@@ -150,8 +148,6 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
         },
       })
 
-      console.log("Resposta do checkout (Mercado Pago):", checkoutResponse.data)
-
       // Se o checkout foi bem-sucedido, registrar o pedido para as KPIs
       if (checkoutResponse.data.initPoint) {
         try {
@@ -187,6 +183,10 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
     } finally {
       setLoading(false)
     }
+  }
+
+  if (loading) {
+    return <CardCarregamento />
   }
 
   return (
