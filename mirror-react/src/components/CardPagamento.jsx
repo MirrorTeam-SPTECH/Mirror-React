@@ -1,12 +1,14 @@
-// src/components/CardPagamento.jsx
 "use client"
-import ButtonBack from "../components/Shared/ButtonBack"
-import axios from "axios";
-import React from "react"
+
 import { useState } from "react"
+import axios from "axios"
+import ButtonBack from "../components/Shared/ButtonBack"
 
 
-export default function CardPagamento({ produto, onPix, onCartao, pedido, onClose}) {
+export default function CardPagamento({ produto, onCartao, onClose }) {
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+
   console.log("CardPagamento recebeu:", produto)
 
   // Se não tiver produto, renderiza estado vazio mantendo altura fixa igual ao CardCarrinho
@@ -33,102 +35,167 @@ export default function CardPagamento({ produto, onPix, onCartao, pedido, onClos
   const total = produto.total || "0,00"
   const adicionais = produto.adicionaisSelecionados || []
 
-  // Dispara evento e chama callback ao clicar em "Balcão"
-  const handlePagamentoBalcao = () => {
-    if (onCartao) onCartao();
-  
-    const nomeLanche = pedido?.nome ?? "desconhecido";
-  
-    localStorage.setItem(
-      "novoPagamentoBalcao",
-      JSON.stringify({
-        timestamp: Date.now(),
-        nomeLanche,
-      })
-    );
-  };
-
+  // Função para converter preço de string para número
   const parsePreco = (preco) => {
-  if (typeof preco === "string") {
-    return parseFloat(preco.replace(",", "."));
-  } else if (typeof preco === "number") {
-    return preco;
+    if (typeof preco === "string") {
+      return Number.parseFloat(preco.replace(",", "."))
+    } else if (typeof preco === "number") {
+      return preco
+    }
+    return 0
   }
-  return 0;
-};
 
+  // Função para calcular o total
   const calcularTotal = () => {
-  const precoBase = parsePreco(produto.preco);
-  const quantidade = produto.quantity || 1;
+    const precoBase = parsePreco(produto.preco)
+    const quantidade = produto.quantity || 1
 
-  const totalAdicionais = adicionais.reduce((acc, adicional) => {
-    return acc + parsePreco(adicional.preco);
-  }, 0);
+    const totalAdicionais = adicionais.reduce((acc, adicional) => {
+      return acc + parsePreco(adicional.preco)
+    }, 0)
 
-
-  const total = (precoBase + totalAdicionais) * quantidade;
-
-  return total.toFixed(2);
-};
-
-
-
-const handlePagamentoPix = async () => {
-
-  const token = localStorage.getItem("token");
-
-   const totalCalculado = calcularTotal();
-
-  if (!token) {
-    alert("Você precisa estar logado para fazer o pagamento.");
-    return;
+    const total = (precoBase + totalAdicionais) * quantidade
+    return total.toFixed(2)
   }
-  
-  try {
 
-    const response = await axios.post(
-      "http://localhost:8080/api/checkout",
-      {
+  // Dispara evento e chama callback ao clicar em "Balcão"
+  const handlePagamentoBalcao = async () => {
+    setLoading(true)
+    setError("")
+
+    try {
+      const token = localStorage.getItem("token")
+      const userId = localStorage.getItem("userId") || "0"
+      const totalCalculado = calcularTotal()
+
+      // Dados para enviar ao backend
+      const pagamentoData = {
+        nomeLanche: nome,
+        quantidade: quantity,
+        valorUnitario: parsePreco(produto.preco),
+        valorTotal: Number.parseFloat(totalCalculado),
+        clienteId: userId,
+        adicionais: adicionais.map((adicional) => ({
+          nome: adicional.nome,
+          quantidade: adicional.quantidade || 1,
+          precoUnitario: parsePreco(adicional.preco),
+        })),
+      }
+
+      // Enviar para o novo endpoint de pedidos
+      const response = await axios.post("http://localhost:8080/api/pedidos/registrar-balcao", pagamentoData, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      })
+
+      console.log("Resposta do backend (balcão):", response.data)
+
+      // Salvar no localStorage para histórico local
+      localStorage.setItem(
+        "novoPagamentoBalcao",
+        JSON.stringify({
+          timestamp: Date.now(),
+          nomeLanche: nome,
+          valorTotal: totalCalculado,
+        }),
+      )
+
+      // Chamar callback se existir
+      if (onCartao) onCartao()
+
+      // Fechar o modal após sucesso
+      if (onClose) onClose()
+
+      // Mostrar mensagem de sucesso
+      alert("Pagamento no balcão registrado com sucesso!")
+    } catch (error) {
+      console.error("Erro ao registrar pagamento no balcão:", error)
+      setError("Erro ao registrar pagamento no balcão")
+      alert("Erro ao registrar pagamento no balcão.")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Função para pagamento via PIX
+  const handlePagamentoPix = async () => {
+    setLoading(true)
+    setError("")
+
+    try {
+      const token = localStorage.getItem("token")
+      const totalCalculado = calcularTotal()
+
+      if (!token) {
+        alert("Você precisa estar logado para fazer o pagamento via PIX.")
+        setLoading(false)
+        return
+      }
+
+      // Preparar dados para o checkout original (Mercado Pago)
+      const checkoutData = {
         items: [
           {
-            title: nome + (adicionais.length > 0 ? ` + ${adicionais.map(a => a.nome).join(", ")}` : ""),
+            title: nome + (adicionais.length > 0 ? ` + ${adicionais.map((a) => a.nome).join(", ")}` : ""),
             quantity: quantity,
-            unit_price: parseFloat(totalCalculado) / quantity, // Preço unitário já com adicionais
-            currency_id: "BRL"
-          }
-        ]
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+            unit_price: Number.parseFloat(totalCalculado) / quantity, // Preço unitário já com adicionais
+            currency_id: "BRL",
+          },
+        ],
       }
-    );
 
-    console.log("Resposta do backend:", response.data);
+      // Primeiro, chamar o checkout original para gerar o link do Mercado Pago
+      const checkoutResponse = await axios.post("http://localhost:8080/api/checkout", checkoutData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
 
-    if (response.data.initPoint) {
-      // Redireciona para o checkout do Mercado Pago
-       setTimeout(() => {
-        window.location.href = response.data.initPoint;
-      }, 500);
-    } else {
-      alert("Não foi possível obter o link de pagamento.");
+      console.log("Resposta do checkout (Mercado Pago):", checkoutResponse.data)
+
+      // Se o checkout foi bem-sucedido, registrar o pedido para as KPIs
+      if (checkoutResponse.data.initPoint) {
+        try {
+          // Registrar o pedido para as estatísticas
+          await axios.post(
+            "http://localhost:8080/api/pedidos/registrar-pix",
+            {
+              items: checkoutData.items,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            },
+          )
+          console.log("✅ Pedido PIX registrado para estatísticas")
+        } catch (registroError) {
+          console.error("⚠️ Erro ao registrar pedido para estatísticas:", registroError)
+          // Não bloqueia o fluxo principal, apenas loga o erro
+        }
+
+        // Redireciona para o checkout do Mercado Pago
+        setTimeout(() => {
+          window.location.href = checkoutResponse.data.initPoint
+        }, 500)
+      } else {
+        alert("Não foi possível obter o link de pagamento.")
+      }
+    } catch (error) {
+      console.error("Erro ao iniciar pagamento:", error)
+      setError("Erro ao iniciar pagamento")
+      alert("Erro ao iniciar pagamento.")
+    } finally {
+      setLoading(false)
     }
-  } catch (error) {
-    console.error("Erro ao iniciar pagamento:", error);
-    alert("Erro ao iniciar pagamento.");
   }
-};
-
 
   return (
     <div className="w-[350px] h-128 flex flex-col font-['Montserrat']">
       {/* Topo */}
       <div className="flex justify-center !p-5 bg-white rounded-t-2xl shadow-md">
         <div className="flex absolute left-1 top-0.5 ">
-                    <ButtonBack onClose={onClose} />
-              </div>
+          <ButtonBack onClose={onClose} />
+        </div>
         <h2 className="text-2xl font-bold !m-0 text-gray-800">Finalizar compra</h2>
       </div>
 
@@ -150,7 +217,7 @@ const handlePagamentoPix = async () => {
                 <span>
                   {ad.nome} x{ad.quantidade}
                 </span>
-                <span>R$ {(ad.preco * ad.quantidade).toFixed(2).replace(".", ",")}</span>
+                <span>R$ {(parsePreco(ad.preco) * (ad.quantidade || 1)).toFixed(2).replace(".", ",")}</span>
               </div>
             ))}
           </div>
@@ -172,34 +239,47 @@ const handlePagamentoPix = async () => {
           <span>Total</span>
           <span>R$ {total}</span>
         </div>
+
+        {/* Mensagem de erro */}
+        {error && <div className="bg-red-50 text-red-600 p-2 rounded-md text-sm mb-2">{error}</div>}
       </div>
 
       {/* Rodapé fixo */}
       <div className="flex-none !px-5 !pb-5 bg-white rounded-b-2xl shadow-md">
         <p className="text-base font-medium !mb-4 text-gray-800">Como prefere fazer o pagamento?</p>
-        
+
         {/* Botão PIX */}
         <button
-          className="w-full flex justify-between items-center !p-4 !mb-2.5 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors"
+          className={`w-full flex justify-between items-center !p-4 !mb-2.5 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
           onClick={handlePagamentoPix}
-        > 
+          disabled={loading}
+        >
           <div className="flex items-center gap-2.5">
             <span className="text-xl">💠</span>
             <span className="text-base font-medium text-gray-800">PIX</span>
           </div>
-          <span className="text-lg text-gray-600">➔</span>
+          {loading ? (
+            <div className="w-5 h-5 border-2 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
+          ) : (
+            <span className="text-lg text-gray-600">➔</span>
+          )}
         </button>
 
         {/* Botão Balcão */}
         <button
-          className="w-full flex justify-between items-center !p-4 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors"
+          className={`w-full flex justify-between items-center !p-4 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
           onClick={handlePagamentoBalcao}
+          disabled={loading}
         >
           <div className="flex items-center gap-2.5">
             <span className="text-xl">💳</span>
             <span className="text-base font-medium text-gray-800">Balcão</span>
           </div>
-          <span className="text-lg text-gray-600">➔</span>
+          {loading ? (
+            <div className="w-5 h-5 border-2 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
+          ) : (
+            <span className="text-lg text-gray-600">➔</span>
+          )}
         </button>
       </div>
     </div>
