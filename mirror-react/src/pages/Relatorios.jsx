@@ -148,11 +148,10 @@ export default function Relatorios() {
                 onChange={setFiltroValor}
               />
               <Filtros
-                label="Origem"
+                label="Status"
                 options={[
-                  { value: "app", label: "App" },
-                  { value: "site", label: "Site" },
-                  { value: "loja", label: "Loja Física" },
+                  { value: "pago", label: "Pago" },
+                  { value: "não pago", label: "Não pago" },
                 ]}
                 value={filtroOrigem}
                 onChange={setFiltroOrigem}
