@@ -10,6 +10,7 @@ import Cadastro from "./pages/Cadastro";
 import Perfil from "./pages/Perfil";
 import NovoPedido from "./pages/NovoPedido";
 import CardapioEditar from "./pages/CardapioEditar";
+import Cozinha from "./pages/Cozinha";
 import HistoricoPedidos from "./pages/HistoricoPedido";
 import Fidelidade from "./pages/Fidelidade";
 import Relatorios from "./pages/Relatorios";
@@ -63,6 +64,7 @@ function App() {
         <Route element={<LayoutGerenciamento />}>
           <Route path="novoPedido" element={<NovoPedido />} />
           <Route path="cardapioEditar" element={<CardapioEditar />} />
+          <Route path="/cozinha" element={<Cozinha />} />
           <Route path="/cardGerenciamento" element={<CardsGerenciamento titulo="Editar" />} />
           <Route path="relatorios" element={<Relatorios />} />
           <Route path="deleteCard" element={<DeleteConfirmation />} />

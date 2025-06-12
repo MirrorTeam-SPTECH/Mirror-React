@@ -45,6 +45,18 @@ html, body {
   overflow-x: hidden;
 }
 
+.fullContent{
+  margin: 0 auto;
+}
+
+.homePage{
+  background-color: #1F0D0A
+}
+
+.AboutUs{
+  background: #C26700;
+}
+
 
 
 
