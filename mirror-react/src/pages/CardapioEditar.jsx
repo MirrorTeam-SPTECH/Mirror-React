@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import HeaderGerenciamento from "../components/HeaderGerenciamento"
 import { Pesquisa } from "../components/Pesquisa"
-import NavigationBar from "../components/NavigationBar"
+import NavigationBarGerenciamento from "../components/NavigationBarGerenciamento"
 import ControlePedidos from "../components/ControlePedidos"
 import { ListaProdutos } from "../components/ListaProdutos"
 import CreateCard from "../components/CreateCard"
@@ -64,7 +64,7 @@ export default function CardapioEditar() {
           <Pesquisa />
           <div className="flex w-full !mb-0">
             <div className={cardAberto ? "flex-3 w-[70%]" : "w-full"}>
-              <NavigationBar />
+              <NavigationBarGerenciamento />
               {/* Passar refreshTrigger para forçar recarregamento automático */}
               <ListaProdutos categorias={todasCategorias} compact={false} refreshTrigger={refreshTrigger} />
             </div>
