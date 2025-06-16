@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { Header } from "../components/Header"
 import { SubNavigation } from "../components/SubNavigation"
 import "../styles/HistoricoPedido.css"
+import { Trash2 } from "lucide-react"
 
 // Função para calcular o status baseado no tempo de preparo
 const calcularStatus = (dataPedido, tempoPreparo) => {
@@ -26,23 +27,88 @@ const formatarData = (data) => {
   })
 }
 
+
+
 // Função para gerar ID único
 const gerarId = () => {
   return "#" + Math.random().toString(36).substr(2, 5).toUpperCase()
 }
 
-// Componente de item do pedido
-function OrderItem({ item }) {
+// Função para formatar preço
+const formatarPreco = (preco) => {
+  const precoNum = typeof preco === "number" ? preco : Number.parseFloat(preco || 0)
+  return precoNum.toFixed(2).replace(".", ",")
+}
+
+function OrderItem({ item, onRemover }) {
+  console.log("👉 OrderItem recebeu imagem:", item.imagem);
+  const {
+    nome,
+    imagem,
+    preco,
+    quantidade,
+    adicionaisSelecionados = [],
+  } = item
+
+  const precoFormatado = typeof preco === "number"
+    ? preco.toFixed(2).replace(".", ",")
+    : preco
+
   return (
-    <div className="item-pedido">
-      <img src={item.imagem || "/placeholder.svg?height=60&width=60"} alt={item.nome} className="imagem-item" />
-      <div className="detalhes-item">
-        <p className="nome-item">{item.nome}</p>
-        <p className="preco-item">
-          R$ {typeof item.preco === "number" ? item.preco.toFixed(2).replace(".", ",") : item.preco}
-        </p>
-        {item.quantidade > 1 && <p className="quantidade-item">Qtd: {item.quantidade}</p>}
+    <div className="flex justify-between items-start bg-gray-50 rounded-xl !p-4 !mb-4">
+      {/* Imagem e detalhes */}
+      <div className="flex gap-4">
+        <img
+  src={imagem || "/placeholder.svg"}
+  alt={nome}
+  className="w-[60px] h-[60px] object-cover rounded-lg"
+/>
+
+        <div className="flex flex-col">
+          <span className="font-semibold text-base text-gray-800">
+            {nome}
+          </span>
+          <span className="text-sm text-gray-600">
+            Qtd: {quantidade}
+          </span>
+          <span className="text-sm text-gray-600">
+            R$ {precoFormatado} (unidade)
+          </span>
+
+          {adicionaisSelecionados.length > 0 && (
+            <div className="!mt-2 flex flex-col">
+              <span className="text-sm font-semibold text-gray-700">
+                Adicionais:
+              </span>
+              {adicionaisSelecionados.map((ad, i) => (
+                <span
+                  key={i}
+                  className="text-xs text-gray-600 !mb-0.5"
+                >
+                  {ad.nome} x{ad.quantidade} (
+                  R$
+                  {" "}
+                  {typeof ad.preco === "number"
+                    ? ad.preco.toFixed(2).replace(".", ",")
+                    : ad.preco
+                  }
+                  cada)
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
+
+      {/* Botão remover (se necessário) */}
+      {onRemover && (
+        <button
+          className="bg-transparent border-none text-red-600 cursor-pointer !p-1"
+          onClick={onRemover}
+        >
+          <Trash2 size={18} />
+        </button>
+      )}
     </div>
   )
 }
@@ -86,9 +152,7 @@ function OrderCard({ pedido, onPedirNovamente }) {
         ))}
       </div>
 
-      <div className="total-pedido">
-        Total: R$ {typeof pedido.total === "number" ? pedido.total.toFixed(2).replace(".", ",") : pedido.total}
-      </div>
+      <div className="total-pedido">Total: R$ {formatarPreco(pedido.total)}</div>
 
       <button
         className={isInProgress ? "botao-repetir-cinza" : "botao-repetir-claro"}
@@ -124,6 +188,8 @@ export default function HistoricoPedidos() {
       const pedidosSalvos = localStorage.getItem("historicoPedidos")
       if (pedidosSalvos) {
         const pedidosData = JSON.parse(pedidosSalvos)
+        console.log("📋 Pedidos carregados do localStorage:", pedidosData)
+
         // Atualizar status de todos os pedidos
         const pedidosAtualizados = pedidosData.map((pedido) => ({
           ...pedido,
@@ -143,6 +209,7 @@ export default function HistoricoPedidos() {
     if (novoPagamentoBalcao) {
       try {
         const dadosPagamento = JSON.parse(novoPagamentoBalcao)
+        console.log("🏪 Novo pagamento balcão detectado:", dadosPagamento)
         adicionarNovoPedido(dadosPagamento, "balcao")
         localStorage.removeItem("novoPagamentoBalcao")
       } catch (error) {
@@ -155,6 +222,7 @@ export default function HistoricoPedidos() {
     if (novoPagamentoPix) {
       try {
         const dadosPagamento = JSON.parse(novoPagamentoPix)
+        console.log("💳 Novo pagamento PIX detectado:", dadosPagamento)
         adicionarNovoPedido(dadosPagamento, "pix")
         localStorage.removeItem("novoPagamentoPix")
       } catch (error) {
@@ -164,48 +232,146 @@ export default function HistoricoPedidos() {
   }
 
   const adicionarNovoPedido = (dadosPagamento, metodoPagamento) => {
-    console.log("Dados do pagamento recebidos:", dadosPagamento)
+    console.log("🔍 DADOS COMPLETOS DO PAGAMENTO:", JSON.stringify(dadosPagamento, null, 2))
+   const { produto: produtoCarrinho, pagamentoData } = dadosPagamento;
+    // Array para armazenar todos os itens do pedido
+    const itens = []
 
-    // Extrair dados do produto principal
-    const produtoPrincipal = {
-      nome: dadosPagamento.nomeLanche || dadosPagamento.nome || "Produto",
-      preco: dadosPagamento.precoUnitario || dadosPagamento.preco || 0,
-      quantidade: dadosPagamento.quantidade || 1,
-      imagem: dadosPagamento.imagem || "/placeholder.svg?height=60&width=60",
+    // 1. ADICIONAR O PRODUTO PRINCIPAL
+    console.log("🍔 PROCESSANDO PRODUTO PRINCIPAL...")
+
+    // Extrair preço unitário do produto principal
+    let precoUnitarioProduto = 0
+
+    // Tentar múltiplas fontes para o preço unitário
+    if (dadosPagamento.unitPrice && dadosPagamento.unitPrice > 0) {
+      precoUnitarioProduto = dadosPagamento.unitPrice
+      console.log("💰 Preço unitário encontrado em unitPrice:", precoUnitarioProduto)
+    } else if (dadosPagamento.precoUnitario && dadosPagamento.precoUnitario > 0) {
+      precoUnitarioProduto = dadosPagamento.precoUnitario
+      console.log("💰 Preço unitário encontrado em precoUnitario:", precoUnitarioProduto)
+    } else if (dadosPagamento.preco && dadosPagamento.preco > 0) {
+      precoUnitarioProduto = dadosPagamento.preco
+      console.log("💰 Preço unitário encontrado em preco:", precoUnitarioProduto)
+    } else {
+      // Se não encontrou o preço unitário, vamos calcular baseado no subtotal
+      if (dadosPagamento.subtotalNum && dadosPagamento.quantity) {
+        // Subtrair o valor dos adicionais do subtotal para obter o preço do produto
+        let valorAdicionais = 0
+        if (Array.isArray(dadosPagamento.adicionaisSelecionados)) {
+          valorAdicionais = dadosPagamento.adicionaisSelecionados.reduce((total, adicional) => {
+            const precoAdicional =
+              typeof adicional.preco === "number" ? adicional.preco : Number.parseFloat(adicional.preco || 0)
+            const quantidadeAdicional = adicional.quantidade || 1
+            return total + precoAdicional * quantidadeAdicional
+          }, 0)
+        }
+
+        precoUnitarioProduto = (dadosPagamento.subtotalNum - valorAdicionais) / dadosPagamento.quantity
+        console.log(
+          "💰 Preço calculado: (subtotal - adicionais) / quantidade =",
+          `(${dadosPagamento.subtotalNum} - ${valorAdicionais}) / ${dadosPagamento.quantity} = ${precoUnitarioProduto}`,
+        )
+      }
     }
 
-    // Criar array de itens (produto principal + adicionais se houver)
-    const itens = [produtoPrincipal]
+    // Criar item do produto principal
+   const produtoPrincipal = {
+    ...produtoCarrinho,
+    // sobrescreve apenas o preço, se quiser usar o que veio do pagamento
+    preco: pagamentoData.valorUnitario,
+    quantidade: produtoCarrinho.quantity,
+    adicionaisSelecionados: produtoCarrinho.adicionaisSelecionados || [],
+  };
 
-    // Adicionar adicionais se existirem
-    if (dadosPagamento.adicionaisSelecionados && dadosPagamento.adicionaisSelecionados.length > 0) {
-      dadosPagamento.adicionaisSelecionados.forEach((adicional) => {
-        itens.push({
+
+      itens.push(produtoPrincipal);
+    console.log("✅ Produto principal adicionado:", produtoPrincipal)
+
+    // 2. ADICIONAR OS ADICIONAIS COMO ITENS SEPARADOS
+    console.log("🍟 PROCESSANDO ADICIONAIS...")
+
+    if (Array.isArray(dadosPagamento.adicionaisSelecionados) && dadosPagamento.adicionaisSelecionados.length > 0) {
+      console.log("📝 Adicionais encontrados:", dadosPagamento.adicionaisSelecionados.length)
+
+      dadosPagamento.adicionaisSelecionados.forEach((adicional, index) => {
+        console.log(`🔍 Processando adicional ${index + 1}:`, adicional)
+
+        const precoAdicional =
+          typeof adicional.preco === "number" ? adicional.preco : Number.parseFloat(adicional.preco || 0)
+        const quantidadeAdicional = adicional.quantidade || 1
+
+        const itemAdicional = {
           nome: `+ ${adicional.nome}`,
-          preco: adicional.preco,
-          quantidade: adicional.quantidade,
-          imagem: "/placeholder.svg?height=60&width=60",
-        })
+          preco: precoAdicional,
+          quantidade: quantidadeAdicional,
+          imagem: adicional.imagem || "/placeholder.svg?height=60&width=60",
+          tipo: "adicional",
+        }
+
+        itens.push(itemAdicional)
+        console.log(`✅ Adicional ${index + 1} adicionado:`, itemAdicional)
       })
+    } else {
+      console.log("❌ Nenhum adicional encontrado")
+      console.log("   - adicionaisSelecionados:", dadosPagamento.adicionaisSelecionados)
+      console.log("   - É array?", Array.isArray(dadosPagamento.adicionaisSelecionados))
+      console.log("   - Length:", dadosPagamento.adicionaisSelecionados?.length)
     }
 
+    // 3. CALCULAR TOTAL FINAL
+    let totalFinal = 0
+    if (dadosPagamento.totalNum && typeof dadosPagamento.totalNum === "number") {
+      totalFinal = dadosPagamento.totalNum
+    } else if (dadosPagamento.valorTotal) {
+      totalFinal =
+        typeof dadosPagamento.valorTotal === "number"
+          ? dadosPagamento.valorTotal
+          : Number.parseFloat(String(dadosPagamento.valorTotal).replace(",", "."))
+    } else if (dadosPagamento.total) {
+      totalFinal =
+        typeof dadosPagamento.total === "number"
+          ? dadosPagamento.total
+          : Number.parseFloat(String(dadosPagamento.total).replace(",", "."))
+    } else {
+      // Calcular total baseado nos itens
+      totalFinal = itens.reduce((total, item) => total + item.preco * item.quantidade, 0)
+      // Adicionar taxa de entrega se existir
+      if (dadosPagamento.entregaNum) {
+        totalFinal += dadosPagamento.entregaNum
+      }
+    }
+
+    console.log("💵 TOTAL FINAL CALCULADO:", totalFinal)
+
+    // 4. CRIAR PEDIDO COMPLETO
     const novoPedido = {
       id: gerarId(),
       dataPedido: new Date().toISOString(),
       tempoPreparo: dadosPagamento.tempoPreparo || "15-20 min",
       status: "em-andamento",
       metodoPagamento: metodoPagamento,
-      total: dadosPagamento.valorTotal || dadosPagamento.total || "0,00",
+      total: totalFinal,
       itens: itens,
+      // Dados extras para debug
+      dadosOriginais: dadosPagamento,
     }
 
-    console.log("Novo pedido criado:", novoPedido)
+    console.log("📦 NOVO PEDIDO COMPLETO:")
+    console.log("   - ID:", novoPedido.id)
+    console.log("   - Total:", novoPedido.total)
+    console.log("   - Itens:", novoPedido.itens.length)
+    novoPedido.itens.forEach((item, i) => {
+      console.log(`     ${i + 1}. ${item.nome} - R$ ${item.preco} x${item.quantidade} (${item.tipo})`)
+    })
 
-    const novosPedidos = [novoPedido, ...pedidos]
-    setPedidos(novosPedidos)
-
-    // Salvar no localStorage
-    localStorage.setItem("historicoPedidos", JSON.stringify(novosPedidos))
+    // 5. SALVAR PEDIDO
+    setPedidos((pedidosAntigos) => {
+      const novosPedidos = [novoPedido, ...pedidosAntigos]
+      localStorage.setItem("historicoPedidos", JSON.stringify(novosPedidos))
+      console.log("💾 Pedidos salvos no localStorage")
+      return novosPedidos
+    })
   }
 
   // Função para pedir novamente

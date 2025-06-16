@@ -89,13 +89,25 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
 
       // Salvar no localStorage para histórico local
       localStorage.setItem(
-        "novoPagamentoBalcao",
-        JSON.stringify({
-          timestamp: Date.now(),
-          nomeLanche: nome,
-          valorTotal: totalCalculado,
-        }),
-      )
+  "novoPagamentoBalcao",
+  JSON.stringify({
+    timestamp: Date.now(),
+    metodo: "balcao",
+    produto,               // ← aqui incluímos tudo
+    pagamentoData: {
+      nomeLanche: nome,
+      valorUnitario: parsePreco(produto.preco),
+      valorTotal: Number.parseFloat(totalCalculado),
+      adicionais: adicionais.map(ad => ({
+        nome: ad.nome,
+        quantidade: ad.quantidade || 1,
+        precoUnitario: parsePreco(ad.preco),
+      })),
+    },
+  }),
+);
+
+
 
       // Chamar callback se existir
       if (onCartao) onCartao()

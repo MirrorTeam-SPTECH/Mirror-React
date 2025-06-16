@@ -9,19 +9,34 @@ export default function NotificationDropdown() {
   const [unreadCount, setUnreadCount] = useState(0);
   const dropdownRef = useRef(null);
 
-  // Carregar notificações do localStorage
+  // Carrega as notificações com fallback seguro
   const loadNotifications = () => {
-    const stored = JSON.parse(
-      localStorage.getItem("notificacoesPagamentos") || "[]"
-    );
-    setNotifications(stored.sort((a, b) => b.timestamp - a.timestamp));
-    setUnreadCount(stored.filter((n) => !n.lida).length);
+    try {
+      const stored = JSON.parse(localStorage.getItem("notificacoesPagamentos"));
+      const validList = Array.isArray(stored) ? stored : [];
+
+      const ordenadas = validList
+        .map((n, i) => ({
+          id: n.id ?? i,
+          lida: n.lida ?? false,
+          timestamp: n.timestamp ?? Date.now(),
+          nomeLanche: n.nomeLanche ?? "Lanche desconhecido",
+          valorTotal: n.valorTotal ?? "0,00",
+        }))
+        .sort((a, b) => b.timestamp - a.timestamp);
+
+      setNotifications(ordenadas);
+      setUnreadCount(ordenadas.filter((n) => !n.lida).length);
+    } catch (e) {
+      console.error("Erro ao carregar notificações:", e);
+      setNotifications([]);
+      setUnreadCount(0);
+    }
   };
 
   useEffect(() => {
     loadNotifications();
 
-    // Listener para novas notificações
     const handleNewNotification = () => {
       loadNotifications();
     };
@@ -31,7 +46,6 @@ export default function NotificationDropdown() {
       window.removeEventListener("novaNotificacao", handleNewNotification);
   }, []);
 
-  // Fechar dropdown ao clicar fora
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -43,7 +57,6 @@ export default function NotificationDropdown() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Marcar notificação como lida (mas não remove da lista)
   const markAsRead = (id) => {
     const updated = notifications.map((n) =>
       n.id === id ? { ...n, lida: true } : n
@@ -53,7 +66,6 @@ export default function NotificationDropdown() {
     setUnreadCount(updated.filter((n) => !n.lida).length);
   };
 
-  // Marcar todas como lidas
   const markAllAsRead = () => {
     const updated = notifications.map((n) => ({ ...n, lida: true }));
     setNotifications(updated);
@@ -61,7 +73,6 @@ export default function NotificationDropdown() {
     setUnreadCount(0);
   };
 
-  // Remover notificação
   const removeNotification = (id) => {
     const updated = notifications.filter((n) => n.id !== id);
     setNotifications(updated);
@@ -69,7 +80,6 @@ export default function NotificationDropdown() {
     setUnreadCount(updated.filter((n) => !n.lida).length);
   };
 
-  // Formatar tempo
   const formatTime = (timestamp) => {
     const now = Date.now();
     const diff = now - timestamp;
@@ -85,7 +95,6 @@ export default function NotificationDropdown() {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      {/* Botão do sino */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="relative p-2 text-white hover:text-gray-200 transition-colors"
@@ -98,15 +107,11 @@ export default function NotificationDropdown() {
         )}
       </button>
 
-      {/* Dropdown */}
       {isOpen && (
         <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-lg shadow-lg border z-50 overflow-hidden">
-          {/* Header */}
           <div className="p-4 border-b bg-gray-50">
             <div className="flex items-center justify-between flex-col justify-self-start !gap-1">
-              <h3 className="font-semibold text-gray-800 !mt-1 ">
-                Notificações
-              </h3>
+              <h3 className="font-semibold text-gray-800 !mt-1">Notificações</h3>
               <hr className="w-[320px] bg-gray-800 !mb-1" />
               {unreadCount > 0 && (
                 <button
@@ -119,17 +124,13 @@ export default function NotificationDropdown() {
             </div>
           </div>
 
-          {/* Lista de notificações com scroll customizado */}
           <div
             className="max-h-64 overflow-y-auto"
-            style={{
-              scrollbarWidth: "none" /* Firefox */,
-              msOverflowStyle: "none" /* Internet Explorer 10+ */,
-            }}
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             <style jsx>{`
               div::-webkit-scrollbar {
-                display: none; /* Chrome, Safari, Opera */
+                display: none;
               }
             `}</style>
 
@@ -148,7 +149,7 @@ export default function NotificationDropdown() {
                       : "bg-white"
                   }`}
                 >
-                  <div className="flex items-start justify-between ">
+                  <div className="flex items-start justify-between">
                     <div className="flex items-start flex-1">
                       <CheckCircle
                         className={`mt-0.5 ${
@@ -159,27 +160,21 @@ export default function NotificationDropdown() {
                       <div className="flex-1 min-w-0">
                         <p
                           className={`font-medium text-sm ${
-                            notification.lida
-                              ? "text-gray-600"
-                              : "text-gray-800"
+                            notification.lida ? "text-gray-600" : "text-gray-800"
                           }`}
                         >
                           Pagamento no Balcão
                         </p>
                         <p
                           className={`text-sm truncate ${
-                            notification.lida
-                              ? "text-gray-500"
-                              : "text-gray-600"
+                            notification.lida ? "text-gray-500" : "text-gray-600"
                           }`}
                         >
                           {notification.nomeLanche}
                         </p>
                         <p
                           className={`text-xs ${
-                            notification.lida
-                              ? "text-gray-400"
-                              : "text-gray-500"
+                            notification.lida ? "text-gray-400" : "text-gray-500"
                           }`}
                         >
                           R$ {notification.valorTotal}

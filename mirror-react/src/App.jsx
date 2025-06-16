@@ -14,6 +14,7 @@ import Cozinha from "./pages/Cozinha";
 import HistoricoPedidos from "./pages/HistoricoPedido";
 import Fidelidade from "./pages/Fidelidade";
 import Relatorios from "./pages/Relatorios";
+import Pedido from "./pages/Pedido"
 // Layouts
 import LayoutCliente from "./layouts/LayoutCliente";
 import LayoutGerenciamento from "./layouts/LayoutGerenciamento";
@@ -53,7 +54,7 @@ function App() {
 
           <Route path="/historicoPedido" element={<HistoricoPedidos />} />
           <Route path="/fidelidade" element={<Fidelidade />} />
-          <Route path="/pedido" element={<PedidoPage />} />
+          <Route path="/pedidoPage" element={<PedidoPage />} />
           <Route path="/success" element={<Success />} />
           <Route path="/failure" element={<div>Pagamento não aprovado. Tente novamente.</div>} />
           <Route path="/pending" element={<div>Pagamento pendente. Aguardando confirmação.</div>} />
@@ -70,6 +71,7 @@ function App() {
           <Route path="deleteCard" element={<DeleteConfirmation />} />
           <Route path="CreateCard" element={<CreateCard />} />
           <Route path="EditCard" element={<EditCard />} />
+          <Route path="/pedido" element={<Pedido />} />
         </Route>
 
         {/* Rotas diretas de componentes */}

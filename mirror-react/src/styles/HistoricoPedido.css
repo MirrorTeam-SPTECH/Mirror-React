@@ -27,6 +27,10 @@
   margin-left: -130px;
 }
 
+.total-pedido{
+  color: #333;
+}
+
 .cards-container {
   display: flex;
   gap: 20px;
