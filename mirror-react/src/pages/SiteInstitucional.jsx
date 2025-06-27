@@ -4,6 +4,7 @@ import { Contact, Moon } from "lucide-react";
 import wallpaper from "../assets/img/truckHome2.png";
 import logoPortal from "../assets/img/logo.png";
 import sobreNos from "../assets/img/sobre nós.png";
+import { Link } from "react-router-dom";
 
 const SiteInstitucional = () => {
   return (
@@ -38,23 +39,44 @@ const SiteInstitucional = () => {
               {/* <button className="temas cursor-pointer" id="DarkLight">
                 <Moon></Moon>
               </button> */}
-              <button className="btnLogin w-[35%] h-[45%] font-semibold cursor-pointer rounded-lg bg-red-600">
+               <button className="btnLogin w-[35%] h-[45%] font-semibold cursor-pointer rounded-lg bg-red-600">
+                <Link to="/login">
                 Login
+                </Link>
               </button>
+              
               <button className="btnCadastro w-[50%] h-[45%] rounded-lg border-2 border-red-600 cursor-pointer text-red-600 font-semibold">
+                <Link to="/cadastro">
                 Cadastre-se
+                </Link>
               </button>
             </div>
           </header>
           <div className="contentHomepage w-[45%] h-[500px] absolute top-[120px] justify-center items-center flex flex-col">
-            {/* <div className="WelcomePC text- flex flex-col justify-end items-center w-full h-[10%]">
-              <span className="spanWel font-semibold !font-montserrat text-[50px]">Boas Vindas</span>
+            <div className="WelcomePCS flex flex-col justify-end absolute top-[90px] items-start w-full h-[10%]">
+              <span className="text-[22px] !font-corben flex justify-start items-start">
+                Food Truck
+              </span>
             </div>
-            <div className="WelcomePCS text- flex flex-col justify-start items-center  w-full h-[35%]">
-              <span className="spanWel !font-rye text-[70px]">Portal do Churras</span>
+            <div className="WelcomePCS flex flex-col justify-end items-end w-full h-[45%]">
+              <span className="!-ml-106  text-[69px] !font-rye flex justify-end items-end">
+                Portal do Churras
+              </span>
             </div>
-            <div className="ParagraphHome bg-amber-600 w-full h-[25%]"></div>
-            <div className="MenusAccess bg-amber-500  w-full h-[25%]"></div> */}
+            <div className="ParagraphHome w-full h-[25%]">
+              <span className="text-[20px] text-center font-medium">
+                Seja bem-vindo ao nosso espaço sobre rodas, onde o cheiro de
+                churrasco na brasa e o som da chapa quente já anunciam: aqui o
+                sabor é de verdade!{" "}
+              </span>
+            </div>
+            <div className="MenusAccess w-full h-[25%]">
+              <div className="w-full h-full flex justify-start items-start">
+                <button className="w-[50%] h-[60%] rounded-lg bg-red-700 text-white font-semibold cursor-pointer hover:bg-red-800 transition duration-300">
+                  Acesse o cardápio!
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </section>

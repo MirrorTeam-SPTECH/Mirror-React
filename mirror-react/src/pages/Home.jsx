@@ -147,7 +147,9 @@ export default function Home() {
               </div>
             </div>
           ))}
-          <div className="skeleton sub-nav-skeleton" />
+          <div className="flex justify-center items-center">
+         <div className="skeleton sub-nav-skeleton" />
+        </div>
         </>
       ) : etapaAtual === "favoritos" ? (
         <>

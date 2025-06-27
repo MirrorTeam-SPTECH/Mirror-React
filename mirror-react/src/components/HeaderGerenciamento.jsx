@@ -8,7 +8,6 @@ export default function HeaderGerenciamento({ activePage }) {
   const menuItems = [
     { label: "PEDIDOS", page: "pedido", href: "/pedido" },
     { label: "COZINHA", page: "cozinha", href: "/cozinha" },
-    { label: "BENEFÍCIOS", page: "beneficios", href: "/beneficios" },
     { label: "CARDÁPIO", page: "cardapio", href: "/cardapioEditar" },
     { label: "RELATÓRIOS", page: "relatorios", href: "/relatorios" },
   ]

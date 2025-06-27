@@ -8,6 +8,7 @@ import produtosData from "../data/produtos.json";
 import "../styles/Fidelidade.css";
 import Vector15 from "../assets/img/Vector15.png";
 import Vector16 from "../assets/img/Vector16.png";
+import "../styles/Carregamento.css"
 
 const API_URL = "http://localhost:8080/api/pedidos";
 
@@ -33,9 +34,12 @@ export default function FidelidadePage() {
     setComprasRealizadas(0);
     setPremioDisponivel(false);
     setPedidosProcessados(new Set());
-
-    setLoading(false);
   }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 2000)
+    return () => clearTimeout(timer)
+  }, [])
 
   // 2. Busca pedidos novos a cada segundo e atualiza contador
   const verificarNovasCompras = useCallback(async () => {
@@ -193,9 +197,19 @@ export default function FidelidadePage() {
   return (
     <div>
       {loading ? (
-        <div>Carregando...</div>
+        <>
+        
+        <div className="skeleton header-skeleton !-mt-25" />
+        <div className="flex flex-row !gap-2 !pt-10">
+        <div className="skeleton bloco-central-skeleton" />
+        <div className="skeleton blocu-central-skeleton" />
+        </div>
+        <div className="flex justify-center items-center">
+         <div className="skeleton sub-nav-skeleton" />
+        </div>
+        </>
       ) : (
-        <div className="flex flex-col !-mt-25">
+        <div className="flex flex-col !-mt-25 justify-center items-center ">
           <Header titulo="Cada pedido te aproxima" p="de mais sabores" />
           <div className="fidelidade-page-container">
             <div className="blocos-centrais-container">

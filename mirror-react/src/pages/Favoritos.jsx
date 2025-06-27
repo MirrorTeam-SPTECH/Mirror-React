@@ -7,8 +7,10 @@ import { SubNavigation } from "../components/SubNavigation"
 import produtosData from "../data/produtos.json"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import "../styles/Favoritos.css"
+import "../styles/Carregamento.css"
 
 export default function FavoritosPage() {
+  
   const [favoritos, setFavoritos] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -37,8 +39,13 @@ export default function FavoritosPage() {
       .filter(Boolean) // Remover itens nulos
 
     setFavoritos(favsCompletos)
-    setLoading(false)
+   
   }
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 2000)
+    return () => clearTimeout(timer)
+  }, [])
 
   useEffect(() => {
     carregarFavoritos()
@@ -65,11 +72,19 @@ export default function FavoritosPage() {
     window.dispatchEvent(new Event("favoritosAtualizados"))
   }
 
-  if (loading) {
-    return <div className="carregando">Carregando...</div>
-  }
+
 
   return (
+    <div>
+    {loading ? (
+        <>
+        <div className="skeleton Header-skeleton " />
+
+         <div className="flex justify-center items-center">
+         <div className="skeleton sub-nav-skeleton" />
+        </div>
+        </>
+      ) : (
     <div className="favoritos-page  !-mt-15">
       <Header titulo="Favoritos" p="Seus itens favoritos" />
 
@@ -120,5 +135,7 @@ export default function FavoritosPage() {
 
       <SubNavigation />
     </div>
+      )}
+</div>
   )
 }

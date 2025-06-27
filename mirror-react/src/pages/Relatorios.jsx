@@ -116,7 +116,7 @@ export default function Relatorios() {
             />
             <Kpi
               tittle="Clientes Ativos"
-              value={stats?.clientesAtivos || 0}
+              value={stats?.clientesAtivos || 2}
               loading={statsLoading}
             />
             <Ranking
