@@ -18,19 +18,19 @@ const SiteInstitucional = () => {
             </div>
             <nav className="navbar flex items-center w-[65%] h-20 justify-center">
               <ul className="navbarList font-semibold justify-center flex gap-20 items-center w-full h-full">
-                <li className="navbarItem hover:text-red-800">
+                <li className="navbarItem hover:text-red-800 transition duration-400">
                   <a href="#AboutUs">Home</a>
                 </li>
-                <li className="navbarItem hover:text-red-800">
+                <li className="navbarItem hover:text-red-800 transition duration-400 ">
                   <a href="#AboutUs">Sobre Nós</a>
                 </li>
-                <li className="navbarItem hover:text-red-800">
+                <li className="navbarItem hover:text-red-800 transition duration-400">
                   <a href="#Chefs">Nossos Chefs</a>
                 </li>
-                <li className="navbarItem hover:text-red-800">
+                <li className="navbarItem hover:text-red-800 transition duration-400">
                   <a href="#Menu">Menu</a>
                 </li>
-                <li className="navbarItem hover:text-red-800">
+                <li className="navbarItem hover:text-red-800 transition duration-400">
                   <a href="#Contact">Contato</a>
                 </li>
               </ul>
@@ -39,16 +39,12 @@ const SiteInstitucional = () => {
               {/* <button className="temas cursor-pointer" id="DarkLight">
                 <Moon></Moon>
               </button> */}
-               <button className="btnLogin w-[35%] h-[45%] font-semibold cursor-pointer rounded-lg bg-red-600">
-                <Link to="/login">
-                Login
-                </Link>
+              <button className="btnLogin w-[35%] h-[45%] font-semibold cursor-pointer rounded-lg bg-red-600 hover:bg-red-950 transition duration-400">
+                <Link to="/login">Login</Link>
               </button>
-              
-              <button className="btnCadastro w-[50%] h-[45%] rounded-lg border-2 border-red-600 cursor-pointer text-red-600 font-semibold">
-                <Link to="/cadastro">
-                Cadastre-se
-                </Link>
+
+              <button className="btnCadastro w-[50%] h-[45%] rounded-lg border-2 border-red-600 cursor-pointer text-red-600 font-semibold hover:bg-red-600 hover:text-white transition duration-400">
+                <Link to="/cadastro">Cadastre-se</Link>
               </button>
             </div>
           </header>
@@ -59,7 +55,7 @@ const SiteInstitucional = () => {
               </span>
             </div>
             <div className="WelcomePCS flex flex-col justify-end items-end w-full h-[45%]">
-              <span className="!-ml-106  text-[69px] !font-rye flex justify-end items-end">
+              <span className="!-ml-110 text-[69px] !font-rye flex justify-end items-end">
                 Portal do Churras
               </span>
             </div>
@@ -72,7 +68,7 @@ const SiteInstitucional = () => {
             </div>
             <div className="MenusAccess w-full h-[25%]">
               <div className="w-full h-full flex justify-start items-start">
-                <button className="w-[50%] h-[60%] rounded-lg bg-red-700 text-white font-semibold cursor-pointer hover:bg-red-800 transition duration-300">
+                <button className="w-[50%] h-[60%] rounded-lg bg-red-700 text-white font-semibold text-[20px] cursor-pointer hover:bg-red-800 transition duration-300">
                   Acesse o cardápio!
                 </button>
               </div>
@@ -80,9 +76,35 @@ const SiteInstitucional = () => {
           </div>
         </div>
       </section>
-      <section className="AboutUs relative bg-amber-600 top-[200px] w-full h-[90dvh]">
-        <img className="absolute -top-17" src={sobreNos} alt="" />
+      <section className="AboutUs relative bg-amber-600 !top-[200px] w-full h-[90dvh] z-0">
+        <img className="absolute !-top-17" src={sobreNos} alt="" />
+
+        <div className="flex flex-row justify-between items-start gap-10 !pt-[100px] px-14 relative z-10">
+          <div className="flex flex-col gap-3 !ml-14 ">
+            <div className="flex gap-3 items-end">
+              <div className="bg-amber-50 h-[200px] w-[200px] rounded-2xl"></div>
+              <div className="bg-amber-50 h-[230px] w-[200px] rounded-2xl"></div>
+              <div className="bg-amber-50 h-[200px] w-[350px] rounded-2xl"></div>
+            </div>
+
+            <div className="flex gap-3 ">
+              <div className="bg-amber-50 h-[200px] w-[275px] rounded-2xl"></div>
+              <div className="bg-amber-50 h-[230px] w-[200px] rounded-2xl"></div>
+              <div className="bg-amber-50 h-[200px] w-[275px] rounded-2xl"></div>
+            </div>
+          </div>
+
+          <div className="flex flex-col justify-start items-start !mt-6 !mr-14">
+            <span className="text-8xl font-bold text-white">Sobre Nós</span>
+            <p className="!mt-6 text-white text-xl max-w-[400px] leading-relaxed">
+              Aqui você pode colocar seu texto descritivo. Ele ficará abaixo do
+              título, ao lado dos blocos, com espaçamento e alinhamento
+              apropriado.
+            </p>
+          </div>
+        </div>
       </section>
+
       <section className="Chefs"></section>
       <section className="Menu"></section>
       <section className="Contact"></section>
