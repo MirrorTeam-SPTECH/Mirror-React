@@ -105,8 +105,25 @@ const SiteInstitucional = () => {
         </div>
       </section>
 
-      <section className="Chefs"></section>
-      <section className="Menu"></section>
+      <section className="Chefs relative bg-[#7DCD38] !top-[200px] w-full h-[70dvh] z-0 ">
+        <div className="flex flex-row w-full h-[500px] top-[50%] absolute transform -translate-y-1/2 justify-around">
+        <div className="flex flex-col justify-center items-center  ">
+          <div className="h-[300px] w-[300px] bg-amber-950 rounded-[50%] "></div>
+          <span className="text-2xl font-bold text-white !mt-1">Meri</span>
+            <p className="text-white text-xl max-w-[400px] leading-relaxed">CEO</p>
+        </div>
+        <div className="flex flex-col justify-center items-center  ">
+                <p className="text-white text-xl max-w-[400px] leading-relaxed">Conheça nossos</p>
+                <span className="text-8xl font-bold text-white">Chefs</span>
+        </div>
+        <div className="flex flex-col justify-center items-center  ">
+          <div className="h-[300px] w-[300px] bg-amber-950 rounded-[50%]"></div>
+        <span className="text-2xl font-bold text-white !mt-1">Denis</span>
+            <p className="text-white text-xl max-w-[400px] leading-relaxed">CEO</p>
+        </div>
+        </div>
+      </section>
+      <section className="Menu relative bg-amber-600 !top-[200px] w-full h-[90dvh] z-0 "></section>
       <section className="Contact"></section>
       <section className="Footer"></section>
     </div>
