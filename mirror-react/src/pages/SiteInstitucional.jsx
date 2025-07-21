@@ -5,6 +5,8 @@ import wallpaper from "../assets/img/truckHome2.png";
 import logoPortal from "../assets/img/logo.png";
 import sobreNos from "../assets/img/sobre nós.png";
 import { Link } from "react-router-dom";
+import MenuCarousel from "../components/MenuCarousel"; "../components/MenuCarousel"
+
 
 const SiteInstitucional = () => {
   return (
@@ -123,8 +125,27 @@ const SiteInstitucional = () => {
         </div>
         </div>
       </section>
-      <section className="Menu relative bg-amber-600 !top-[200px] w-full h-[90dvh] z-0 "></section>
-      <section className="Contact"></section>
+       <section className="Menu relative bg-[#2C0000] !top-[200px] w-full h-[90dvh] z-0 ">
+        <div className="flex flex-col justify-start items-center w-full h-full">
+          <p className="!mt-10 text-white text-xl max-w-[400px] leading-relaxed">
+            Esse é o nosso
+          </p>
+          <span className="text-8xl font-bold text-white">Menu</span>
+          <div className="w-[100%] flex justify-center items-center h-[80%]">
+            <MenuCarousel />
+          </div>
+        </div>
+      </section>
+      <section className="Contact relative bg-[#FFD940] !top-[200px] w-full h-[35dvh] z-0 ">
+                <div className="flex flex-col w-full h-full items-center">
+                  <span className="text-7xl font-bold text-white !mt-10">Contato Rápido!</span>
+                  <div className="flex flex-row gap-5 justify-around items-center !mt-10">
+                    <input type="text" className="w-[400px] h-[50px] bg-amber-50 text-black rounded-[8px] border-amber-50 shadow-md focus:outline-none focus:right-0 !px-4 placeholder:text-gray-600" placeholder="Nome Completo" />
+                    <input type="text" className="w-[400px] h-[50px] bg-amber-50 text-black rounded-[8px] border-amber-50 shadow-md focus:outline-none focus:right-0 !px-4 placeholder:text-gray-600" placeholder="Nome Completo" />
+                    <button className="w-[150px] h-[50px] bg-[#F4C300] text-black rounded-[8px] shadow-lg text-sm font-bold hover:bg-[#BC9600] transition duration-300">Solicitar contato</button>
+                  </div>
+                </div>
+      </section>
       <section className="Footer"></section>
     </div>
   );
