@@ -1,8 +1,9 @@
 // src/pages/SiteInstitucional.jsx
 import React from "react";
-import { Instagram, MessageCircle } from 'lucide-react';
+import { Instagram, MessageCircle } from "lucide-react";
 import wallpaper from "../assets/img/truckHome2.png";
 import logoPortal from "../assets/img/logo.png";
+import LocalizationCtn  from "../assets/img/Localization.png";
 import sobreNos from "../assets/img/sobre nós.png";
 import { Link } from "react-router-dom";
 import MenuCarousel from "../components/MenuCarousel";
@@ -16,7 +17,11 @@ const SiteInstitucional = () => {
         <div className="containerHomePage  flex flex-col relative w-[95%] h-full">
           <header className="navbarHomePage absolute w-[100%] h-25 flex justify-center items-center">
             <div className="logoHomePage relative w-[15%] h-20 flex justify-center items-center">
-              <img className="absolute top-2.5  !-ml-15" src={logoPortal} alt="" />
+              <img
+                className="absolute top-2.5  !-ml-15"
+                src={logoPortal}
+                alt=""
+              />
             </div>
             <nav className="navbar flex items-center w-[65%] h-20 justify-center">
               <ul className="navbarList font-semibold justify-center flex gap-20 items-center w-full h-full">
@@ -164,83 +169,82 @@ const SiteInstitucional = () => {
           </div>
         </div>
       </section>
-     <section className="Contact relative bg-[#A40000] !top-[200px] w-full h-[65dvh] flex justify-center items-center !px-8">
-  <div className="flex flex-row justify-center items-center w-full h-full gap-5">
-    {/* Lado esquerdo: Ícone e texto */}
-    <div className="flex flex-col items-start justify-center gap-[35px] !-mt-[6%] relative">
-      {/* Ícone */}
-      <div className="w-[250px] h-[250px] bg-amber-50 !mt-2 "></div>
+      <section className="Contact relative bg-[#A40000] !top-[200px] w-full h-[65dvh] flex justify-center items-center !px-8">
+        <div className="flex flex-row justify-center items-center w-full h-full gap-5">
+          <div className="flex flex-col items-start justify-center gap-[35px] !-mt-[7%] relative">
+              <img src={LocalizationCtn} className="h-[440px] w-[auto] !-ml-20" alt="" />     
+            
+            <h2 className="text-[100px] font-bold text-white leading-[1] text-right !-mt-[30%] whitespace-nowrap">
+              Nossa
+              <br />
+              Localização
+            </h2>
+          </div>
 
-      {/* Texto */}
-      <h2 className="text-[100px] font-bold text-white leading-[1] text-right !-mt-[5%] whitespace-nowrap">
-        Nossa<br />Localização
-      </h2>
-    </div>
-
-    {/* Mapa */}
-    <div className="bg-[#f1f1f1] h-[350px] w-[45%] !mt-[10px] rounded-[10px] overflow-hidden">
-      <iframe
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2165.210150247894!2d-46.71189489120232!3d-23.482309332977163!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94cef90a69d6b48b%3A0xbdcf6cb742a0539d!2sR.%20Domingos%20Giglio%2C%2081%20-%20Vila%20Miriam%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2002972-010!5e0!3m2!1spt-BR!2sbr!4v1741995970605!5m2!1spt-BR!2sbr"
-        width="100%"
-        height="100%"
-        style={{ border: 0 }}
-        allowFullScreen=""
-        loading="lazy"
-        referrerPolicy="no-referrer-when-downgrade"
-      ></iframe>
-    </div>
-  </div>
-</section>
+          {/* Mapa */}
+          <div className="bg-[#f1f1f1] h-[350px] w-[45%] !mt-[10px] rounded-[10px] overflow-hidden">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2165.210150247894!2d-46.71189489120232!3d-23.482309332977163!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94cef90a69d6b48b%3A0xbdcf6cb742a0539d!2sR.%20Domingos%20Giglio%2C%2081%20-%20Vila%20Miriam%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2002972-010!5e0!3m2!1spt-BR!2sbr!4v1741995970605!5m2!1spt-BR!2sbr"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen=""
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            ></iframe>
+          </div>
+        </div>
+      </section>
 
       <section className="Footer relative bg-[#C26700] !top-[200px] w-full h-[65dvh] flex justify-center items-center !px-8">
-          <div className="flex flex-col justify-center items-center w-full h-full gap-5">
-                <div className="flex flex-row h-[350px] w-[100%] justify-around items-center gap-10">
-                  <div className="flex flex-col justify-center items-center w-[100px] h-[90%] bg-red-500">
+        <div className="flex flex-col justify-center items-center w-full h-full gap-5">
+          <div className="flex flex-row h-[350px] w-[100%] justify-around items-center gap-10">
+            <div className="flex flex-col justify-start items-center w-[210px] h-[90%]  gap-5 ">
+              <img className="absolute" src={logoPortal} alt="" />
+              <p className="!mt-25 text-white text-sm  leading-relaxed">
+                Levando sabor e qualidade onde você estiver! Nosso food truck
+                oferece pratos frescos e deliciosos, preparados com ingredientes
+                selecionados para proporcionar uma experiência única de sabor.
+                Siga-nos nas redes sociais e descubra nosso cardápio itinerante!
+              </p>
+            </div>
 
-                  </div>
+            <div className="flex flex-col justify-start items-center w-[100px] h-[90%]  gap-3">
+              <span className="text-2xl font-bold text-white">Social</span>
+              <div className="flex flex-row gap-2 justify-center items-center">
+                <Instagram size={18} />
+                <span className="text-sm font-bold  text-white">
+                  ChurrasdoPortal
+                </span>
+              </div>
+            </div>
 
-                  <div className="flex flex-col justify-start items-center w-[100px] h-[90%]  gap-3">
-                      <span className="text-1xl font-bold text-white">
-                      Social
-                  </span>
-                  <div className="flex flex-row gap-2 justify-center items-center">
-                      <Instagram size={18} />
-                       <span className="text-xs font-bold  text-white">
-                      ChurrasdoPortal
-                  </span>
-                  </div>
-                  </div>
+            <div className="flex flex-col justify-start items-center w-[100px] h-[90%]  gap-3">
+              <span className="text-2xl font-bold text-white ">Detalhes</span>
+              <ul className="text-sm font-bold text-white flex flex-col justify-center items-start !-ml-7">
+                <li>Home</li>
+                <li>Sobre Nós</li>
+                <li>Menu</li>
+                <li>Contato</li>
+              </ul>
+            </div>
 
-                  <div className="flex flex-col justify-start items-center w-[100px] h-[90%]  gap-3">
-                      <span className="text-1xl font-bold text-white ">
-                      Detalhes
-                  </span>
-                  <ul className="text-xs font-bold text-white flex flex-col justify-center items-start !-ml-2">
-                    <li>Home</li>
-                    <li>Sobre Nós</li>
-                    <li>Menu</li>
-                    <li>Contato</li>
-                  </ul>
-                  </div>
-
-                  <div className="flex flex-col justify-start items-center w-[140px] h-[90%]  gap-3">
-                      <span className="text-1xl font-bold text-white">
-                      Contato
-                  </span>
-                  <div className="flex flex-row gap-2 justify-center items-center">
-                      <MessageCircle size={18} />
-                       <span className="text-xs font-bold text-white">
-                      (11) 94802-8922
-                  </span>
-                  </div>
-                  </div>
-                </div>
-                <div className="flex flex-row h-[50px] w-[100%] justify-center items-center gap-10">
-                  <span className="text-1xl font-bold text-white">
-                      Todos os direitos reservados | Mirror® 2025
-                  </span>
-                </div>
+            <div className="flex flex-col justify-start items-center w-[140px] h-[90%]  gap-3">
+              <span className="text-2xl font-bold text-white">Contato</span>
+              <div className="flex flex-row gap-2 justify-center items-center">
+                <MessageCircle size={18} />
+                <span className="text-sm font-bold text-white">
+                  (11) 94802-8922
+                </span>
+              </div>
+            </div>
           </div>
+          <div className="flex flex-row h-[50px] w-[100%] justify-center items-center gap-10">
+            <span className="text-1xl font-bold text-white">
+              Todos os direitos reservados | Mirror® 2025
+            </span>
+          </div>
+        </div>
       </section>
     </div>
   );
