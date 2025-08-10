@@ -1,147 +1,191 @@
-"use client";
+"use client"
 
-import { useState, useEffect, useCallback } from "react";
-import { Header } from "../components/Header";
-import { Favoritos } from "../components/CardFavoritos";
-import { SubNavigation } from "../components/SubNavigation";
-import produtosData from "../data/produtos.json";
-import "../styles/Fidelidade.css";
+import { useState, useEffect, useCallback } from "react"
+import { useRef } from "react";
+import { Header } from "../components/Header"
+import { Favoritos } from "../components/CardFavoritos"
+import { SubNavigation } from "../components/SubNavigation"
+import produtosData from "../data/produtos.json"
 import Vector15 from "../assets/img/Vector15.png";
 import Vector16 from "../assets/img/Vector16.png";
-import "../styles/Carregamento.css"
-
-const API_URL = "http://localhost:8080/api/pedidos";
+import "../styles/Fidelidade.css"
+import confetti from "canvas-confetti";
 
 export default function FidelidadePage() {
-  const [fidelidade, setFidelidade] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [comprasRealizadas, setComprasRealizadas] = useState(0);
-  const [premioDisponivel, setPremioDisponivel] = useState(false);
-  const [pedidosProcessados, setPedidosProcessados] = useState(new Set());
+  const [fidelidade, setFidelidade] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [comprasRealizadas, setComprasRealizadas] = useState(0)
+  const [premioDisponivel, setPremioDisponivel] = useState(false)
+  const [pedidosProcessados, setPedidosProcessados] = useState(new Set())
 
-  // 1. Ao montar, zera tudo e carrega os favoritos visuais
+  // Montagem: carrega favoritos visuais e progresso persistido
   useEffect(() => {
-    // limpa dados antigos
-    localStorage.removeItem("dadosFidelidade");
-    localStorage.removeItem("historicoPedidos");
-    localStorage.removeItem("fidelidade");
+    // NÃO limpe o localStorage aqui — isso apagava o histórico!
+    const ids = JSON.parse(localStorage.getItem("fidelidade") || "[]")
+    setFidelidade(produtosData.hamburgueres.filter((p) => ids.includes(p.id)))
 
-    // carrega produtos favoritos (visual)
-    const ids = JSON.parse(localStorage.getItem("fidelidade")) || [];
-    setFidelidade(produtosData.hamburgueres.filter((p) => ids.includes(p.id)));
+    const saved = JSON.parse(localStorage.getItem("dadosFidelidade") || "{}")
+    const compras = saved.compras || 0
+    const processados = new Set(saved.pedidosProcessados || [])
 
-    // zera contagem de compras
-    setComprasRealizadas(0);
-    setPremioDisponivel(false);
-    setPedidosProcessados(new Set());
-  }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2000)
-    return () => clearTimeout(timer)
+    setComprasRealizadas(compras)
+    setPremioDisponivel(compras >= 10)
+    setPedidosProcessados(processados)
+    setLoading(false)
   }, [])
 
-  // 2. Busca pedidos novos a cada segundo e atualiza contador
-  const verificarNovasCompras = useCallback(async () => {
-    try {
-      const res = await fetch(API_URL);
-      if (!res.ok) throw new Error(res.statusText);
-      const lista = await res.json();
+  // Verifica novas compras de: novoPagamentoBalcao, novoPagamentoPix e como backup o historicoPedidos
+  const verificarNovasCompras = useCallback(() => {
+    let novaCompraDetectada = false
+    const novos = new Set(pedidosProcessados)
 
-      let detectou = false;
-      const novos = new Set(pedidosProcessados);
-
-      lista.forEach((p) => {
-        const id = p.id?.toString() || `${p.dataCriacao}-${p.total}`;
-        if (!novos.has(id)) {
-          novos.add(id);
-          detectou = true;
+    // Balcão
+    const novoPagamentoBalcao = localStorage.getItem("novoPagamentoBalcao")
+    if (novoPagamentoBalcao) {
+      try {
+        const dados = JSON.parse(novoPagamentoBalcao)
+        const pedidoId = `balcao-${dados.timestamp}`
+        if (!novos.has(pedidoId)) {
+          novos.add(pedidoId)
+          novaCompraDetectada = true
         }
-      });
-
-      if (detectou) {
-        const total = novos.size;
-        setPedidosProcessados(novos);
-        setComprasRealizadas(Math.min(total, 10));
-        setPremioDisponivel(total >= 10);
+      } catch (e) {
+        console.error("Erro ao processar novoPagamentoBalcao:", e)
+      } finally {
+        // Limpa a chave sempre que encontrada (processada/corrompida)
+        localStorage.removeItem("novoPagamentoBalcao")
       }
-    } catch (err) {
-      console.error("Erro ao buscar pedidos para fidelidade:", err);
     }
-  }, [pedidosProcessados]);
+
+    // PIX
+    const novoPagamentoPix = localStorage.getItem("novoPagamentoPix")
+    if (novoPagamentoPix) {
+      try {
+        const dados = JSON.parse(novoPagamentoPix)
+        const pedidoId = `pix-${dados.timestamp}`
+        if (!novos.has(pedidoId)) {
+          novos.add(pedidoId)
+          novaCompraDetectada = true
+        }
+      } catch (e) {
+        console.error("Erro ao processar novoPagamentoPix:", e)
+      } finally {
+        localStorage.removeItem("novoPagamentoPix")
+      }
+    }
+
+    // Backup: histórico
+    const historicoPedidos = JSON.parse(localStorage.getItem("historicoPedidos") || "[]")
+    historicoPedidos.forEach((pedido) => {
+      const pedidoId = pedido.id || `${pedido.dataPedido}-${pedido.total}`
+      if (pedidoId && !novos.has(pedidoId)) {
+        novos.add(pedidoId)
+        novaCompraDetectada = true
+      }
+    })
+
+    if (novaCompraDetectada) {
+      const total = novos.size
+      setPedidosProcessados(novos)
+      setComprasRealizadas(Math.min(total, 10))
+      setPremioDisponivel(total >= 10)
+
+      // Persistência
+      localStorage.setItem(
+        "dadosFidelidade",
+        JSON.stringify({
+          compras: Math.min(total, 10),
+          pedidosProcessados: Array.from(novos),
+          ultimaAtualizacao: new Date().toISOString(),
+          // preserva contagem de prêmios se existir
+          premiosResgatados: JSON.parse(localStorage.getItem("dadosFidelidade") || "{}").premiosResgatados || 0,
+        }),
+      )
+    }
+  }, [pedidosProcessados])
 
   useEffect(() => {
-    const interval = setInterval(verificarNovasCompras, 1000);
-    return () => clearInterval(interval);
-  }, [verificarNovasCompras]);
+    verificarNovasCompras() // primeiro disparo
+    const interval = setInterval(verificarNovasCompras, 1000)
+    return () => clearInterval(interval)
+  }, [verificarNovasCompras])
 
-  // 3. Layout de pontos + prêmio
+
+  const progressoRef = useRef(null);
+
+ useEffect(() => {
+  if (premioDisponivel && progressoRef.current) {
+    const rect = progressoRef.current.getBoundingClientRect();
+    confetti({
+      particleCount: 100,
+      spread: 100,
+      origin: {
+        x: (rect.left + rect.width / 2) / window.innerWidth,
+        y: (rect.top + rect.height / 2) / window.innerHeight,
+      },
+    });
+  }
+}, [premioDisponivel]);
+ 
+
   const renderBloco = (items, isLeftBlock = false) => (
     <div className="bloco-central">
       {isLeftBlock ? (
         <div className="circulos-container">
           <h3 className="text-lg font-medium">Seus pontos</h3>
-          <div className="linha-circulos">
-            {[...Array(5)].map((_, idx) => (
+          <div className="linha-circulos !mt-7">
+            {[...Array(5)].map((_, index) => (
               <div
-                key={idx}
-                className={`circulo ${
-                  idx < comprasRealizadas ? "circulo-verde" : ""
-                } ${
-                  idx === comprasRealizadas && comprasRealizadas < 10
-                    ? "circulo-proximo"
-                    : ""
+                key={`top-circle-${index}`}
+                className={`circulo ${index < comprasRealizadas ? "circulo-verde" : ""} ${
+                  index === comprasRealizadas && comprasRealizadas < 10 ? "circulo-proximo" : ""
                 }`}
-              >
-                {idx < comprasRealizadas ? (
+              > 
+                {index < comprasRealizadas ? (
                   <span className="circulo-check">✓</span>
                 ) : (
-                  <span className="circulo-numero">{idx + 1}</span>
+                  <span className="circulo-numero">{index + 1}</span>
                 )}
               </div>
             ))}
           </div>
           <div className="linha-circulos">
-            {[...Array(5)].map((_, j) => {
-              const idx = j + 5;
+            {[...Array(5)].map((_, index) => {
+              const circleIndex = index + 5
               return (
                 <div
-                  key={j}
-                  className={`circulo ${
-                    idx < comprasRealizadas ? "circulo-verde" : ""
-                  } ${
-                    idx === comprasRealizadas && comprasRealizadas < 10
-                      ? "circulo-proximo"
-                      : ""
+                  key={`bottom-circle-${index}`}
+                  className={`circulo ${circleIndex < comprasRealizadas ? "circulo-verde" : ""} ${
+                    circleIndex === comprasRealizadas && comprasRealizadas < 10 ? "circulo-proximo" : ""
                   }`}
                 >
-                  {idx < comprasRealizadas ? (
+                  {circleIndex < comprasRealizadas ? (
                     <span className="circulo-check">✓</span>
                   ) : (
-                    <span className="circulo-numero">{idx + 1}</span>
+                    <span className="circulo-numero">{circleIndex + 1}</span>
                   )}
                 </div>
-              );
+              )
             })}
           </div>
-          <div className="progresso-texto">
-            {!premioDisponivel && (
-              <p className="text-center text-sm text-gray-600">
-                Faltam {10 - comprasRealizadas} compras para o prêmio!
-              </p>
-            )}
+
+          
+          <div className="progresso-texto flex flex-col items-center justify-end !mt-10">
+            
             {premioDisponivel && (
-              <p className="text-center text-lg font-bold text-green-600">
-                🎉 Prêmio disponível para resgate!
-              </p>
+              <p className="text-center text-lg font-bold text-green-600">🎉 Prêmio disponível para resgate!</p>
             )}
+
+            {/* Debug info */}
             <div className="text-xs text-gray-500 mt-2">
               <p>Pedidos processados: {pedidosProcessados.size}</p>
+              <p>Histórico total: {JSON.parse(localStorage.getItem("historicoPedidos") || "[]").length}</p>
             </div>
           </div>
         </div>
       ) : (
-        <div className="premio-container flex flex-col items-center">
+        <div ref={progressoRef}
+        className="premio-container flex flex-col items-center">
           <h3 className="text-lg font-medium flex items-center justify-center mb-2">
             Seu Prêmio
           </h3>
@@ -172,7 +216,7 @@ export default function FidelidadePage() {
               </div>
             )}
           </div>
-          <p className="descricao-premio text-center mt-2">
+          <p className="descricao-premio text-center !mt-3 text-gray-700">
             {premioDisponivel
               ? "🎉 Seu prêmio está disponível! Hambúrguer X-Tudo Grátis"
               : "Complete 10 compras e ganhe um delicioso X-Tudo totalmente grátis!"}
@@ -193,30 +237,17 @@ export default function FidelidadePage() {
     </div>
   );
 
-  // 4. Renderização final
+
   return (
     <div>
       {loading ? (
-        <>
-        
-        <div className="skeleton header-skeleton !-mt-25" />
-        <div className="flex flex-row !gap-2 !pt-10">
-        <div className="skeleton bloco-central-skeleton" />
-        <div className="skeleton blocu-central-skeleton" />
-        </div>
-        <div className="flex justify-center items-center">
-         <div className="skeleton sub-nav-skeleton" />
-        </div>
-        </>
+        <div>Carregando...</div>
       ) : (
-        <div className="flex flex-col !-mt-25 justify-center items-center ">
+        <div className="flex flex-col !-mt-25">
           <Header titulo="Cada pedido te aproxima" p="de mais sabores" />
           <div className="fidelidade-page-container">
             <div className="blocos-centrais-container">
-              {renderBloco(
-                fidelidade.slice(0, Math.ceil(fidelidade.length / 2)),
-                true
-              )}
+              {renderBloco(fidelidade.slice(0, Math.ceil(fidelidade.length / 2)), true)}
               {renderBloco(fidelidade.slice(Math.ceil(fidelidade.length / 2)))}
             </div>
           </div>
@@ -224,5 +255,5 @@ export default function FidelidadePage() {
         </div>
       )}
     </div>
-  );
+  )
 }

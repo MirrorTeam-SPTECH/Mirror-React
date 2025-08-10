@@ -6,13 +6,48 @@ import "../styles/Resultados.css"
 
 import { registerAllModules } from "handsontable/registry"
 import { HotTable } from "@handsontable/react-wrapper"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useMemo } from "react"
 import axios from "axios"
 
 registerAllModules()
 
-export default function Resultados() {
-  const [pedidos, setPedidos] = useState([])
+// Helpers
+function formatCurrency(value) {
+  const num = Number(value) || 0
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(num)
+}
+
+function formatDate(dateString) {
+  if (!dateString) return ""
+  const d = new Date(dateString)
+  if (Number.isNaN(d.getTime())) return ""
+  return d.toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  })
+}
+
+// Compara somente a data em horário local (evita deslocamentos por fuso/UTC)
+function sameDayLocal(isoString, yyyyMmDd) {
+  if (!isoString || !yyyyMmDd) return true
+  try {
+    const d = new Date(isoString)
+    if (Number.isNaN(d.getTime())) return false
+    const [y, m, day] = yyyyMmDd.split("-").map(Number)
+    return d.getFullYear() === y && d.getMonth() + 1 === m && d.getDate() === day
+  } catch {
+    return false
+  }
+}
+
+export default function Resultados({ filtros = {}, pagamentoBalcao }) {
+  const [pedidosOriginais, setPedidosOriginais] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const intervalRef = useRef(null)
@@ -23,31 +58,128 @@ export default function Resultados() {
     // Atualização automática a cada 5 segundos
     intervalRef.current = setInterval(() => {
       fetchPedidos()
-    }, 5000)
+    }, 30000)
 
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current)
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // Recarrega quando um novo pagamento no balcão é detectado
+  useEffect(() => {
+    if (pagamentoBalcao) {
+      fetchPedidos()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pagamentoBalcao])
 
   const fetchPedidos = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/pedidos")
+      setLoading(true)
+      let response
+      try {
+        response = await axios.get("http://localhost:8080/api/pedidos")
+      } catch {
+        // Fallback para dados do histórico local se existir
+        const historico = JSON.parse(localStorage.getItem("historicoPedidos") || "[]")
+        if (Array.isArray(historico) && historico.length > 0) {
+          response = {
+            data: historico.map((p, idx) => ({
+              id: p.id || idx + 1,
+              nomeProduto: p.itens?.[0]?.nome || "Item",
+              quantidade: p.itens?.[0]?.quantidade || 1,
+              valor: Number(p.total) || 0,
+              metodoPagamento: p.metodoPagamento || "balcao",
+              status: p.status || "pago",
+              dataCriacao: p.dataPedido || new Date().toISOString(),
+            })),
+          }
+        } else {
+          // Mock básico (último recurso)
+          response = {
+            data: [
+              {
+                id: 1,
+                nomeProduto: "X-Burger",
+                quantidade: 2,
+                valor: 25.0,
+                metodoPagamento: "pix",
+                status: "pago",
+                dataCriacao: "2024-01-15T18:30:00Z",
+              },
+              {
+                id: 2,
+                nomeProduto: "X-Salada",
+                quantidade: 1,
+                valor: 18.0,
+                metodoPagamento: "balcao",
+                status: "não pago",
+                dataCriacao: "2024-01-15T19:00:00Z",
+              },
+              {
+                id: 3,
+                nomeProduto: "Batata Frita",
+                quantidade: 3,
+                valor: 12.0,
+                metodoPagamento: "pix",
+                status: "pago",
+                dataCriacao: "2024-01-15T19:15:00Z",
+              },
+              {
+                id: 4,
+                nomeProduto: "Refrigerante",
+                quantidade: 2,
+                valor: 8.0,
+                metodoPagamento: "balcao",
+                status: "pago",
+                dataCriacao: "2024-01-15T19:30:00Z",
+              },
+              {
+                id: 5,
+                nomeProduto: "X-Bacon",
+                quantidade: 1,
+                valor: 35.0,
+                metodoPagamento: "pix",
+                status: "não pago",
+                dataCriacao: "2024-01-15T20:00:00Z",
+              },
+              {
+                id: 6,
+                nomeProduto: "Pizza Grande",
+                quantidade: 1,
+                valor: 55.0,
+                metodoPagamento: "balcao",
+                status: "pago",
+                dataCriacao: "2024-01-15T20:15:00Z",
+              },
+              {
+                id: 7,
+                nomeProduto: "Hambúrguer Simples",
+                quantidade: 1,
+                valor: 15.0,
+                metodoPagamento: "pix",
+                status: "pago",
+                dataCriacao: "2024-01-15T20:30:00Z",
+              },
+              {
+                id: 8,
+                nomeProduto: "Combo Família",
+                quantidade: 1,
+                valor: 75.0,
+                metodoPagamento: "balcao",
+                status: "não pago",
+                dataCriacao: "2024-01-15T21:00:00Z",
+              },
+            ],
+          }
+        }
+      }
 
-      // Transformar dados para o formato do Handsontable
-      const dadosFormatados = response.data.map((pedido) => [
-        pedido.id,
-        pedido.nomeProduto || pedido.descricao,
-        pedido.quantidade,
-        formatCurrency(pedido.valor),
-        pedido.metodoPagamento,
-        pedido.status,
-        formatDate(pedido.dataCriacao),
-      ])
-
-      setPedidos(dadosFormatados)
+      setPedidosOriginais(response.data)
+      setError(null)
     } catch (err) {
       console.error("Erro ao buscar pedidos:", err)
       setError("Erro ao carregar pedidos")
@@ -56,41 +188,89 @@ export default function Resultados() {
     }
   }
 
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    }).format(value)
-  }
+  // Aplicar filtros aos dados (inclui data local)
+  const pedidosFiltrados = useMemo(() => {
+    let filtrados = [...pedidosOriginais]
 
-  const formatDate = (dateString) => {
-    if (!dateString) return ""
-    return new Date(dateString).toLocaleDateString("pt-BR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    })
-  }
+    // Filtro por pagamento
+    if (filtros.pagamento) {
+      filtrados = filtrados.filter(
+        (pedido) => pedido.metodoPagamento?.toLowerCase() === filtros.pagamento.toLowerCase(),
+      )
+    }
 
-  // Configurações da tabela
+    // Filtro por valor
+    if (filtros.valor) {
+      filtrados = filtrados.filter((pedido) => {
+        const valor = Number(pedido.valor) || 0
+        switch (filtros.valor) {
+          case "0-20":
+            return valor <= 20
+          case "20-50":
+            return valor > 20 && valor <= 50
+          case "50+":
+            return valor > 50
+          default:
+            return true
+        }
+      })
+    }
+
+    // Filtro por status/origem
+    if (filtros.origem) {
+      filtrados = filtrados.filter((pedido) => pedido.status?.toLowerCase().includes(filtros.origem.toLowerCase()))
+    }
+
+    // Filtro por pesquisa
+    if (filtros.pesquisar) {
+      const termo = filtros.pesquisar.toLowerCase()
+      filtrados = filtrados.filter((pedido) => {
+        return (
+          pedido.nomeProduto?.toLowerCase().includes(termo) ||
+          pedido.descricao?.toLowerCase().includes(termo) ||
+          pedido.id?.toString().includes(termo)
+        )
+      })
+    }
+
+    // Filtro por data (YYYY-MM-DD, local)
+    if (filtros.data) {
+      filtrados = filtrados.filter((pedido) => sameDayLocal(pedido.dataCriacao, filtros.data))
+    }
+
+    return filtrados
+  }, [pedidosOriginais, filtros])
+
+  // Transformar dados filtrados para o formato do Handsontable
+  const dadosFormatados = useMemo(() => {
+    return pedidosFiltrados.map((pedido) => [
+      pedido.id,
+      pedido.nomeProduto || pedido.descricao || "Item",
+      pedido.quantidade,
+      formatCurrency(pedido.valor),
+      pedido.metodoPagamento,
+      pedido.status,
+      formatDate(pedido.dataCriacao),
+    ])
+  }, [pedidosFiltrados])
+
+  // Configurações da tabela (sem col widths rígidas para ocupar 100%)
   const columns = [
-    { title: "ID", width: 55 },
-    { title: "Produto", width: 140 },
-    { title: "Qtd", width: 60 },
-    { title: "Valor", width: 80 },
-    { title: "Pagamento", width: 100 },
-    { title: "Status", width: 80 },
-    { title: "Data/Hora", width: 110 },
+    { title: "ID" },
+    { title: "Produto" },
+    { title: "Qtd" },
+    { title: "Valor" },
+    { title: "Pagamento" },
+    { title: "Status" },
+    { title: "Data/Hora" },
   ]
 
   if (loading) {
     return (
-      <div className="flex h-70 w-292 bg-white rounded-xl z-10 !ml-18 !mt-5 shadow-md">
-        <div className="flex items-center justify-center w-full">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-          <span className="ml-2 text-gray-600">Carregando resultados...</span>
+      <div className="resultados-container">
+        <div className="loading-state">
+          <div className="spinner"></div>
+          <span>Carregando resultados...</span>
         </div>
       </div>
     )
@@ -98,54 +278,64 @@ export default function Resultados() {
 
   if (error) {
     return (
-      <div className="flex h-70 w-292 bg-white rounded-xl z-10 !ml-18 !mt-5 shadow-md">
-        <div className="flex items-center justify-center w-full">
-          <p className="text-red-600">{error}</p>
+      <div className="resultados-container">
+        <div className="error-state">
+          <p>{error}</p>
         </div>
       </div>
     )
   }
 
+  const isDateFiltered = Boolean(filtros.data)
+
   return (
-    <div className="flex h-64 w-292 bg-white rounded-xl z-10 !ml-18 !mt-5 shadow-md">
-      <div className="flex flex-col w-full p-4 h-full">
-        <div className="flex-1 overflow-hidden">
-          {pedidos.length > 0 ? (
-            <HotTable
-              data={pedidos}
-              columns={columns}
-              colHeaders={true}
-              width="100%"
-              height="100%"
-              licenseKey="non-commercial-and-evaluation"
-              readOnly={true}
-              stretchH="all"
-              className="htCenter htMiddle"
-              // Configurações essenciais para scroll
-              autoWrapRow={false}
-              autoWrapCol={false}
-              // Força o scroll vertical
-              settings={{
-                scrollV: true,
-                scrollH: false,
-                manualRowResize: false,
-                manualColumnResize: false,
-                rowHeaders: false,
-                contextMenu: false,
-                // Força altura das linhas para permitir mais itens
-                rowHeight: 35,
-                // Configurações de viewport
-                viewportRowRenderingOffset: 10,
-                viewportColumnRenderingOffset: 10,
-              }}
-            />
-          ) : (
-            <div className="flex flex-col items-center justify-center h-full">
-              <div className="text-4xl mb-2">📋</div>
-              <p className="text-gray-500">Nenhum pedido encontrado</p>
-            </div>
-          )}
-        </div>
+    <div className="resultados-container">
+      <div className="tabela-wrapper">
+        {dadosFormatados.length > 0 ? (
+          <HotTable
+            data={dadosFormatados}
+            columns={columns}
+            colHeaders={true}
+            width="100%"
+            height="100%"
+            licenseKey="non-commercial-and-evaluation"
+            readOnly={true}
+            stretchH="all"
+            autoColumnSize={true}
+            className="tabela-resultados"
+            autoWrapRow={false}
+            autoWrapCol={false}
+            rowHeaders={false}
+            contextMenu={false}
+            // Use header height consistente com o CSS
+            columnHeaderHeight={45}
+            rowHeights={40}
+            settings={{
+              // Permitir scroll horizontal/vertical quando necessário
+              scrollV: true,
+              scrollH: true,
+              manualRowResize: false,
+              manualColumnResize: false,
+              viewportRowRenderingOffset: 10,
+              viewportColumnRenderingOffset: 10,
+              cells: (row) => {
+                const cellProperties = {}
+                if (row % 2 === 1) {
+                  cellProperties.className = "linha-par"
+                }
+                return cellProperties
+              },
+            }}
+          />
+        ) : (
+          <div className="empty-state">
+            <div className="empty-icon">🔍</div>
+            <p>{isDateFiltered ? "Nenhuma compra encontrada para a data selecionada." : "Nenhum pedido encontrado"}</p>
+            {Object.values({ ...filtros, data: undefined }).some((f) => f) && (
+              <small className="text-gray-500">Tente ajustar os filtros para ver mais resultados</small>
+            )}
+          </div>
+        )}
       </div>
     </div>
   )

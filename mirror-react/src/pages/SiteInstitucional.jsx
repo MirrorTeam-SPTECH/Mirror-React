@@ -3,7 +3,9 @@ import React from "react";
 import { Instagram, MessageCircle } from "lucide-react";
 import wallpaper from "../assets/img/truckHome2.png";
 import logoPortal from "../assets/img/logo.png";
-import LocalizationCtn  from "../assets/img/Localization.png";
+import ImgMeri from "../assets/img/imgMeri.png";
+import ImgDenis from "../assets/img/imgDenis.png";
+import LocalizationCtn from "../assets/img/Localization.png";
 import sobreNos from "../assets/img/sobre nós.png";
 import { Link } from "react-router-dom";
 import MenuCarousel from "../components/MenuCarousel";
@@ -110,12 +112,34 @@ const SiteInstitucional = () => {
             </p>
           </div>
         </div>
+        <svg
+          id="wave"
+          className="w-[100%] z-[2000] bg-[#C26700]"
+          style={{ transform: "rotate(0deg)", transition: "0.3s" }}
+          viewBox="0 0 1440 100"
+          version="1.1"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs></defs>
+          <path
+          className="fill-[#7DCD38] w-full"
+            style={{ transform: "translate(0, 0px)", opacity: 1 }}
+            fill="url(#sw-gradient-0)"
+            d="M0,60L360,20L720,70L1080,50L1440,80L1800,80L2160,0L2520,40L2880,50L3240,10L3600,60L3960,20L4320,50L4680,80L5040,50L5400,40L5760,40L6120,70L6480,60L6840,60L7200,0L7560,70L7920,10L8280,80L8640,50L8640,100L8280,100L7920,100L7560,100L7200,100L6840,100L6480,100L6120,100L5760,100L5400,100L5040,100L4680,100L4320,100L3960,100L3600,100L3240,100L2880,100L2520,100L2160,100L1800,100L1440,100L1080,100L720,100L360,100L0,100Z"
+          />
+        </svg>
       </section>
 
-      <section className="Chefs relative bg-[#7DCD38] !top-[200px] w-full h-[70dvh] z-0 ">
-        <div className="flex flex-row w-full h-[500px] top-[50%] absolute transform -translate-y-1/2 justify-around">
+      <section className="Chefs relative bg-[#7DCD38] !top-[200px] w-full h-[75dvh] z-0 ">
+        <div className="flex flex-row w-full h-[500px] top-[45%] absolute transform -translate-y-1/2 justify-around">
           <div className="flex flex-col justify-center items-center  ">
-            <div className="h-[300px] w-[300px] bg-amber-950 rounded-[50%] "></div>
+            <div className="h-[300px] w-[300px] bg-amber-50 rounded-[50%] flex justify-center items-center">
+              <img
+                src={ImgMeri}
+                className="h-full w-full rounded-full object-cover "
+                alt=""
+              />
+            </div>
             <span className="text-2xl font-bold text-white !mt-1">Meri</span>
             <p className="text-white text-xl max-w-[400px] leading-relaxed">
               CEO
@@ -128,15 +152,38 @@ const SiteInstitucional = () => {
             <span className="text-8xl font-bold text-white">Chefs</span>
           </div>
           <div className="flex flex-col justify-center items-center  ">
-            <div className="h-[300px] w-[300px] bg-amber-950 rounded-[50%]"></div>
+            <div className="h-[300px] w-[300px] bg-amber-50 rounded-[50%]">
+              <img
+                src={ImgDenis}
+                className="h-full w-full rounded-full object-cover "
+                alt=""
+              />
+            </div>
             <span className="text-2xl font-bold text-white !mt-1">Denis</span>
             <p className="text-white text-xl max-w-[400px] leading-relaxed">
               CEO
             </p>
           </div>
         </div>
+        <svg
+          id="wave"
+          className="w-[100%] z-[2000] bg-[#7DCD38] !top-[85%] relative"
+          style={{ transform: "rotate(0deg)", transition: "0.3s" }}
+          viewBox="0 0 1440 100"
+          version="1.1"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs></defs>
+          <path
+          className="fill-[#2C0000] w-full"
+            style={{ transform: "translate(0, 0px)", opacity: 1 }}
+            fill="url(#sw-gradient-0)"
+            d="M0,10L240,70L480,50L720,50L960,20L1200,10L1440,70L1680,90L1920,50L2160,30L2400,70L2640,0L2880,40L3120,70L3360,80L3600,30L3840,30L4080,80L4320,70L4560,70L4800,90L5040,0L5280,70L5520,40L5760,30L5760,100L5520,100L5280,100L5040,100L4800,100L4560,100L4320,100L4080,100L3840,100L3600,100L3360,100L3120,100L2880,100L2640,100L2400,100L2160,100L1920,100L1680,100L1440,100L1200,100L960,100L720,100L480,100L240,100L0,100Z"
+          />
+        </svg>
       </section>
       <section className="Menu relative bg-[#2C0000] !top-[200px] w-full h-[90dvh] z-0 ">
+         
         <div className="flex flex-col justify-start items-center w-full h-full">
           <p className="!mt-10 text-white text-xl max-w-[400px] leading-relaxed">
             Esse é o nosso
@@ -169,11 +216,15 @@ const SiteInstitucional = () => {
           </div>
         </div>
       </section>
-      <section className="Contact relative bg-[#A40000] !top-[200px] w-full h-[65dvh] flex justify-center items-center !px-8">
+      <section className="Contact relative bg-[#A40000] !top-[200px] w-full h-[65dvh] flex justify-center items-center !px-8 flex-col">
         <div className="flex flex-row justify-center items-center w-full h-full gap-5">
           <div className="flex flex-col items-start justify-center gap-[35px] !-mt-[7%] relative">
-              <img src={LocalizationCtn} className="h-[440px] w-[auto] !-ml-20" alt="" />     
-            
+            <img
+              src={LocalizationCtn}
+              className="h-[440px] w-[auto] !-ml-20"
+              alt=""
+            />
+
             <h2 className="text-[100px] font-bold text-white leading-[1] text-right !-mt-[30%] whitespace-nowrap">
               Nossa
               <br />
@@ -194,9 +245,10 @@ const SiteInstitucional = () => {
             ></iframe>
           </div>
         </div>
+       
       </section>
 
-      <section className="Footer relative bg-[#C26700] !top-[200px] w-full h-[65dvh] flex justify-center items-center !px-8">
+      <section className="Footer relative bg-[#C26700] !top-[200px] w-full h-[60dvh] flex justify-center items-center !px-8">
         <div className="flex flex-col justify-center items-center w-full h-full gap-5">
           <div className="flex flex-row h-[350px] w-[100%] justify-around items-center gap-10">
             <div className="flex flex-col justify-start items-center w-[210px] h-[90%]  gap-5 ">

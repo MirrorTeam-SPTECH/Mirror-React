@@ -236,7 +236,6 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
       <form onSubmit={handleSubmit} className="flex flex-col flex-1 !px-4 !py-2 overflow-y-auto">
         {/* Imagem */}
         <div className="!mb-3">
-          <label className="block text-xs font-medium text-gray-700 !mb-1">Imagem do Produto</label>
           <div className="flex flex-col items-center">
             <div className="w-[50%] h-[80px] border border-gray-300 rounded-md overflow-hidden !mb-1 flex items-center justify-center bg-gray-100">
               <img
