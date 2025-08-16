@@ -14,7 +14,7 @@ import MenuCarousel from "../components/MenuCarousel";
 const SiteInstitucional = () => {
   return (
     <div className="fullContent relative flex justify-center items-center flex-col">
-      <section className="homePage w-screen relative flex justify-center h-[75.5dvh] ">
+      <section id="Home" className="homePage w-screen relative flex justify-center h-[75.5dvh] ">
         <img className="absolute top-10 z-0" src={wallpaper} alt="" />
         <div className="containerHomePage  flex flex-col relative w-[95%] h-full">
           <header className="navbarHomePage absolute w-[100%] h-25 flex justify-center items-center">
@@ -28,7 +28,7 @@ const SiteInstitucional = () => {
             <nav className="navbar flex items-center w-[65%] h-20 justify-center">
               <ul className="navbarList font-semibold justify-center flex gap-20 items-center w-full h-full">
                 <li className="navbarItem hover:text-red-800 transition duration-400">
-                  <a href="#AboutUs">Home</a>
+                  <a href="#Home">Home</a>
                 </li>
                 <li className="navbarItem hover:text-red-800 transition duration-400 ">
                   <a href="#AboutUs">Sobre Nós</a>
@@ -85,7 +85,7 @@ const SiteInstitucional = () => {
           </div>
         </div>
       </section>
-      <section className="AboutUs relative bg-amber-600 !top-[200px] w-full h-[90dvh] z-0">
+      <section id="AboutUs" className="AboutUs relative bg-amber-600 !top-[200px] w-full h-[90dvh] z-0">
         <img className="absolute !-top-17" src={sobreNos} alt="" />
 
         <div className="flex flex-row justify-between items-start gap-10 !pt-[100px] px-14 relative z-10">
@@ -130,7 +130,7 @@ const SiteInstitucional = () => {
         </svg>
       </section>
 
-      <section className="Chefs relative bg-[#7DCD38] !top-[200px] w-full h-[75dvh] z-0 ">
+      <section id="Chefs" className="Chefs relative bg-[#7DCD38] !top-[200px] w-full h-[75dvh] z-0 ">
         <div className="flex flex-row w-full h-[500px] top-[45%] absolute transform -translate-y-1/2 justify-around">
           <div className="flex flex-col justify-center items-center  ">
             <div className="h-[300px] w-[300px] bg-amber-50 rounded-[50%] flex justify-center items-center">
