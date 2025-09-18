@@ -98,7 +98,8 @@ export default function Home() {
 
   const handlePix = () => {
     setMetodoPagamento("pix")
-    setEtapaAtual("qrcode") // Vai para o QRCode quando for PIX
+     setEtapaAtual("carregamento"); // Mostra o CardCarregamento
+  setTimeout(() => setEtapaAtual("qrcode"), 2000);
   }
 
   const handleCartao = () => {
@@ -127,6 +128,8 @@ export default function Home() {
     setProdutoCarrinho(null)
     setEtapaAtual(null)
   }
+
+  
 
   return (
     <div className="containerProjeto h-screen">
@@ -167,7 +170,7 @@ export default function Home() {
         </>
       ) : produtoSelecionado == null ? (
         <>
-          <Header titulo="Bem vindos!" p="Vamos fazer seu pedido" />
+          <Header titulo="Bem-vindos!" p="Vamos fazer seu pedido" />
           <Pesquisa
             categorias={todasCategorias}
             onProdutoEncontrado={(titulo) => {
@@ -219,6 +222,8 @@ export default function Home() {
               />
               <SubNavigation />
             </div>
+
+            
 
             <div className="flex-1 relative right-15 top-5 w-[30%] flex flex-col items-center justify-center">
               {etapaAtual === "lancheSelecionado" && (

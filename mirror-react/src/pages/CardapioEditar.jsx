@@ -16,10 +16,44 @@ export default function CardapioEditar() {
   const [loading, setLoading] = useState(true);
   const [cardAberto, setCardAberto] = useState(null);
 
+  const [categoriasState, setCategoriasState] = useState([...todasCategorias]);
+
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 2000);
     return () => clearTimeout(timer);
   }, []);
+
+  // ─── Função para adicionar no estado local o novo item criado ───────
+const handleProdutoCriado = (novoItem) => {
+  // Função utilitária para “normalizar” títulos, igual ao ListaProdutos usa internamente
+  const normalizeId = (titulo) =>
+    titulo
+      .normalize("NFD")
+      .replace(/[^\w\s-]/g, "")
+      .toLowerCase()
+      .replace(/\s+/g, "");
+
+  setCategoriasState((prev) =>
+    prev.map((cat) => {
+      // Se o “normalizeId(titulo da categoria)” for igual ao “novoItem.categoria”,
+      // significa que esse novo item pertence a esta categoria de produtos.
+      if (normalizeId(cat.titulo) === novoItem.categoria) {
+        return {
+          ...cat,
+          produtos: [
+            ...cat.produtos,
+            { ...novoItem }
+          ],
+        };
+      }
+      return cat;
+    })
+  );
+};
+// ───────────────────────────────────────────────────────────────────────
+
+
+   
 
   return (
     <div className="containerProjeto">
@@ -54,14 +88,17 @@ export default function CardapioEditar() {
           <div className="flex w-full !mb-0">
             <div className={cardAberto ? "flex-3 w-[70%]" : "w-full"}>
               <NavigationBar />
-              <ListaProdutos
-                categorias={todasCategorias}
-                isGerenciamento={true}
-              />
+               <ListaProdutos
+              categorias={categoriasState}    // ── usa o estado clonado, não mais todasCategorias diretamente
+               isGerenciamento={true}
+             />
             </div>
             {cardAberto && (
               <div className="flex-1 !-mt-25 !mr-17 w-[30%] flex flex-col items-center justify-center">
-                {cardAberto === "criar" && <CreateCard onClose={() => setCardAberto(null)} />}
+                {cardAberto === "criar" && <CreateCard
+                   onClose={() => setCardAberto(null)}
+                   onProdutoCriado={handleProdutoCriado} // ── passa a função que insere no estado
+                 />}
                 {cardAberto === "editar" && <EditCard onClose={() => setCardAberto(null)} />}
                 {cardAberto === "deletar" && <DeleteConfirmation onClose={() => setCardAberto(null)} />}
               </div>
