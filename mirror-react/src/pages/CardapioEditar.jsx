@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import HeaderGerenciamento from "../components/HeaderGerenciamento"
 import { Pesquisa } from "../components/Pesquisa"
-import NavigationBarGerenciamento from "../components/NavigationBarGerenciamento"
+import NavigationBar from "../components/NavigationBar"
 import ControlePedidos from "../components/ControlePedidos"
 import { ListaProdutos } from "../components/ListaProdutos"
 import CreateCard from "../components/CreateCard"
@@ -16,8 +16,6 @@ export default function CardapioEditar() {
   const [loading, setLoading] = useState(true)
   const [cardAberto, setCardAberto] = useState(null)
   const [refreshTrigger, setRefreshTrigger] = useState(0) // Para forçar recarregamento
-
-  const [categoriasState, setCategoriasState] = useState([...todasCategorias]);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 2000)
@@ -33,38 +31,6 @@ export default function CardapioEditar() {
     console.log("✅ Produto modificado, recarregando lista...")
     setRefreshTrigger((prev) => prev + 1)
   }
-
-  // ─── Função para adicionar no estado local o novo item criado ───────
-const handleProdutoCriado = (novoItem) => {
-  // Função utilitária para “normalizar” títulos, igual ao ListaProdutos usa internamente
-  const normalizeId = (titulo) =>
-    titulo
-      .normalize("NFD")
-      .replace(/[^\w\s-]/g, "")
-      .toLowerCase()
-      .replace(/\s+/g, "");
-
-  setCategoriasState((prev) =>
-    prev.map((cat) => {
-      // Se o “normalizeId(titulo da categoria)” for igual ao “novoItem.categoria”,
-      // significa que esse novo item pertence a esta categoria de produtos.
-      if (normalizeId(cat.titulo) === novoItem.categoria) {
-        return {
-          ...cat,
-          produtos: [
-            ...cat.produtos,
-            { ...novoItem }
-          ],
-        };
-      }
-      return cat;
-    })
-  );
-};
-// ───────────────────────────────────────────────────────────────────────
-
-
-   
 
   return (
     <div className="containerProjeto">
@@ -98,23 +64,7 @@ const handleProdutoCriado = (novoItem) => {
           <Pesquisa />
           <div className="flex w-full !mb-0">
             <div className={cardAberto ? "flex-3 w-[70%]" : "w-full"}>
-<<<<<<< HEAD
               <NavigationBar />
-               <ListaProdutos
-              categorias={categoriasState}    // ── usa o estado clonado, não mais todasCategorias diretamente
-               isGerenciamento={true}
-             />
-            </div>
-            {cardAberto && (
-              <div className="flex-1 !-mt-25 !mr-17 w-[30%] flex flex-col items-center justify-center">
-                {cardAberto === "criar" && <CreateCard
-                   onClose={() => setCardAberto(null)}
-                   onProdutoCriado={handleProdutoCriado} // ── passa a função que insere no estado
-                 />}
-                {cardAberto === "editar" && <EditCard onClose={() => setCardAberto(null)} />}
-                {cardAberto === "deletar" && <DeleteConfirmation onClose={() => setCardAberto(null)} />}
-=======
-              <NavigationBarGerenciamento />
               {/* Passar refreshTrigger para forçar recarregamento automático */}
               <ListaProdutos categorias={todasCategorias} compact={false} refreshTrigger={refreshTrigger} />
             </div>
@@ -129,7 +79,6 @@ const handleProdutoCriado = (novoItem) => {
                 {cardAberto === "deletar" && (
                   <DeleteConfirmation onClose={handleCardClose} onProdutoRemovido={handleProdutoModificado} />
                 )}
->>>>>>> 685f498b886d356c13ccf31e59a4a11107ecbf0e
               </div>
             )}
           </div>
