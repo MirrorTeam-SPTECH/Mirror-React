@@ -16,7 +16,6 @@ import CardPagamentoRealizado from "../components/CardPagamentoRealizado"
 import { todasCategorias } from "../utils/Categorias"
 import "../styles/Carregamento.css"
 
-
 export default function Home() {
   const [loading, setLoading] = useState(true)
   const [produtoSelecionado, setProdutoSelecionado] = useState(null)
@@ -38,7 +37,6 @@ export default function Home() {
     localStorage.setItem("favoritos", JSON.stringify(favoritos))
   }, [favoritos])
 
-  // Para debug - mostra o estado atual do produtoCarrinho sempre que ele mudar
   useEffect(() => {
     if (produtoCarrinho) {
       console.log("Estado atual do produtoCarrinho:", produtoCarrinho)
@@ -78,12 +76,6 @@ export default function Home() {
     setEtapaAtual("adicionais")
   }
 
-  const handleIrParaObservacoes = (produtoComQuantidade) => {
-    console.log("Home recebeu do CardLancheSelecionado para observações:", produtoComQuantidade)
-    setProdutoComAdicionais(produtoComQuantidade)
-    setEtapaAtual("adicionais")
-  }
-
   const handleAvancarCarrinho = (produtoFinalizado) => {
     console.log("Home recebeu do CardAdicionais:", produtoFinalizado)
     setProdutoCarrinho(produtoFinalizado)
@@ -98,26 +90,20 @@ export default function Home() {
 
   const handlePix = () => {
     setMetodoPagamento("pix")
-<<<<<<< HEAD
-     setEtapaAtual("carregamento"); // Mostra o CardCarregamento
-  setTimeout(() => setEtapaAtual("qrcode"), 2000);
-=======
-    setEtapaAtual("qrcode"); 
->>>>>>> 685f498b886d356c13ccf31e59a4a11107ecbf0e
+    setEtapaAtual("carregamento")
+    setTimeout(() => setEtapaAtual("qrcode"), 2000)
   }
 
   const handleCartao = () => {
-  setMetodoPagamento("balcao");
-  setEtapaAtual("carregamento"); // Vai para carregamento
-  setTimeout(() => setEtapaAtual("realizado"), 2000); // Depois de 2s, vai para realizado
-};
+    setMetodoPagamento("cartao")
+    setEtapaAtual("carregamento")
+    setTimeout(() => setEtapaAtual("realizado"), 2000)
+  }
 
   const handleConfirmarPagamento = () => {
     setEtapaAtual("carregamento")
     setTimeout(() => setEtapaAtual("realizado"), 2000)
   }
-
-  
 
   const handleVoltarHome = () => {
     setProdutoSelecionado(null)
@@ -132,8 +118,6 @@ export default function Home() {
     setProdutoCarrinho(null)
     setEtapaAtual(null)
   }
-
-  
 
   return (
     <div className="containerProjeto h-screen">
@@ -155,8 +139,8 @@ export default function Home() {
             </div>
           ))}
           <div className="flex justify-center items-center">
-         <div className="skeleton sub-nav-skeleton" />
-        </div>
+            <div className="skeleton sub-nav-skeleton" />
+          </div>
         </>
       ) : etapaAtual === "favoritos" ? (
         <>
@@ -224,20 +208,17 @@ export default function Home() {
                 onProdutoClick={handleClickProduto}
                 onFavoritar={handleFavoritar}
                 compact
-                 isGerenciamento={false}
+                isGerenciamento={false}
               />
               <SubNavigation />
             </div>
-
-            
-
             <div className="flex-1 relative right-15 top-5 w-[30%] flex flex-col items-center justify-center">
               {etapaAtual === "lancheSelecionado" && (
                 <CardLancheSelecionado
                   produto={produtoSelecionado}
                   onAvancar={handleAvancarAdicionais}
                   onClose={handleVoltarHome}
-                  onObservacoes={handleIrParaObservacoes}
+                  onObservacoes={handleAvancarAdicionais}
                   onAdicionarCarrinho={handleAvancarCarrinho}
                 />
               )}
@@ -257,11 +238,11 @@ export default function Home() {
                 />
               )}
               {etapaAtual === "pagamento" && (
-                <CardPagamento 
-                produto={produtoCarrinho} 
-                onPix={handlePix} 
-                onCartao={handleCartao}
-                onClose={handleVoltarHome}
+                <CardPagamento
+                  produto={produtoCarrinho}
+                  onPix={handlePix}
+                  onCartao={handleCartao}
+                  onClose={handleVoltarHome}
                 />
               )}
               {etapaAtual === "qrcode" && (

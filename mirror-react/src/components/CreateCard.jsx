@@ -158,67 +158,61 @@ export default function CreateCard({
         onSubmit={handleSubmit}
         className="!px-4 !py-2 overflow-y-auto flex-1"
       >
-<<<<<<< HEAD
-=======
+        {/* Nome e Categoria em linha */}
+        <div className="flex flex-row !gap-2">
+          {/* Nome */}
+          <div className="!mb-3 flex-1">
+            <label
+              htmlFor="nome"
+              className="block text-xs font-medium text-gray-700 !mb-1"
+            >
+              Nome do Produto
+            </label>
+            <input
+              type="text"
+              id="nome"
+              name="nome"
+              value={form.nome}
+              onChange={handleChange}
+              placeholder="Nome do produto"
+              disabled={mode === "view"}
+              className="w-full h-8 !p-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[#e30613] focus:border-[#e30613] text-gray-800"
+            />
+            {errors.nome && (
+              <p className="text-[#e30613] text-xs !mt-1">{errors.nome}</p>
+            )}
+          </div>
 
-      <div className="flex flex-row !gap-2">
->>>>>>> 685f498b886d356c13ccf31e59a4a11107ecbf0e
-        {/* Nome */}
-        <div className="!mb-3">
-          <label
-            htmlFor="nome"
-            className="block text-xs font-medium text-gray-700 !mb-1"
-          >
-            Nome do Produto
-          </label>
-          <input
-            type="text"
-            id="nome"
-            name="nome"
-            value={form.nome}
-            onChange={handleChange}
-            placeholder="Nome do produto"
-            disabled={mode === "view"}
-            className="w-full h-8 !p-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[#e30613] focus:border-[#e30613] text-gray-800"
-          />
-          {errors.nome && (
-            <p className="text-[#e30613] text-xs !mt-1">{errors.nome}</p>
-          )}
+          {/* Categoria */}
+          <div className="!mb-3 flex-1">
+            <label
+              htmlFor="categoria"
+              className="block text-xs font-medium text-gray-700 !mb-1"
+            >
+              Categoria
+            </label>
+            <select
+              id="categoria"
+              name="categoria"
+              value={form.categoria}
+              onChange={handleChange}
+              disabled={mode === "view"}
+              className="w-full h-8 !p-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[#e30613] focus:border-[#e30613] text-gray-800"
+            >
+              <option value="">Selecione a categoria</option>
+              <option value="combos">Combos</option>
+              <option value="hamburgueres">Hambúrgueres</option>
+              <option value="espetinhos">Espetinhos</option>
+              <option value="adicionais">Adicionais</option>
+              <option value="bebidas">Bebidas</option>
+              <option value="porcoes">Porções</option>
+            </select>
+            {errors.categoria && (
+              <p className="text-[#e30613] text-xs !mt-1">{errors.categoria}</p>
+            )}
+          </div>
         </div>
 
-        {/* Categoria */}
-        <div className="!mb-3">
-          <label
-            htmlFor="categoria"
-            className="block text-xs font-medium text-gray-700 !mb-1"
-          >
-            Categoria
-          </label>
-          <select
-            id="categoria"
-            name="categoria"
-            value={form.categoria}
-            onChange={handleChange}
-            disabled={mode === "view"}
-            className="w-full h-8 !p-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[#e30613] focus:border-[#e30613] text-gray-800"
-          >
-            <option value="">Selecione a categoria</option>
-            <option value="combos">Combos</option>
-            <option value="hamburgueres">Hambúrgueres</option>
-            <option value="espetinhos">Espetinhos</option>
-            <option value="adicionais">Adicionais</option>
-            <option value="bebidas">Bebidas</option>
-            <option value="porcoes">Porções</option>
-          </select>
-          {errors.categoria && (
-            <p className="text-[#e30613] text-xs !mt-1">{errors.categoria}</p>
-          )}
-        </div>
-<<<<<<< HEAD
-
-=======
-</div>  
->>>>>>> 685f498b886d356c13ccf31e59a4a11107ecbf0e
         {/* Preço e Tempo de Preparo */}
         <div className="flex flex-row gap-2">
           <div className="!mb-3 flex-1">
