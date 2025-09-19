@@ -1,0 +1,270 @@
+{
+  "combos": [
+    {
+      "id": 1,
+      "nome": "X-Churrasco",
+      "tempoPreparo": "20-25 min",
+      "preco": "30,00",
+      "imagem": "/img/combo-1.png",
+      "descricao": "Pão francês, espeto de carne, misto ou frango, vinagrete e queijo"
+    },
+    {
+      "id": 2,
+      "nome": "X-Burguer",
+      "tempoPreparo": "20-25 min",  
+      "preco": "28,00",
+      "imagem": "/img/combo-2.png",
+      "descricao": "Pão brioche, 180g de hambúrguer artenasal, maionese e queijo"
+    },
+    {
+      "id": 3,
+      "nome": "X-Salada",
+      "tempoPreparo": "20-25 min",
+      "preco": "30,00",
+      "imagem": "/img/combo-3.png",
+      "descricao": "Pão brioche, 180g de hambúrguer artenasal, maionese, queijo, alface e tomate"
+    },
+    {
+      "id": 4,
+      "nome": "X-Bacon",
+      "tempoPreparo": "20-25 min",
+      "preco": "32,00",
+      "imagem": "/img/combo-4.png",
+      "descricao": "Pão brioche, 180g de hambúrguer artenasal, bacon, maionese, queijo, alface e tomate"
+    },
+    {
+      "id": 5,
+      "nome": "X-Cheedar Bacon",
+      "tempoPreparo": "20-25 min",
+      "preco": "34,00",
+      "imagem": "/img/combo-5.png",
+      "descricao": "Pão brioche, 180g de hambúrguer artenasal, bacon, maionese, queijo cheaddar, alface e tomate"
+    },
+    {
+      "id": 6,
+      "nome": "X-Egg Bacon",
+      "tempoPreparo": "20-25 min",
+      "preco": "34,00",
+      "imagem": "/img/combo-6.png",
+      "descricao": "Pão brioche, 180g de hambúrguer artenasal, maionese, queijo, bacon, ovo, alface e tomate"
+    }
+  ],
+  "hamburgueres": [
+    {
+      "id": 1,
+      "nome": "X-Churrasco",
+      "tempoPreparo": "15-20 min",
+      "preco": "18,00",
+      "imagem": "/img/x-churrasco.png",
+      "descricao": "Pão francês, espeto de carne, misto ou frango, vinagrete e queijo"
+    },
+    {
+      "id": 2,
+      "nome": "X-Burguer",
+      "tempoPreparo": "16-22 min",
+      "preco": "16,00",
+      "imagem": "/img/x-burguer.png",
+      "descricao": "Pão brioche, 180g de hambúrguer artenasal, maionese e queijo"
+    },
+    {
+      "id": 3,
+      "nome": "X-Salada",
+      "tempoPreparo": "15-20 min",
+      "preco": "18,00",
+      "imagem": "/img/x-salada.png",
+      "descricao": "Pão brioche, 180g de hambúrguer artenasal, maionese, queijo, alface e tomate"
+    },
+    {
+      "id": 4,
+      "nome": "X-Bacon",
+      "tempoPreparo": "10-15 min",
+      "preco": "20,00",
+      "imagem": "/img/x-bacon.png",
+      "descricao": "Pão brioche, 180g de hambúrguer artenasal, bacon, maionese, queijo, alface e tomate"
+    },
+    {
+      "id": 5,
+      "nome": "X-Cheedar Bacon",
+      "tempoPreparo": "15-20 min",
+      "preco": "22,00",
+      "imagem": "/img/x-cheddarbacon.png",
+      "descricao": "Pão brioche, 180g de hambúrguer artenasal, bacon, maionese, queijo cheaddar, alface e tomate"
+    },
+    {
+      "id": 6,
+      "nome": "X-Egg Bacon",
+      "tempoPreparo": "10-15 min",
+      "preco": "22,00",
+      "imagem": "/img/x-eggbacon.png",
+      "descricao": "Pão brioche, 180g de hambúrguer artenasal, maionese, queijo, bacon, ovo, alface e tomate"
+    }
+  ],
+  "espetinhos": [
+    {
+      "id": 1,
+      "nome": "Carne",
+      "preco": 18,
+      "tempoPreparo": "15-20 min",
+      "imagem": "/img/espeto-carne.png",
+      "descricao": "Espeto de carne suculenta, temperada com ervas finas"
+    },
+    {
+      "id": 2,
+      "nome": "Misto (carne e linguiça)",
+      "preco": 18,
+      "tempoPreparo": "15-20 min",
+      "imagem": "/img/espeto-misto.png",
+      "descricao": "Combinação de carne e linguiça, perfeita para compartilhar"
+    },
+    {
+      "id": 3,
+      "nome": "Carne com bacon",
+      "preco": 20,
+      "tempoPreparo": "15-20 min",
+      "imagem": "/img/espeto-carne-bacon.png",
+      "descricao": "Espeto de carne com pedaços de bacon crocante"
+    },
+    {
+      "id": 4,
+      "nome": "Cafta",
+      "preco": 16,
+      "tempoPreparo": "10-15 min",
+      "imagem": "/img/espeto-cafta.png",
+      "descricao": "Espeto de cafta tradicional, com sabor autêntico"
+    },
+    {
+      "id": 5,
+      "nome": "Linguiça",
+      "preco": 16,
+      "tempoPreparo": "10-15 min",
+      "imagem": "/img/espeto-linguica.png",
+      "descricao": "Linguiça temperada na brasa, com sabor inigualável"
+    },
+    {
+      "id": 6,
+      "nome": "Frango",
+      "preco": 16,
+      "tempoPreparo": "10-15 min",
+      "imagem": "/img/espeto-frango.png",
+      "descricao": "Espeto de frango suculento, com toque especial de ervas"
+    },
+    {
+      "id": 7,
+      "nome": "Queijo Coalho",
+      "preco": 9,
+      "tempoPreparo": "5-10 min",
+      "imagem": "/img/espeto-queijo.png",
+      "descricao": "Queijo coalho grelhado, ideal para petiscar"
+    },
+    {
+      "id": 8,
+      "nome": "Pão de Alho",
+      "preco": 8,
+      "tempoPreparo": "5-10 min",
+      "imagem": "/img/espeto-paodealho.png",
+      "descricao": "Pão de alho crocante com toque de ervas e manteiga"
+    }
+  ],
+  "adicionais":[
+    {
+      "id": 1,
+      "nome": "Queijo",
+      "preco": 2,
+      "imagem": "/img/adicional-queijo.png"
+    },
+    {
+      "id": 2,
+      "nome": "Queijo Cheddar",
+      "preco": 4,
+      "imagem": "/img/adicional-cheddar.png"
+    },
+    {
+      "id": 3,
+      "nome": "Hamburguer",
+      "preco": 6,
+      "imagem": "/img/adicional-hamburguer.png"
+        },
+    {
+      "id": 4,
+      "nome": "Bacon",
+      "preco": 4,
+      "imagem": "/img/adicional-bacon.png"
+    }
+  ],
+
+    "bebidas": [
+      {
+        "id": 1,
+        "nome": "Coca-Cola",
+        "preco": 6,
+        "imagem": "/img/coca-cola.png",
+        "tempoPreparo": "0-5 min"
+      },
+      {
+        "id": 2,
+        "nome": "Pepsi",
+        "preco": 6,
+        "imagem": "/img/pepsi.png",
+        "tempoPreparo": "0-5 min"
+      },
+      {
+        "id": 3,
+        "nome": "Guaraná Antarctica",
+        "preco": 6,
+        "imagem": "/img/guarana.png",
+        "tempoPreparo": "0-5 min"
+      },
+      {
+        "id": 4,
+        "nome": "Fanta Laranja",
+        "preco": 6,
+        "imagem": "/img/fanta.png",
+        "tempoPreparo": "0-5 min"
+      },
+      {
+        "id": 5,
+        "nome": "Sprite",
+        "preco": 6,
+        "imagem": "/img/sprite.png",
+        "tempoPreparo": "0-5 min"
+      },
+      {
+        "id": 6,
+        "nome": "Coca-Cola Zero",
+        "preco": 6,
+        "imagem": "/img/coca-zero.png",
+        "tempoPreparo": "0-5 min"
+      },
+      {
+        "id": 7,
+        "nome": "Sucos lata",
+        "preco": 5,
+        "imagem": "/img/suco.png",
+        "tempoPreparo": "0-5 min"
+      },
+      {
+        "id": 8,
+        "nome": "Cerveja lata",
+        "preco": 5,
+        "imagem": "/img/cerveja.png",
+        "tempoPreparo": "0-5 min"
+      }
+    ],
+    "porcoes": [
+        {
+            "id": 1,
+            "nome": "Fritas",
+            "preco": 10,
+            "imagem": "/img/porcao-fritas.png",
+            "tempoPreparo": "10-15 min"
+          },
+      {
+        "id": 2,
+        "nome": "Fritas c/ cheddar e bacon",
+        "preco": 20,
+        "imagem": "/img/batata-cheddar.png",
+        "tempoPreparo": "10-15 min"
+      }
+    ]
+  }
+  

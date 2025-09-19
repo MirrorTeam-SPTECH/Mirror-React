@@ -30,6 +30,28 @@
         color: white;
         transition: 0.3s ease-in-out;
       }
+
+      
+    }
+
+    .Fixed {
+      padding: 6px 15px;
+      border: 2px solid #F4E8E8;
+      border-radius: 8px;
+      color: #F4E8E8;
+      font-weight: bold;
+      cursor: pointer;
+      background: transparent;
+      transition: all 0.3s ease-in-out;
+      font-weight: 500;
+
+      &#active:hover {
+        background: #c00;
+        color: white;
+        transition: 0.3s ease-in-out;
+      }
+
+      
     }
 
     .Use {

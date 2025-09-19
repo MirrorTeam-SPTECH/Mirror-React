@@ -46,10 +46,17 @@ export function SubNavigation() {
                   <span
                     style={{
                      position: "absolute",
+<<<<<<< HEAD
                       width: 35,
                       height: 35,
                       top: 2,
                       left: 2,
+=======
+                      width: 30,
+                      height: 30,
+                      top: 5,
+                      left: 4,
+>>>>>>> 685f498b886d356c13ccf31e59a4a11107ecbf0e
                       borderRadius: "50%",
                       background: "#ff5a5f",
                       zIndex: 0,

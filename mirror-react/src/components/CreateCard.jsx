@@ -158,6 +158,11 @@ export default function CreateCard({
         onSubmit={handleSubmit}
         className="!px-4 !py-2 overflow-y-auto flex-1"
       >
+<<<<<<< HEAD
+=======
+
+      <div className="flex flex-row !gap-2">
+>>>>>>> 685f498b886d356c13ccf31e59a4a11107ecbf0e
         {/* Nome */}
         <div className="!mb-3">
           <label
@@ -209,7 +214,11 @@ export default function CreateCard({
             <p className="text-[#e30613] text-xs !mt-1">{errors.categoria}</p>
           )}
         </div>
+<<<<<<< HEAD
 
+=======
+</div>  
+>>>>>>> 685f498b886d356c13ccf31e59a4a11107ecbf0e
         {/* Preço e Tempo de Preparo */}
         <div className="flex flex-row gap-2">
           <div className="!mb-3 flex-1">

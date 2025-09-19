@@ -98,8 +98,12 @@ export default function Home() {
 
   const handlePix = () => {
     setMetodoPagamento("pix")
+<<<<<<< HEAD
      setEtapaAtual("carregamento"); // Mostra o CardCarregamento
   setTimeout(() => setEtapaAtual("qrcode"), 2000);
+=======
+    setEtapaAtual("qrcode"); 
+>>>>>>> 685f498b886d356c13ccf31e59a4a11107ecbf0e
   }
 
   const handleCartao = () => {
@@ -150,7 +154,9 @@ export default function Home() {
               </div>
             </div>
           ))}
-          <div className="skeleton sub-nav-skeleton" />
+          <div className="flex justify-center items-center">
+         <div className="skeleton sub-nav-skeleton" />
+        </div>
         </>
       ) : etapaAtual === "favoritos" ? (
         <>

@@ -10,9 +10,11 @@ import Cadastro from "./pages/Cadastro";
 import Perfil from "./pages/Perfil";
 import NovoPedido from "./pages/NovoPedido";
 import CardapioEditar from "./pages/CardapioEditar";
+import Cozinha from "./pages/Cozinha";
 import HistoricoPedidos from "./pages/HistoricoPedido";
 import Fidelidade from "./pages/Fidelidade";
 import Relatorios from "./pages/Relatorios";
+import Pedido from "./pages/Pedido"
 // Layouts
 import LayoutCliente from "./layouts/LayoutCliente";
 import LayoutGerenciamento from "./layouts/LayoutGerenciamento";
@@ -33,6 +35,7 @@ import CardsGerenciamento from "./components/CardGerenciamento";
 import DeleteConfirmation from "./components/DeleteConfirmation";
 import CreateCard from "./components/CreateCard";
 import EditCard from "./components/EditCard";
+import Success from "./components/Success";
 
 import "./App.css";
 
@@ -51,18 +54,24 @@ function App() {
 
           <Route path="/historicoPedido" element={<HistoricoPedidos />} />
           <Route path="/fidelidade" element={<Fidelidade />} />
-          <Route path="/pedido" element={<PedidoPage />} />
+          <Route path="/pedidoPage" element={<PedidoPage />} />
+          <Route path="/success" element={<Success />} />
+          <Route path="/failure" element={<div>Pagamento não aprovado. Tente novamente.</div>} />
+          <Route path="/pending" element={<div>Pagamento pendente. Aguardando confirmação.</div>} />
+
         </Route>
 
         {/* Layout Gerenciamento */}
         <Route element={<LayoutGerenciamento />}>
           <Route path="novoPedido" element={<NovoPedido />} />
           <Route path="cardapioEditar" element={<CardapioEditar />} />
-          <Route path="/cardGerenciamento" element={<CardsGerenciamento  titulo="Editar" />}/>
+          <Route path="/cozinha" element={<Cozinha />} />
+          <Route path="/cardGerenciamento" element={<CardsGerenciamento titulo="Editar" />} />
           <Route path="relatorios" element={<Relatorios />} />
           <Route path="deleteCard" element={<DeleteConfirmation />} />
           <Route path="CreateCard" element={<CreateCard />} />
           <Route path="EditCard" element={<EditCard />} />
+          <Route path="/pedido" element={<Pedido />} />
         </Route>
 
         {/* Rotas diretas de componentes */}
@@ -71,7 +80,7 @@ function App() {
           element={
             <CardLancheSelecionado
               produto={{ nome: "Teste", preco: "18,00", imagem: "" }}
-              onAvancar={() => {}}
+              onAvancar={() => { }}
             />
           }
         />
@@ -81,8 +90,8 @@ function App() {
           element={
             <CardPagamento
               produto={{ nome: "Teste", preco: "18,00" }}
-              onPix={() => {}}
-              onCartao={() => {}}
+              onPix={() => { }}
+              onCartao={() => { }}
             />
           }
         />
@@ -91,7 +100,7 @@ function App() {
           element={
             <CardCredenciais
               produto={{ nome: "Teste", preco: "18,00" }}
-              onConfirmar={() => {}}
+              onConfirmar={() => { }}
             />
           }
         />
@@ -105,7 +114,7 @@ function App() {
           element={
             <CardQRcode
               produto={{ nome: "Teste", preco: "18,00" }}
-              onConfirmar={() => {}}
+              onConfirmar={() => { }}
             />
           }
         />

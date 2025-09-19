@@ -1,0 +1,165 @@
+.resultados-container {
+  display: flex;
+  height: 16rem; 
+  width: 73rem; 
+  background-color: white;
+  z-index: 10;
+  margin-left: 4.5rem; 
+  margin-top: 1.1rem; 
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+  .loading-state,
+  .error-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+
+    .spinner {
+      animation: spin 1s linear infinite;
+      border-radius: 50%;
+      height: 2rem;
+      width: 2rem;
+      border: 2px solid #e5e7eb;
+      border-top-color: #2563eb;
+    }
+
+    span {
+      margin-left: 0.5rem;
+      color: #6b7280;
+    }
+
+    p {
+      color: #dc2626;
+    }
+  }
+
+  .tabela-wrapper {
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    
+
+    .handsontable {
+      font-family: "Montserrat", sans-serif;
+      font-size: 13px;
+      height: 100% !important;
+      overflow: hidden;
+
+      .htCore {
+        border: 1px solid #e5e7eb !important;
+        height: 100% !important;
+      }
+
+      th {
+        background-color: #f8fafc !important;
+        font-weight: 600;
+        color: #374151;
+        border-bottom: 1px solid #e5e7eb !important;
+        border-right: 1px solid #e5e7eb !important;
+        height: 45px;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 13px;
+        padding: 8px 12px;
+
+        &:last-child {
+          border-right: none !important;
+        }
+      }
+
+      td {
+        border-right: 1px solid #f3f4f6 !important;
+        border-bottom: 1px solid #f3f4f6 !important;
+        padding: 8px 12px;
+        height: 40px;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 13px;
+        color: #374151;
+        background-color: white;
+
+        &:last-child {
+          border-right: none !important;
+        }
+
+        &.linha-par {
+          background-color: #f9fafb !important;
+        }
+      }
+
+      .htCenter {
+        text-align: center;
+      }
+
+      .htMiddle {
+        vertical-align: middle;
+      }
+
+      .wtHolder {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        height: 100% !important;
+
+        &::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: #f1f5f9;
+          border-radius: 4px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: #cbd5e1;
+          border-radius: 4px;
+
+          &:hover {
+            background: #94a3b8;
+          }
+        }
+      }
+
+      .ht_master {
+        height: 100% !important;
+
+        .wtHolder {
+          height: calc(100% - 45px) !important;
+        }
+      }
+    }
+  }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 1rem;
+
+    .empty-icon {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      color: #6b7280;
+      margin-bottom: 0.25rem;
+    }
+
+    small {
+      color: #9ca3af;
+      text-align: center;
+    }
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
