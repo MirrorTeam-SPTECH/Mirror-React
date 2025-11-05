@@ -79,21 +79,34 @@ export default function CreateCard({
     e.preventDefault();
     if (!validateForm()) return;
 
-    // Preparar payload - manter preço como string para consistência com o JSON
+    // Converter preço de string para número
+    const precoNumerico = parseFloat(form.preco.replace(",", "."));
+
+    // Preparar payload com nomes de campos corretos para o backend
     const payload = {
-      nome: form.nome.trim(),
-      preco: form.preco, // Manter como string
-      tempoPreparo: form.tempoPreparo,
-      imagem: form.imagem,
-      descricao: form.descricao.trim(),
-      categoria: form.categoria,
+      name: form.nome.trim(),
+      description: form.descricao.trim(),
+      price: precoNumerico,
+      category: form.categoria.toUpperCase(), // Backend espera enum em maiúsculo
+      preparationTime: form.tempoPreparo,
+      imageUrl: form.imagem,
     };
 
     console.log("Enviando payload:", JSON.stringify(payload, null, 2));
 
-    fetch("http://localhost:8080/api/itens-pedidos", {
+    // Obter token de autenticação
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Você precisa estar logado para criar produtos");
+      return;
+    }
+
+    fetch("http://localhost:8080/api/menu-items", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify(payload),
     })
       .then((res) => {

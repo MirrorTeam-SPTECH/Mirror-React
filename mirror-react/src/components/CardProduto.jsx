@@ -16,9 +16,14 @@ export function CardProduto({
 }) {
   const [isSelected, setIsSelected] = useState(false);
 
+  // Debug: verificar URL da imagem
+  if (!imagem && id) {
+    console.log(`⚠️ Produto ${nome} (ID: ${id}) sem imagem`);
+  }
+
   const toggleSelect = (e) => {
     e.stopPropagation();
-    setIsSelected(prev => !prev);
+    setIsSelected((prev) => !prev);
   };
 
   // Callback executado quando o HeartButton alterna favorito
@@ -34,19 +39,22 @@ export function CardProduto({
       onClick={onClick}
     >
       {isGerenciamento ? (
-         <>
-        <div
-          className={`${styles.selectButton} ${isSelected ? styles.active : ""}`}
-          onClick={toggleSelect}
-        >
-          {isSelected ? "Selecionado" : ""}
-        </div>
-        <ButtonSelect 
-        produtoId={id}
-        categoria={categoria}
-        selected={isSelected} 
-        onClick={toggleSelect} />
-       </>
+        <>
+          <div
+            className={`${styles.selectButton} ${
+              isSelected ? styles.active : ""
+            }`}
+            onClick={toggleSelect}
+          >
+            {isSelected ? "Selecionado" : ""}
+          </div>
+          <ButtonSelect
+            produtoId={id}
+            categoria={categoria}
+            selected={isSelected}
+            onClick={toggleSelect}
+          />
+        </>
       ) : (
         <HeartButton
           produtoId={id}

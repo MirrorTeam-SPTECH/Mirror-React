@@ -1,58 +1,67 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import HeaderGerenciamento from "../components/HeaderGerenciamento"
-import ControlePedidos from "../components/ControlePedidos"
-import Kpi from "../components/KPI"
-import Ranking from "../components/Ranking"
-import Filtros from "../components/Filtros"
-import Resultados from "../components/Resultados"
-import { Search, ChevronDown, RefreshCw } from "lucide-react"
-import { useDashboardData } from "../data/useDashboardData"
+import { useState, useEffect } from "react";
+import HeaderGerenciamento from "../components/HeaderGerenciamento";
+import ControlePedidos from "../components/ControlePedidos";
+import Kpi from "../components/KPI";
+import Ranking from "../components/Ranking";
+import Filtros from "../components/Filtros";
+import Resultados from "../components/Resultados";
+import { Search, ChevronDown, RefreshCw } from "lucide-react";
+import { useDashboardData } from "../data/useDashboardData";
 
 export default function Relatorios() {
-  const [dataSelecionada, setDataSelecionada] = useState("")
-  const [filtroPagamento, setFiltroPagamento] = useState("")
-  const [filtroValor, setFiltroValor] = useState("")
-  const [filtroOrigem, setFiltroOrigem] = useState("")
-  const [filtroPesquisar, setFiltroPesquisar] = useState("")
-  const [loading, setLoading] = useState(true)
-  const [novoPagamentoBalcao, setNovoPagamentoBalcao] = useState(null)
+  const [dataSelecionada, setDataSelecionada] = useState("");
+  const [filtroPagamento, setFiltroPagamento] = useState("");
+  const [filtroValor, setFiltroValor] = useState("");
+  const [filtroOrigem, setFiltroOrigem] = useState("");
+  const [filtroPesquisar, setFiltroPesquisar] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [novoPagamentoBalcao, setNovoPagamentoBalcao] = useState(null);
 
   // KPIs/Ranking reagem aos filtros
   const {
     stats,
     loading: statsLoading,
     error,
-  } = useDashboardData(dataSelecionada, filtroPagamento, filtroValor, filtroOrigem, filtroPesquisar)
+  } = useDashboardData(
+    dataSelecionada,
+    filtroPagamento,
+    filtroValor,
+    filtroOrigem,
+    filtroPesquisar
+  );
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2000)
-    return () => clearTimeout(timer)
-  }, [])
+    const timer = setTimeout(() => setLoading(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
-    const item = localStorage.getItem("novoPagamentoBalcao")
+    const item = localStorage.getItem("novoPagamentoBalcao");
     if (item) {
       try {
-        setNovoPagamentoBalcao(JSON.parse(item))
+        setNovoPagamentoBalcao(JSON.parse(item));
       } catch (e) {
-        console.error("Erro ao parsear novoPagamentoBalcao do localStorage:", e)
+        console.error(
+          "Erro ao parsear novoPagamentoBalcao do localStorage:",
+          e
+        );
       }
     }
-  }, [])
+  }, []);
 
   const handleDateChange = (e) => {
-    setDataSelecionada(e.target.value)
-  }
+    setDataSelecionada(e.target.value);
+  };
 
   const handleResetFilters = () => {
-    setDataSelecionada("")
-    setFiltroPagamento("")
-    setFiltroValor("")
-    setFiltroOrigem("")
-    setFiltroPesquisar("")
-  }
+    setDataSelecionada("");
+    setFiltroPagamento("");
+    setFiltroValor("");
+    setFiltroOrigem("");
+    setFiltroPesquisar("");
+  };
 
   return (
     <>
@@ -71,7 +80,10 @@ export default function Relatorios() {
       ) : (
         <>
           <HeaderGerenciamento activePage="relatorios" />
-          <ControlePedidos titulo="Relatório de Pedidos" esconderBotoes={true} />
+          <ControlePedidos
+            titulo="Relatório de Pedidos"
+            esconderBotoes={true}
+          />
 
           <div className="flex !-mt-18 items-center gap-4">
             <div className="relative !ml-18">
@@ -97,16 +109,36 @@ export default function Relatorios() {
 
           {error && (
             <div className="!ml-18 !mt-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
-              <p>{error}</p>
+              <p>{error?.message || "Erro ao carregar relatórios"}</p>
             </div>
           )}
 
           <div className="flex flex-row gap-4 !ml-18">
-            <Kpi tittle="Total de Pedidos" value={stats?.totalPedidos || 0} loading={statsLoading} />
-            <Kpi tittle="Faturamento" value={stats?.faturamentoTotal || 0} loading={statsLoading} />
-            <Kpi tittle="Ticket Médio" value={stats?.ticketMedio || 0} loading={statsLoading} />
-            <Kpi tittle="Clientes Ativos" value={stats?.clientesAtivos || 0} loading={statsLoading} />
-            <Ranking title="Ranking de Itens" data={stats?.produtosRanking || []} loading={statsLoading} />
+            <Kpi
+              tittle="Total de Pedidos"
+              value={stats?.totalPedidos || 0}
+              loading={statsLoading}
+            />
+            <Kpi
+              tittle="Faturamento"
+              value={stats?.faturamentoTotal || 0}
+              loading={statsLoading}
+            />
+            <Kpi
+              tittle="Ticket Médio"
+              value={stats?.ticketMedio || 0}
+              loading={statsLoading}
+            />
+            <Kpi
+              tittle="Clientes Ativos"
+              value={stats?.clientesAtivos || 0}
+              loading={statsLoading}
+            />
+            <Ranking
+              title="Ranking de Itens"
+              data={stats?.produtosRanking || []}
+              loading={statsLoading}
+            />
           </div>
 
           <div className="flex flex-row !ml-18 !-mt-80 items-center">
@@ -141,7 +173,12 @@ export default function Relatorios() {
               />
             </div>
             <div className="w-84" />
-            <Filtros label="Pesquisar" options={[]} value={filtroPesquisar} onChange={setFiltroPesquisar}>
+            <Filtros
+              label="Pesquisar"
+              options={[]}
+              value={filtroPesquisar}
+              onChange={setFiltroPesquisar}
+            >
               <div className="relative h-full">
                 <input
                   type="text"
@@ -168,5 +205,5 @@ export default function Relatorios() {
         </>
       )}
     </>
-  )
+  );
 }

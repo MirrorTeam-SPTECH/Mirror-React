@@ -1,67 +1,199 @@
 /* src/styles/CardQRcode.css */
-.qrcode-wrapper {
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap");
+
+.qrcode-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 350px;
-  height: 32rem; /* equivalente a h-128 */
+  z-index: 1000;
 }
 
-.card-pix {
-  background: rgba(30, 30, 30, 0.95);
-  color: #f0f0f0;
-  width: 350px;
-  height: 100%;
+.qrcode-container {
+  width: 90%;
+  max-width: 400px;
+  background: #fff;
   border-radius: 20px;
-  text-align: center;
-  font-family: Arial, sans-serif;
+  overflow: hidden;
+  font-family: "Montserrat", sans-serif;
+  color: #000;
   display: flex;
   flex-direction: column;
+  max-height: 90vh;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Header */
+.qrcode-header {
+  display: flex;
+  align-items: center;
   justify-content: space-between;
-  padding: 20px;
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
-.card-pix h2 {
+.btn-voltar-qr {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  color: #000;
+  transition: opacity 0.2s;
+}
+
+.btn-voltar-qr:hover {
+  opacity: 0.7;
+}
+
+.qrcode-titulo {
+  font-weight: 700;
+  font-size: 1.2rem;
   margin: 0;
-  font-size: 18px;
-  color: #ffffff;
+  text-align: center;
 }
 
-.pix-info {
-  flex-grow: 1;
+/* Content */
+.qrcode-content {
+  padding: 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.qr-image-container {
+  background: #f8f8f8;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  display: flex;
   justify-content: center;
+  align-items: center;
 }
 
-.qr-code {
-  width: 150px;
-  height: 150px;
-  margin-bottom: 10px;
-}
-
-.pix-code {
-  font-size: 12px;
-  line-height: 1.4;
-  word-break: break-word;
-  color: #cccccc;
-}
-
-.btn {
+.qr-code-image {
+  width: 250px;
+  height: 250px;
   display: block;
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
+}
+
+.qr-loading {
+  padding: 60px 20px;
+  text-align: center;
+  color: #666;
+}
+
+.qrcode-instrucao {
   font-size: 14px;
-  cursor: pointer;
-  font-weight: bold;
+  color: #666;
+  text-align: center;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+/* Código PIX */
+.codigo-pix-container {
+  width: 100%;
   margin-top: 10px;
 }
 
-.copiar,
-.pagar {
-  background-color: #00d66b;
+.codigo-pix-label {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.codigo-pix-box {
+  background: #f8f8f8;
+  border-radius: 12px;
+  padding: 12px;
+  max-height: 80px;
+  overflow-y: auto;
+}
+
+.codigo-pix-texto {
+  font-size: 10px;
+  color: #333;
+  word-break: break-all;
+  margin: 0;
+  line-height: 1.4;
+  font-family: monospace;
+}
+
+/* Actions */
+.qrcode-actions {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.btn-qr-action {
+  width: 100%;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: "Montserrat", sans-serif;
+}
+
+.btn-copiar {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.btn-copiar:hover {
+  background: #c8e6c9;
+}
+
+.btn-ticket {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.btn-ticket:hover {
+  background: #bbdefb;
+}
+
+.btn-confirmar {
+  background: #dc0000;
   color: #fff;
+}
+
+.btn-confirmar:hover {
+  background: #b30000;
+}
+
+/* Responsivo */
+@media (max-width: 480px) {
+  .qrcode-container {
+    width: 95%;
+    max-height: 95vh;
+  }
+
+  .qr-code-image {
+    width: 200px;
+    height: 200px;
+  }
+
+  .qrcode-content {
+    padding: 16px;
+  }
 }

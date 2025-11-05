@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Edit2, Check, X } from "lucide-react"
+import { useState, useEffect } from "react";
+import { Edit2, Check, X } from "lucide-react";
 
 export default function EditCard({ onClose, onProdutoAtualizado }) {
-  const [produtoSelecionado, setProdutoSelecionado] = useState(null)
+  const [produtoSelecionado, setProdutoSelecionado] = useState(null);
   const [form, setForm] = useState({
     id: "",
     nome: "",
@@ -13,161 +13,211 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
     imagem: "/placeholder.svg",
     descricao: "",
     categoria: "",
-  })
+  });
 
-  const [editMode, setEditMode] = useState(false)
-  const [errors, setErrors] = useState({})
-  const [previewImage, setPreviewImage] = useState("/placeholder.svg")
-  const [loading, setLoading] = useState(false)
+  const [editMode, setEditMode] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [previewImage, setPreviewImage] = useState("/placeholder.svg");
+  const [loading, setLoading] = useState(false);
 
   // Buscar produto selecionado e seus dados completos
   useEffect(() => {
     const buscarProdutoSelecionado = async () => {
-      const selecionado = localStorage.getItem("selecionadoUnico")
+      const selecionado = localStorage.getItem("selecionadoUnico");
+      console.log("Selecionado no localStorage:", selecionado);
+
       if (!selecionado) {
-        setProdutoSelecionado(null)
-        return
+        setProdutoSelecionado(null);
+        return;
       }
 
-      const { id } = JSON.parse(selecionado)
+      const { id } = JSON.parse(selecionado);
+      console.log("ID do produto selecionado:", id);
 
       try {
         // Buscar todos os produtos da API
-        const response = await fetch("http://localhost:8080/api/itens-pedidos")
-        if (!response.ok) throw new Error("Erro ao buscar produtos")
+        const response = await fetch("http://localhost:8080/api/menu-items");
+        if (!response.ok) throw new Error("Erro ao buscar produtos");
 
-        const data = await response.json()
+        const data = await response.json();
+        console.log("Dados da API:", data);
+
+        // A API retorna { menu: { categoria: [...] } }
+        const menuData = data.menu || data;
+        console.log("Menu data:", menuData);
 
         // Encontrar o produto específico
-        let produtoEncontrado = null
-        const categorias = ["combos", "hamburgueres", "espetinhos", "adicionais", "bebidas", "porcoes"]
+        let produtoEncontrado = null;
+        const categorias = [
+          "combos",
+          "hamburgueres",
+          "espetinhos",
+          "adicionais",
+          "bebidas",
+          "porcoes",
+        ];
 
         for (const cat of categorias) {
-          if (data[cat]) {
-            produtoEncontrado = data[cat].find((produto) => produto.id === id)
+          if (menuData[cat]) {
+            console.log(
+              `Buscando ID ${id} na categoria ${cat}:`,
+              menuData[cat]
+            );
+            produtoEncontrado = menuData[cat].find(
+              (produto) => produto.id === id
+            );
             if (produtoEncontrado) {
-              produtoEncontrado.categoria = cat // Adicionar categoria ao produto
-              break
+              console.log(
+                "Produto encontrado na categoria:",
+                cat,
+                produtoEncontrado
+              );
+              produtoEncontrado.categoria = cat; // Adicionar categoria ao produto
+              break;
             }
           }
         }
 
         if (produtoEncontrado) {
-          setProdutoSelecionado(produtoEncontrado)
+          setProdutoSelecionado(produtoEncontrado);
+          // Mapear campos do backend (inglês) para o frontend (português)
           setForm({
             id: produtoEncontrado.id,
-            nome: produtoEncontrado.nome || "",
-            preco: produtoEncontrado.preco || "",
-            tempoPreparo: produtoEncontrado.tempoPreparo || "10-15 min",
-            imagem: produtoEncontrado.imagem || "/placeholder.svg",
-            descricao: produtoEncontrado.descricao || "",
+            nome: produtoEncontrado.name || "",
+            preco: produtoEncontrado.price?.toString().replace(".", ",") || "",
+            tempoPreparo: produtoEncontrado.preparationTime || "10-15 min",
+            imagem: produtoEncontrado.imageUrl || "/placeholder.svg",
+            descricao: produtoEncontrado.description || "",
             categoria: produtoEncontrado.categoria,
-          })
-          setPreviewImage(produtoEncontrado.imagem || "/placeholder.svg")
+          });
+          setPreviewImage(produtoEncontrado.imageUrl || "/placeholder.svg");
+        } else {
+          console.warn("Produto não encontrado com ID:", id);
         }
       } catch (error) {
-        console.error("Erro ao buscar produto:", error)
+        console.error("Erro ao buscar produto:", error);
       }
-    }
+    };
 
-    buscarProdutoSelecionado()
+    buscarProdutoSelecionado();
 
     // Escutar mudanças na seleção
     const handleSelecionadosUpdate = () => {
-      buscarProdutoSelecionado()
-    }
+      buscarProdutoSelecionado();
+    };
 
-    window.addEventListener("selecionadosAtualizados", handleSelecionadosUpdate)
-    return () => window.removeEventListener("selecionadosAtualizados", handleSelecionadosUpdate)
-  }, [])
+    window.addEventListener(
+      "selecionadosAtualizados",
+      handleSelecionadosUpdate
+    );
+    return () =>
+      window.removeEventListener(
+        "selecionadosAtualizados",
+        handleSelecionadosUpdate
+      );
+  }, []);
 
   const handleChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     if (name === "preco") {
       // Permitir apenas números, vírgula e ponto
-      const precoValue = value.replace(/[^0-9.,]/g, "")
-      setForm((prev) => ({ ...prev, [name]: precoValue }))
+      const precoValue = value.replace(/[^0-9.,]/g, "");
+      setForm((prev) => ({ ...prev, [name]: precoValue }));
     } else {
-      setForm((prev) => ({ ...prev, [name]: value }))
+      setForm((prev) => ({ ...prev, [name]: value }));
     }
 
     // Limpar erro do campo
     if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: null }))
+      setErrors((prev) => ({ ...prev, [name]: null }));
     }
-  }
+  };
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0]
+    const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onloadend = () => {
-        setPreviewImage(reader.result)
-        setForm((prev) => ({ ...prev, imagem: reader.result }))
-      }
-      reader.readAsDataURL(file)
+        setPreviewImage(reader.result);
+        setForm((prev) => ({ ...prev, imagem: reader.result }));
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
 
   const validateForm = () => {
-    const newErrors = {}
-    if (!form.nome.trim()) newErrors.nome = "Nome é obrigatório"
+    const newErrors = {};
+    if (!form.nome.trim()) newErrors.nome = "Nome é obrigatório";
     if (!form.preco || form.preco === "0" || form.preco === "0,00") {
-      newErrors.preco = "Preço deve ser maior que zero"
+      newErrors.preco = "Preço deve ser maior que zero";
     }
-    if (!form.descricao.trim()) newErrors.descricao = "Descrição é obrigatória"
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+    if (!form.descricao.trim()) newErrors.descricao = "Descrição é obrigatória";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    if (!validateForm()) return
+    e.preventDefault();
+    if (!validateForm()) return;
 
-    setLoading(true)
+    setLoading(true);
 
     try {
+      // Converter preço de string para número
+      const precoNumerico = parseFloat(form.preco.replace(",", "."));
+
       const payload = {
-        id: form.id,
-        nome: form.nome.trim(),
-        preco: form.preco, // Manter como string
-        tempoPreparo: form.tempoPreparo,
-        imagem: form.imagem,
-        descricao: form.descricao.trim(),
-        categoria: form.categoria,
+        name: form.nome.trim(),
+        description: form.descricao.trim(),
+        price: precoNumerico,
+        preparationTime: form.tempoPreparo,
+        imageUrl: form.imagem,
+      };
+
+      // Obter token de autenticação
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Você precisa estar logado para atualizar produtos");
+        return;
       }
 
       // Fazer requisição PUT para atualizar
-      const response = await fetch(`http://localhost:8080/api/itens-pedidos/${form.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      })
+      const response = await fetch(
+        `http://localhost:8080/api/menu-items/${form.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
 
-      if (!response.ok) throw new Error("Erro ao atualizar produto")
+      if (!response.ok) throw new Error("Erro ao atualizar produto");
 
-      const produtoAtualizado = await response.json()
+      const produtoAtualizado = await response.json();
 
       // Notificar o componente pai para recarregar a lista
       if (onProdutoAtualizado) {
-        onProdutoAtualizado(produtoAtualizado)
+        onProdutoAtualizado(produtoAtualizado);
       }
 
-      setEditMode(false)
-      alert("Produto atualizado com sucesso!")
+      setEditMode(false);
+      alert("Produto atualizado com sucesso!");
 
       // Fechar o modal após sucesso
-      onClose()
+      onClose();
     } catch (error) {
-      console.error("Erro ao atualizar produto:", error)
-      alert("Erro ao atualizar produto: " + error.message)
+      console.error("Erro ao atualizar produto:", error);
+      alert("Erro ao atualizar produto: " + error.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const toggleEditMode = () => {
-    setEditMode(!editMode)
+    setEditMode(!editMode);
     if (editMode) {
       // Cancelar - restaurar dados originais
       if (produtoSelecionado) {
@@ -179,12 +229,12 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
           imagem: produtoSelecionado.imagem || "/placeholder.svg",
           descricao: produtoSelecionado.descricao || "",
           categoria: produtoSelecionado.categoria,
-        })
-        setPreviewImage(produtoSelecionado.imagem || "/placeholder.svg")
+        });
+        setPreviewImage(produtoSelecionado.imagem || "/placeholder.svg");
       }
-      setErrors({})
+      setErrors({});
     }
-  }
+  };
 
   // Se não há produto selecionado
   if (!produtoSelecionado) {
@@ -194,8 +244,12 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
           <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
             <Edit2 size={24} className="text-gray-400" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-800 mb-2">Nenhum produto selecionado</h3>
-          <p className="text-sm text-gray-500 mb-4">Selecione um produto na lista para editá-lo</p>
+          <h3 className="text-lg font-semibold text-gray-800 mb-2">
+            Nenhum produto selecionado
+          </h3>
+          <p className="text-sm text-gray-500 mb-4">
+            Selecione um produto na lista para editá-lo
+          </p>
           <button
             onClick={onClose}
             className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 font-medium"
@@ -204,7 +258,7 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
           </button>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -226,14 +280,18 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
       {/* Indicador do produto selecionado */}
       <div className="px-4 py-2 bg-blue-50 border-b border-blue-200">
         <p className="text-xs text-blue-800">
-          <strong>Produto:</strong> {produtoSelecionado.nome} (ID: {produtoSelecionado.id})
+          <strong>Produto:</strong> {produtoSelecionado.nome} (ID:{" "}
+          {produtoSelecionado.id})
         </p>
         <p className="text-xs text-blue-600">
           <strong>Categoria:</strong> {produtoSelecionado.categoria}
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col flex-1 !px-4 !py-2 overflow-y-auto">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col flex-1 !px-4 !py-2 overflow-y-auto"
+      >
         {/* Imagem */}
         <div className="!mb-3">
           <div className="flex flex-col items-center">
@@ -260,7 +318,10 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
 
         {/* Nome */}
         <div className="!mb-2">
-          <label htmlFor="nome" className="block text-xs font-medium text-gray-700 !mb-1">
+          <label
+            htmlFor="nome"
+            className="block text-xs font-medium text-gray-700 !mb-1"
+          >
             Nome do Produto
           </label>
           <input
@@ -274,13 +335,18 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
               editMode ? "border-gray-300" : "border-transparent bg-gray-100"
             } rounded-md focus:outline-none focus:ring-1 focus:ring-[#e30613] focus:border-[#e30613] text-gray-800 disabled:bg-gray-100`}
           />
-          {errors.nome && editMode && <p className="text-[#e30613] text-xs !mt-1">{errors.nome}</p>}
+          {errors.nome && editMode && (
+            <p className="text-[#e30613] text-xs !mt-1">{errors.nome}</p>
+          )}
         </div>
 
         {/* Preço e Tempo de Preparo */}
         <div className="flex flex-row gap-2 !mb-3">
           <div className="w-1/2">
-            <label htmlFor="preco" className="block text-xs font-medium text-gray-700 !mb-1">
+            <label
+              htmlFor="preco"
+              className="block text-xs font-medium text-gray-700 !mb-1"
+            >
               Preço (R$)
             </label>
             <input
@@ -295,10 +361,15 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
                 editMode ? "border-gray-300" : "border-transparent bg-gray-100"
               } rounded-md focus:outline-none focus:ring-1 focus:ring-[#e30613] focus:border-[#e30613] text-gray-800 disabled:bg-gray-100`}
             />
-            {errors.preco && editMode && <p className="text-[#e30613] text-xs !mt-1">{errors.preco}</p>}
+            {errors.preco && editMode && (
+              <p className="text-[#e30613] text-xs !mt-1">{errors.preco}</p>
+            )}
           </div>
           <div className="w-1/2">
-            <label htmlFor="tempoPreparo" className="block text-xs font-medium text-gray-700 !mb-1">
+            <label
+              htmlFor="tempoPreparo"
+              className="block text-xs font-medium text-gray-700 !mb-1"
+            >
               Tempo de Preparo
             </label>
             {editMode ? (
@@ -331,7 +402,10 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
 
         {/* Descrição */}
         <div className="!mb-3">
-          <label htmlFor="descricao" className="block text-xs font-medium text-gray-700 !mb-1">
+          <label
+            htmlFor="descricao"
+            className="block text-xs font-medium text-gray-700 !mb-1"
+          >
             Descrição
           </label>
           <textarea
@@ -345,7 +419,9 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
               editMode ? "border-gray-300" : "border-transparent bg-gray-100"
             } rounded-md min-h-[60px] resize-none focus:outline-none focus:ring-1 focus:ring-[#e30613] focus:border-[#e30613] text-gray-800 disabled:bg-gray-100`}
           />
-          {errors.descricao && editMode && <p className="text-[#e30613] text-xs !mt-1">{errors.descricao}</p>}
+          {errors.descricao && editMode && (
+            <p className="text-[#e30613] text-xs !mt-1">{errors.descricao}</p>
+          )}
         </div>
 
         {/* Botões */}
@@ -389,5 +465,5 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
         </div>
       </form>
     </div>
-  )
+  );
 }

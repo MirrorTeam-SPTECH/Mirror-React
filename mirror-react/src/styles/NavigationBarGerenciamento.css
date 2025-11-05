@@ -1,0 +1,37 @@
+.container-navBar-gerenciamento {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 0;
+  padding-top: 10px;
+}
+
+.menu-gerenciamento {
+  display: flex;
+  gap: 10px;
+  list-style: none;
+  padding: 10px;
+}
+
+.button-gerenciamento {
+  padding: 6px 15px;
+  border: 2px solid #ffffff; /* Borda branca */
+  border-radius: 8px;
+  color: #ffffff; /* Texto branco */
+  font-weight: 500;
+  cursor: pointer;
+  background: transparent;
+  transition: all 0.3s ease-in-out;
+}
+
+.button-gerenciamento:hover {
+  background: rgba(107, 114, 128, 0.3); /* Cinza transparente no hover */
+  color: white;
+  border-color: rgba(184, 184, 184, 0.5);
+  transition: 0.3s ease-in-out;
+}
+
+.button-gerenciamento:active {
+  background: #1a202c;
+  border-color: #1a202c;
+}

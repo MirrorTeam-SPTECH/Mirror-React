@@ -1,170 +1,117 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Header } from "../components/Header"
-import { SubNavigation } from "../components/SubNavigation"
-import "../styles/HistoricoPedido.css"
-
-// Helpers
-const safeParse = (value, fallback) => {
-  try {
-    return JSON.parse(value)
-  } catch {
-    return fallback
-  }
-}
-
-const calcularStatus = (dataPedido, tempoPreparo) => {
-  const agora = new Date()
-  const dataInicio = new Date(dataPedido)
-  const tempoDecorrido = Math.floor((agora - dataInicio) / (1000 * 60))
-  const tempoMax = Number.parseInt(tempoPreparo?.split("-").pop() || tempoPreparo?.split(" ")[0]) || 15
-  return tempoDecorrido >= tempoMax ? "finalizado" : "em-andamento"
-}
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { Header } from "../components/Header";
+import { SubNavigation } from "../components/SubNavigation";
+import "../styles/HistoricoPedido.css";
 
 const formatarData = (data) =>
   new Date(data).toLocaleDateString("pt-BR", {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
-  })
-
-const gerarId = (baseTs) => {
-  if (baseTs && Number.isFinite(baseTs)) {
-    return `#${baseTs.toString(36).toUpperCase()}`
-  }
-  return "#" + Math.random().toString(36).substr(2, 5).toUpperCase()
-}
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
 const formatarPreco = (preco) => {
-  const precoNum = typeof preco === "number" ? preco : Number.parseFloat(preco || 0)
-  return precoNum.toFixed(2).replace(".", ",")
-}
-
-function normalizarPagamento(dpRaw) {
-  const dp = dpRaw || {}
-
-  const produtoN = dp.produto || null
-  const pagamentoN = dp.pagamentoData || null
-
-  const nome = dp.nomeLanche || dp.nome || produtoN?.nome || "Produto"
-  const imagem = dp.imagem || produtoN?.imagem || "/placeholder.svg?height=60&width=60"
-  const tempoPreparo = dp.tempoPreparo || produtoN?.tempoPreparo || "15-20 min"
-
-  const unitPrice =
-    toNumber(dp.unitPrice) ??
-    toNumber(dp.precoUnitario) ??
-    toNumber(dp.preco) ??
-    toNumber(pagamentoN?.valorUnitario) ??
-    toNumber(produtoN?.unitPrice) ??
-    0
-
-  const quantity = toNumber(dp.quantity) ?? toNumber(dp.quantidade) ?? toNumber(produtoN?.quantity) ?? 1
-
-  const adicionaisSelecionados = Array.isArray(dp.adicionaisSelecionados)
-    ? dp.adicionaisSelecionados
-    : Array.isArray(produtoN?.adicionaisSelecionados)
-      ? produtoN.adicionaisSelecionados
-      : []
-
-  const adicionaisTotal = adicionaisSelecionados.reduce((acc, ad) => {
-    const p = toNumber(ad?.preco) ?? 0
-    const q = toNumber(ad?.quantidade) ?? 1
-    return acc + p * q
-  }, 0)
-
-  const subtotalNum = toNumber(dp.subtotalNum) ?? toNumber(pagamentoN?.subtotalNum) ?? unitPrice * quantity + 0 // base
-
-  const entregaNum = toNumber(dp.entregaNum) ?? 0
-  const totalNum = toNumber(dp.totalNum) ?? toNumber(pagamentoN?.totalNum) ?? subtotalNum + adicionaisTotal + entregaNum
-
-  const timestamp = toNumber(dp.timestamp) ?? toNumber(pagamentoN?.timestamp) ?? Date.now()
-
-  return {
-    nome,
-    imagem,
-    tempoPreparo,
-    unitPrice,
-    quantity,
-    adicionaisSelecionados,
-    adicionaisTotal,
-    subtotalNum,
-    entregaNum,
-    totalNum,
-    timestamp,
-    dadosOriginais: dp,
-  }
-}
-
-function toNumber(v) {
-  if (v == null) return undefined
-  if (typeof v === "number" && Number.isFinite(v)) return v
-  if (typeof v === "string") {
-    const n = Number.parseFloat(v.replace?.(",", ".") ?? v)
-    return Number.isNaN(n) ? undefined : n
-  }
-  return undefined
-}
+  const precoNum =
+    typeof preco === "number" ? preco : Number.parseFloat(preco || 0);
+  return precoNum.toFixed(2).replace(".", ",");
+};
 
 function OrderItem({ item }) {
-  const { nome, imagem, preco, quantidade, adicionaisSelecionados = [] } = item
-  const precoFormatado = typeof preco === "number" ? preco.toFixed(2).replace(".", ",") : preco
-
   return (
     <div className="item-pedido">
-      <img src={imagem || "/placeholder.svg?height=60&width=60"} alt={nome} className="imagem-item" />
+      <img
+        src={item.menuItemImageUrl || "/placeholder.svg?height=60&width=60"}
+        alt={item.menuItemName || "Produto"}
+        className="imagem-item"
+      />
       <div className="detalhes-item">
-        <p className="nome-item">{nome}</p>
-        <p className="preco-item">R$ {precoFormatado}</p>
-        {quantidade > 1 && <p className="quantidade-item">Qtd: {quantidade}</p>}
-        <p className="preco-total-item">Total: R$ {formatarPreco((toNumber(preco) ?? 0) * (quantidade || 1))}</p>
-
-        {Array.isArray(adicionaisSelecionados) && adicionaisSelecionados.length > 0 && (
-          <div className="!mt-2 flex flex-col">
-            <span className="text-sm font-semibold text-gray-700">Adicionais:</span>
-            {adicionaisSelecionados.map((ad, i) => (
-              <span key={i} className="text-xs text-gray-600 !mb-0.5">
-                {ad?.nome} x{ad?.quantidade || 1} (R$ {(toNumber(ad?.preco) ?? 0).toFixed(2).replace(".", ",")} cada)
-              </span>
-            ))}
-          </div>
+        <p className="nome-item">{item.menuItemName || "Produto"}</p>
+        <p className="preco-item">R$ {formatarPreco(item.unitPrice)}</p>
+        {item.quantity > 1 && (
+          <p className="quantidade-item">Qtd: {item.quantity}</p>
         )}
+        {item.observations && (
+          <p className="adicionais-item">
+            <strong>Adicionais:</strong> {item.observations}
+          </p>
+        )}
+        <p className="preco-total-item">
+          Total: R$ {formatarPreco(item.unitPrice * item.quantity)}
+        </p>
       </div>
     </div>
-  )
+  );
 }
 
-function OrderCard({ pedido, onPedirNovamente }) {
-  const [status, setStatus] = useState(pedido.status)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setStatus(calcularStatus(pedido.dataPedido, pedido.tempoPreparo))
-    }, 60000)
-    return () => clearInterval(interval)
-  }, [pedido.dataPedido, pedido.tempoPreparo])
+function OrderCard({ pedido, onPedirNovamente, numeroPedidoUsuario }) {
+  const getStatusText = (status) => {
+    const statusMap = {
+      PENDING: "Pendente",
+      CONFIRMED: "Confirmado",
+      PREPARING: "Em Preparo",
+      READY: "Pronto",
+      DELIVERED: "Entregue",
+      CANCELLED: "Cancelado",
+    };
+    return statusMap[status] || status;
+  };
 
-  const isInProgress = status === "em-andamento"
-  const statusClass = isInProgress ? "em-andamento" : "finalizado"
+  const getStatusClass = (status) => {
+    if (["DELIVERED", "READY"].includes(status)) return "finalizado";
+    if (["CANCELLED"].includes(status)) return "cancelado";
+    return "em-andamento";
+  };
+
+  const statusText = getStatusText(pedido.status);
+  const statusClass = getStatusClass(pedido.status);
+  const isInProgress = statusClass === "em-andamento";
 
   return (
     <div className="card-pedido">
       <div className="topo-pedido">
-        <span className={`status ${statusClass}`}>{isInProgress ? "Em Andamento" : "Finalizado"}</span>
+        <span className={`status ${statusClass}`}>{statusText}</span>
         <div className="info-pedido">
           <div>
-            <strong>{pedido.id}</strong>
+            <strong>Pedido #{numeroPedidoUsuario}</strong>
           </div>
-          <div className="data">{formatarData(pedido.dataPedido)}</div>
+          <div className="data">{formatarData(pedido.createdAt)}</div>
         </div>
       </div>
 
+      <div className="cliente-info">
+        <p>
+          <strong>Cliente:</strong> {pedido.customerName}
+        </p>
+        {pedido.notes && (
+          <p className="observacoes">
+            <strong>Obs:</strong> {pedido.notes}
+          </p>
+        )}
+      </div>
+
       <div className="itens-pedido">
-        {(pedido.itens || []).map((item, index) => (
-          <OrderItem key={index} item={item} />
+        {(pedido.items || []).map((item) => (
+          <OrderItem key={item.id} item={item} />
         ))}
       </div>
 
-      <div className="total-pedido">Total: R$ {formatarPreco(pedido.total)}</div>
+      <div className="pagamento-info">
+        <p>
+          <strong>Pagamento:</strong> {pedido.payment?.method || "N/A"}
+        </p>
+        <p>
+          <strong>Status Pagamento:</strong> {pedido.payment?.status || "N/A"}
+        </p>
+      </div>
+
+      <div className="total-pedido">
+        Total: R$ {formatarPreco(pedido.total)}
+      </div>
 
       <button
         className={isInProgress ? "botao-repetir-cinza" : "botao-repetir-claro"}
@@ -174,140 +121,93 @@ function OrderCard({ pedido, onPedirNovamente }) {
         {isInProgress ? "Aguarde..." : "Pedir Novamente"}
       </button>
     </div>
-  )
+  );
 }
 
 export default function HistoricoPedidos() {
-  const [pedidos, setPedidos] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [pedidos, setPedidos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const carregarPedidos = () => {
-    const raw = localStorage.getItem("historicoPedidos")
-    const list = safeParse(raw, [])
-    const limpos = (Array.isArray(list) ? list : [])
-      .filter((p) => p && Array.isArray(p.itens) && p.itens.length > 0)
-      .map((p) => ({
-        ...p,
-        total: toNumber(p.total) ?? 0,
-        tempoPreparo: p.tempoPreparo || "15-20 min",
-        status: calcularStatus(p.dataPedido, p.tempoPreparo),
-        itens: p.itens.filter(Boolean).map((i) => ({
-          ...i,
-          preco: toNumber(i.preco) ?? 0,
-          quantidade: toNumber(i.quantidade) ?? 1,
-          imagem: i.imagem || "/placeholder.svg?height=60&width=60",
-        })),
-      }))
-    setPedidos(limpos)
-    setLoading(false)
-  }
+  const carregarPedidos = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const token = localStorage.getItem("token");
+      const userStr = localStorage.getItem("user");
+
+      if (!token || !userStr) {
+        setError("Você precisa estar logado para ver o histórico");
+        setLoading(false);
+        return;
+      }
+
+      const user = JSON.parse(userStr);
+      const userEmail = user.email;
+
+      if (!userEmail) {
+        setError("Email do usuário não encontrado");
+        setLoading(false);
+        return;
+      }
+
+      console.log("Buscando pedidos do usuário:", userEmail);
+
+      // Usar o endpoint que filtra por email do cliente
+      const response = await axios.get(
+        `http://localhost:8080/api/orders/customer/${encodeURIComponent(
+          userEmail
+        )}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      console.log("Resposta da API:", response.data);
+
+      // A API retorna um array direto neste endpoint
+      const pedidosData = Array.isArray(response.data) ? response.data : [];
+
+      // Ordenar por data mais recente
+      const pedidosOrdenados = pedidosData.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+
+      console.log("Pedidos ordenados:", pedidosOrdenados);
+
+      // Debug: verificar se os itens têm observations
+      if (pedidosOrdenados.length > 0) {
+        console.log("Primeiro pedido - items:", pedidosOrdenados[0].items);
+      }
+
+      setPedidos(pedidosOrdenados);
+    } catch (err) {
+      console.error("Erro ao carregar pedidos:", err);
+      console.error("Detalhes do erro:", err.response?.data);
+      setError(
+        "Erro ao carregar histórico de pedidos: " +
+          (err.response?.data?.message || err.message)
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    carregarPedidos()
+    carregarPedidos();
 
-    const handleVisibility = () => {
-      if (!document.hidden) carregarPedidos()
-    }
-    document.addEventListener("visibilitychange", handleVisibility)
-
+    // Recarregar a cada 30 segundos
     const interval = setInterval(() => {
-      verificarNovosPedidos()
-    }, 2000)
+      carregarPedidos();
+    }, 30000);
 
-    return () => {
-      clearInterval(interval)
-      document.removeEventListener("visibilitychange", handleVisibility)
-    }
-  }, [])
+    return () => clearInterval(interval);
+  }, []);
 
-  const jaExistePedidoComTimestamp = (ts) => {
-    return pedidos.some((p) => p?.dadosOriginais?.timestamp === ts)
-  }
-
-  const adicionarNovoPedido = (dadosPagamento, metodoPagamento) => {
-    const norm = normalizarPagamento(dadosPagamento)
-
-    if (norm.timestamp && jaExistePedidoComTimestamp(norm.timestamp)) {
-      if (metodoPagamento === "pix") localStorage.removeItem("novoPagamentoPix")
-      if (metodoPagamento === "balcao") localStorage.removeItem("novoPagamentoBalcao")
-      return
-    }
-
-    const produtoPrincipal = {
-      nome: norm.nome,
-      preco: norm.unitPrice,
-      quantidade: norm.quantity,
-      imagem: norm.imagem,
-      tipo: "produto",
-      adicionaisSelecionados: norm.adicionaisSelecionados,
-    }
-
-    const itens = [produtoPrincipal]
-    if (Array.isArray(norm.adicionaisSelecionados) && norm.adicionaisSelecionados.length > 0) {
-      norm.adicionaisSelecionados.forEach((ad) => {
-        itens.push({
-          nome: `+ ${ad?.nome}`,
-          preco: toNumber(ad?.preco) ?? 0,
-          quantidade: toNumber(ad?.quantidade) ?? 1,
-          imagem: ad?.imagem || "/placeholder.svg?height=60&width=60",
-          tipo: "adicional",
-        })
-      })
-    }
-
-    const totalFinal =
-      toNumber(norm.totalNum) ??
-      itens.reduce((acc, it) => acc + (toNumber(it.preco) ?? 0) * (toNumber(it.quantidade) ?? 1), 0) +
-        (toNumber(norm.entregaNum) ?? 0)
-
-    const novoPedido = {
-      id: gerarId(norm.timestamp),
-      dataPedido: new Date().toISOString(),
-      tempoPreparo: norm.tempoPreparo,
-      status: "em-andamento",
-      metodoPagamento,
-      total: totalFinal,
-      itens,
-      dadosOriginais: { ...norm.dadosOriginais, timestamp: norm.timestamp },
-    }
-
-    setPedidos((prev) => {
-      const novos = [novoPedido, ...prev]
-      localStorage.setItem("historicoPedidos", JSON.stringify(novos))
-      return novos
-    })
-
-    if (metodoPagamento === "pix") localStorage.removeItem("novoPagamentoPix")
-    if (metodoPagamento === "balcao") localStorage.removeItem("novoPagamentoBalcao")
-  }
-
-  const verificarNovosPedidos = () => {
-    const novoPagamentoBalcao = localStorage.getItem("novoPagamentoBalcao")
-    if (novoPagamentoBalcao) {
-      const dadosPagamento = safeParse(novoPagamentoBalcao, null)
-      if (dadosPagamento) {
-        adicionarNovoPedido(dadosPagamento, "balcao")
-      } else {
-        localStorage.removeItem("novoPagamentoBalcao")
-      }
-    }
-
-    const novoPagamentoPix = localStorage.getItem("novoPagamentoPix")
-    if (novoPagamentoPix) {
-      const dadosPagamento = safeParse(novoPagamentoPix, null)
-      if (dadosPagamento) {
-        adicionarNovoPedido(dadosPagamento, "pix")
-      } else {
-        localStorage.removeItem("novoPagamentoPix")
-      }
-    }
-  }
-
-  const handlePedirNovamente = (pedido) => {
-    const nomesProdutos = pedido.itens.map((item) => item.nome).join(", ")
-    alert(`Adicionando "${nomesProdutos}" ao carrinho!`)
+  const handlePedirNovamente = () => {
+    alert("Funcionalidade em desenvolvimento: adicionar pedido ao carrinho");
     // TODO: Implementar re-adicionar ao carrinho
-  }
+  };
 
   if (loading) {
     return (
@@ -319,7 +219,25 @@ export default function HistoricoPedidos() {
         </div>
         <SubNavigation />
       </div>
-    )
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="containerProjeto">
+        <Header titulo="Histórico" p="Seus pedidos anteriores" />
+        <main className="historico">
+          <div className="sem-pedidos">
+            <div className="icone-vazio">⚠️</div>
+            <h3>{error}</h3>
+            <button onClick={carregarPedidos} className="botao-repetir-claro">
+              Tentar Novamente
+            </button>
+          </div>
+        </main>
+        <SubNavigation />
+      </div>
+    );
   }
 
   return (
@@ -337,12 +255,17 @@ export default function HistoricoPedidos() {
         ) : (
           <div className="cards-container">
             {pedidos.map((pedido, index) => (
-              <OrderCard key={`${pedido.id}-${index}`} pedido={pedido} onPedirNovamente={handlePedirNovamente} />
+              <OrderCard
+                key={pedido.id}
+                pedido={pedido}
+                numeroPedidoUsuario={pedidos.length - index}
+                onPedirNovamente={handlePedirNovamente}
+              />
             ))}
           </div>
         )}
       </main>
       <SubNavigation />
     </div>
-  )
+  );
 }

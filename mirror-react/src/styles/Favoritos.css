@@ -4,7 +4,7 @@
   align-items: center;
   margin: 10px;
   width: 100%;
-  height: 60%;
+  height: 45%;
 }
 
 .container_textos {
@@ -12,7 +12,7 @@
   flex-direction: column;
   text-align: start;
   width: 100%;
-  height: 40%;
+  height: 55%;
   color: black;
   font-family: inherit;
   padding: 0px 16px;
@@ -37,9 +37,10 @@ hr {
 }
 
 .imagem {
-  width: 200px;
-  height: auto;
+  width: 180px;
+  height: 180px;
   object-fit: cover;
+  border-radius: 10px;
 }
 
 .favoritos-page-container {
