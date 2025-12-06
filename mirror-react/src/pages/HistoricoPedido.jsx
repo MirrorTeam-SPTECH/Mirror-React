@@ -135,7 +135,7 @@ export default function HistoricoPedidos() {
       console.log("Buscando pedidos do usuário:", userEmail);
 
       const response = await axios.get(
-        `http:
+        `http://localhost:8080/api/orders/customer/${encodeURIComponent(
           userEmail
         )}`,
         {
@@ -176,7 +176,6 @@ export default function HistoricoPedidos() {
   }, []);
   const handlePedirNovamente = () => {
     alert("Funcionalidade em desenvolvimento: adicionar pedido ao carrinho");
-
   };
   if (loading) {
     return (

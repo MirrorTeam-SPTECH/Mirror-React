@@ -28,8 +28,7 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
       const { id } = JSON.parse(selecionado);
       console.log("ID do produto selecionado:", id);
       try {
-
-        const response = await fetch("http:
+        const response = await fetch("http://localhost:8080/api/cardapio/menu");
         if (!response.ok) throw new Error("Erro ao buscar produtos");
         const data = await response.json();
         console.log("Dados da API:", data);
@@ -104,7 +103,6 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "preco") {
-
       const precoValue = value.replace(/[^0-9.,]/g, "");
       setForm((prev) => ({ ...prev, [name]: precoValue }));
     } else {
@@ -141,7 +139,6 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
     if (!validateForm()) return;
     setLoading(true);
     try {
-
       const precoNumerico = parseFloat(form.preco.replace(",", "."));
       const payload = {
         name: form.nome.trim(),
@@ -158,7 +155,7 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
       }
 
       const response = await fetch(
-        `http:
+        `http://localhost:8080/api/cardapio/menu-items/${produtoCompleto.id}`,
         {
           method: "PUT",
           headers: {
@@ -188,7 +185,6 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
   const toggleEditMode = () => {
     setEditMode(!editMode);
     if (editMode) {
-
       if (produtoSelecionado) {
         setForm({
           id: produtoSelecionado.id,
@@ -272,8 +268,14 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
                 type="file"
                 id="imagem"
                 name="imagem"
-                accept="image}
-        <div className="!mb-2">
+                accept="image/*"
+                onChange={handleImageChange}
+                className="text-xs"
+              />
+            )}
+          </div>
+        </div>
+        <div className="mb-2">
           <label
             htmlFor="nome"
             className="block text-xs font-medium text-gray-700 !mb-1"

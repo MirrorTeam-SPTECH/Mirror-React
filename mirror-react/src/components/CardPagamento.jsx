@@ -57,7 +57,6 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
       return acc + precoAdicional * quantidadeAdicional;
     }, 0);
 
-
     const totalCalc = precoBase * qtdProduto + totalAdicionais;
     console.log("=== CÁLCULO DE TOTAL ===");
     console.log("Produto:", produto.nome || produto.name);
@@ -229,14 +228,13 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
         notes: produto.observacoes || "",
       };
       const orderResponse = await axios.post(
-        "http:
+        "http://localhost:8080/api/pedidos",
         orderData,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
       const orderId = orderResponse.data.id;
-
 
       const adicionaisTexto = adicionais
         .map(
@@ -250,7 +248,7 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
         observations: adicionaisTexto || null,
       };
       await axios.post(
-        `http:
+        `http://localhost:8080/api/pedidos/${orderId}/itens`,
         itemData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -262,7 +260,7 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
         method: "CASH",
         amount: parseFloat(totalCalculado),
       };
-      await axios.post("http:
+      await axios.post("http://localhost:8080/api/pagamentos", paymentData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       console.log("Pagamento no balcão registrado com sucesso!");
@@ -312,14 +310,13 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
         notes: produto.observacoes || "",
       };
       const orderResponse = await axios.post(
-        "http:
+        "http://localhost:8080/api/pedidos",
         orderData,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
       const orderId = orderResponse.data.id;
-
 
       const adicionaisTexto = adicionais
         .map(
@@ -333,7 +330,7 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
         observations: adicionaisTexto || null,
       };
       await axios.post(
-        `http:
+        `http://localhost:8080/api/pedidos/${orderId}/itens`,
         itemData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -346,7 +343,7 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
         amount: parseFloat(totalCalculado),
       };
       const paymentResponse = await axios.post(
-        "http:
+        "http://localhost:8080/api/pagamentos",
         paymentData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -355,7 +352,7 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
       const paymentId = paymentResponse.data.id;
 
       const pixResponse = await axios.post(
-        `http:
+        `http://localhost:8080/api/pagamentos/${paymentId}/pix`,
         { customerEmail: user.email || "cliente@example.com" },
         { headers: { Authorization: `Bearer ${token}` } }
       );

@@ -54,7 +54,6 @@ export default function Perfil() {
           confirmPassword: "",
         });
       } else {
-
         setError("Você precisa fazer login para acessar seu perfil");
       }
     } catch (err) {
@@ -106,13 +105,13 @@ export default function Perfil() {
         phone: formData.phone,
       };
 
-      await axios.put("http:
+      await axios.put("http://localhost:8080/api/users/profile", updatedData, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       if (formData.newPassword) {
         await axios.put(
-          "http:
+          "http://localhost:8080/api/users/change-password",
           {
             currentPassword: formData.currentPassword,
             newPassword: formData.newPassword,

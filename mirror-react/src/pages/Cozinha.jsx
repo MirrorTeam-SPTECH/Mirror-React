@@ -1,120 +1,139 @@
-﻿"use client"
-import { useEffect, useState, useMemo } from "react"
-import HeaderGerenciamento from "../components/HeaderGerenciamento"
-import DeleteConfirmation from "../components/DeleteConfirmation"
-import { todasCategorias } from "../utils/Categorias"
-import "../styles/Carregamento.css"
-import { Maximize, Minimize, Clock, Search, CreditCard, BadgePercent } from "lucide-react"
+﻿"use client";
+import { useEffect, useState, useMemo } from "react";
+import HeaderGerenciamento from "../components/HeaderGerenciamento";
+import DeleteConfirmation from "../components/DeleteConfirmation";
+import { todasCategorias } from "../utils/Categorias";
+import "../styles/Carregamento.css";
+import {
+  Maximize,
+  Minimize,
+  Clock,
+  Search,
+  CreditCard,
+  BadgePercent,
+} from "lucide-react";
 
 function buildSignature(p) {
   try {
     const cliente = String(p?.cliente ?? "")
       .trim()
-      .toLowerCase()
+      .toLowerCase();
     const firstItem = String(p?.items?.[0]?.nome ?? "")
       .trim()
-      .toLowerCase()
-    const totalCents = Math.round(Number(p?.total ?? 0) * 100)
-    const minute = new Date(p?.dataCriacao ?? Date.now()).toISOString().slice(0, 16)
-    return `${cliente}|${firstItem}|${totalCents}|${minute}`
+      .toLowerCase();
+    const totalCents = Math.round(Number(p?.total ?? 0) * 100);
+    const minute = new Date(p?.dataCriacao ?? Date.now())
+      .toISOString()
+      .slice(0, 16);
+    return `${cliente}|${firstItem}|${totalCents}|${minute}`;
   } catch {
-    return `sig-${Date.now()}`
+    return `sig-${Date.now()}`;
   }
 }
 
 function dedupeOrders(list) {
-  const byId = new Set()
-  const bySig = new Set()
-  const result = []
+  const byId = new Set();
+  const bySig = new Set();
+  const result = [];
   for (const p of list) {
-    const id = p?.id != null ? String(p.id) : null
-    const sig = buildSignature(p)
-    const hasId = id && byId.has(id)
-    const hasSig = bySig.has(sig)
+    const id = p?.id != null ? String(p.id) : null;
+    const sig = buildSignature(p);
+    const hasId = id && byId.has(id);
+    const hasSig = bySig.has(sig);
     if (!hasId && !hasSig) {
-      if (id) byId.add(id)
-      bySig.add(sig)
-      result.push(p)
+      if (id) byId.add(id);
+      bySig.add(sig);
+      result.push(p);
     }
   }
-  return result
+  return result;
 }
 
 function toNumber(v) {
-  if (v == null) return undefined
-  if (typeof v === "number" && Number.isFinite(v)) return v
+  if (v == null) return undefined;
+  if (typeof v === "number" && Number.isFinite(v)) return v;
   if (typeof v === "string") {
-    const n = Number.parseFloat(v.replace?.(",", ".") ?? v)
-    return Number.isNaN(n) ? undefined : n
+    const n = Number.parseFloat(v.replace?.(",", ".") ?? v);
+    return Number.isNaN(n) ? undefined : n;
   }
-  return undefined
+  return undefined;
 }
 function normalizeAddons(maybe) {
-  const src = Array.isArray(maybe) ? maybe : []
+  const src = Array.isArray(maybe) ? maybe : [];
   return src
     .map((ad) => {
-      const nome = ad?.nome ?? ad?.descricao ?? ad?.label ?? (typeof ad === "string" ? ad : "Adicional")
-      const precoRaw = ad?.preco ?? ad?.valor ?? ad?.precoUnitario ?? ad?.valorUnitario ?? 0
-      const quantidade = toNumber(ad?.quantidade) ?? toNumber(ad?.qtd) ?? 1
-      const preco = typeof precoRaw === "string" ? Number.parseFloat(precoRaw.replace(",", ".")) : Number(precoRaw ?? 0)
+      const nome =
+        ad?.nome ??
+        ad?.descricao ??
+        ad?.label ??
+        (typeof ad === "string" ? ad : "Adicional");
+      const precoRaw =
+        ad?.preco ?? ad?.valor ?? ad?.precoUnitario ?? ad?.valorUnitario ?? 0;
+      const quantidade = toNumber(ad?.quantidade) ?? toNumber(ad?.qtd) ?? 1;
+      const preco =
+        typeof precoRaw === "string"
+          ? Number.parseFloat(precoRaw.replace(",", "."))
+          : Number(precoRaw ?? 0);
       return {
         nome,
         preco: Number.isFinite(preco) ? preco : 0,
         quantidade: Number.isFinite(quantidade) ? quantidade : 1,
-      }
+      };
     })
-    .filter((a) => a && a.nome)
+    .filter((a) => a && a.nome);
 }
 export default function Cozinha() {
-  const [loading, setLoading] = useState(true)
-  const [cardAberto, setCardAberto] = useState(null)
-  const [expandido, setExpandido] = useState(false)
-  const [pedidos, setPedidos] = useState([])
-  const [pedidoSelecionado, setPedidoSelecionado] = useState(null)
-  const [searchTerm, setSearchTerm] = useState("")
+  const [loading, setLoading] = useState(true);
+  const [cardAberto, setCardAberto] = useState(null);
+  const [expandido, setExpandido] = useState(false);
+  const [pedidos, setPedidos] = useState([]);
+  const [pedidoSelecionado, setPedidoSelecionado] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
   function Expandir() {
-    setExpandido((prev) => !prev)
+    setExpandido((prev) => !prev);
   }
   useEffect(() => {
     const carregarPedidos = async () => {
       try {
-        const response = await fetch("http:
+        const response = await fetch("http://localhost:8080/api/pedidos")
           .then((res) => (res.ok ? res.json() : null))
-          .catch(() => null)
+          .catch(() => null);
         if (Array.isArray(response)) {
-          setPedidos(processarPedidosAPI(response))
+          setPedidos(processarPedidosAPI(response));
         } else {
-          setPedidos([])
+          setPedidos([]);
         }
       } catch (error) {
-        console.error("Erro ao carregar pedidos:", error)
-        setPedidos([])
+        console.error("Erro ao carregar pedidos:", error);
+        setPedidos([]);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
-    carregarPedidos()
+    };
+    carregarPedidos();
     const interval = setInterval(() => {
-      carregarPedidos()
-    }, 30000)
-    return () => clearInterval(interval)
-  }, [])
+      carregarPedidos();
+    }, 30000);
+    return () => clearInterval(interval);
+  }, []);
   const processarPedidosAPI = (pedidosAPI) => {
     const mapeados = pedidosAPI.map((pedido) => {
-      const id = pedido?.id != null ? String(pedido.id) : `${Date.now()}-${Math.random()}`
+      const id =
+        pedido?.id != null
+          ? String(pedido.id)
+          : `${Date.now()}-${Math.random()}`;
 
       const items =
         Array.isArray(pedido?.itens) && pedido.itens.length > 0
           ? pedido.itens.map((item) => {
               const adicionaisSelecionados = [
-
                 ...normalizeAddons(item?.acompanhamentos),
                 ...normalizeAddons(item?.acompanhamentosSelecionados),
 
                 ...normalizeAddons(item?.adicionais),
                 ...normalizeAddons(item?.adicionaisSelecionados),
                 ...normalizeAddons(item?.extras),
-              ]
+              ];
               return {
                 nome: item?.nome || item?.descricao || "Item",
                 quantidade: Number(item?.quantidade ?? 1),
@@ -125,7 +144,7 @@ export default function Cozinha() {
                     : Number(item?.preco ?? item?.valorUnitario ?? 0),
                 categoria: item?.categoria ?? item?.categoriaNome ?? undefined,
                 adicionaisSelecionados,
-              }
+              };
             })
           : [
               {
@@ -136,10 +155,11 @@ export default function Cozinha() {
                   typeof pedido?.valorUnitario === "string"
                     ? Number.parseFloat(pedido.valorUnitario.replace(",", "."))
                     : Number(pedido?.valorUnitario ?? 0),
-                categoria: pedido?.categoria ?? pedido?.categoriaNome ?? undefined,
+                categoria:
+                  pedido?.categoria ?? pedido?.categoriaNome ?? undefined,
                 adicionaisSelecionados: [],
               },
-            ]
+            ];
 
       const topLevelAddons = [
         ...normalizeAddons(pedido?.acompanhamentos),
@@ -147,14 +167,17 @@ export default function Cozinha() {
         ...normalizeAddons(pedido?.adicionais),
         ...normalizeAddons(pedido?.adicionaisSelecionados),
         ...normalizeAddons(pedido?.extras),
-      ]
+      ];
       if (topLevelAddons.length > 0 && items.length > 0) {
-        items[0].adicionaisSelecionados = [...(items[0].adicionaisSelecionados || []), ...topLevelAddons]
+        items[0].adicionaisSelecionados = [
+          ...(items[0].adicionaisSelecionados || []),
+          ...topLevelAddons,
+        ];
       }
       const total =
         typeof pedido?.valor === "string"
           ? Number.parseFloat(pedido.valor.replace(",", "."))
-          : Number(pedido?.valor ?? 0)
+          : Number(pedido?.valor ?? 0);
       return {
         id,
         cliente: pedido?.nomeCliente || "Cliente",
@@ -164,13 +187,13 @@ export default function Cozinha() {
         total: Number.isFinite(total) ? total : 0,
         items,
         dataCriacao: pedido?.dataCriacao ?? new Date().toISOString(),
-      }
-    })
-    return dedupeOrders(mapeados)
-  }
+      };
+    });
+    return dedupeOrders(mapeados);
+  };
   const pedidosFiltrados = useMemo(() => {
-    if (!searchTerm) return pedidos
-    const term = searchTerm.toLowerCase()
+    if (!searchTerm) return pedidos;
+    const term = searchTerm.toLowerCase();
     return pedidos.filter((pedido) => {
       return (
         String(pedido.id).toLowerCase().includes(term) ||
@@ -194,29 +217,33 @@ export default function Cozinha() {
                 it.adicionaisSelecionados.some((ad) =>
                   String(ad?.nome ?? "")
                     .toLowerCase()
-                    .includes(term),
-                )),
+                    .includes(term)
+                ))
           ))
-      )
-    })
-  }, [pedidos, searchTerm])
+      );
+    });
+  }, [pedidos, searchTerm]);
   const handleCardClose = () => {
-    setCardAberto(null)
-    setPedidoSelecionado(null)
-  }
+    setCardAberto(null);
+    setPedidoSelecionado(null);
+  };
   const handleCancelarPedido = (pedido) => {
-    setPedidoSelecionado(pedido)
-    setCardAberto("cancelar")
-  }
+    setPedidoSelecionado(pedido);
+    setCardAberto("cancelar");
+  };
   const confirmarCancelamento = () => {
-    setPedidos((prev) => prev.filter((p) => String(p.id) !== String(pedidoSelecionado?.id)))
-    setCardAberto(null)
-    setPedidoSelecionado(null)
-  }
+    setPedidos((prev) =>
+      prev.filter((p) => String(p.id) !== String(pedidoSelecionado?.id))
+    );
+    setCardAberto(null);
+    setPedidoSelecionado(null);
+  };
   const formatBRL = (n) =>
-    new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 2 }).format(
-      Number(n || 0),
-    )
+    new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+      maximumFractionDigits: 2,
+    }).format(Number(n || 0));
   return (
     <div className="containerProjeto">
       {loading ? (
@@ -248,7 +275,10 @@ export default function Cozinha() {
                   Novo Pedido
                 </button>
                 <div className="relative w-[250px]">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={16} />
+                  <Search
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                    size={16}
+                  />
                   <input
                     type="text"
                     placeholder="Buscar pedido..."
@@ -260,7 +290,11 @@ export default function Cozinha() {
               </div>
             </div>
             <div className="flex w-full justify-center items-center !mb-0 min-h-[70vh]">
-              <div className={cardAberto ? "flex-3 w-[70%]" : "w-full flex justify-center"}>
+              <div
+                className={
+                  cardAberto ? "flex-3 w-[70%]" : "w-full flex justify-center"
+                }
+              >
                 <div
                   className={
                     expandido
@@ -277,13 +311,21 @@ export default function Cozinha() {
                     }
                     title={expandido ? "Recolher" : "Expandir"}
                   >
-                    {expandido ? <Minimize color="#000" /> : <Maximize color="#000" />}
+                    {expandido ? (
+                      <Minimize color="#000" />
+                    ) : (
+                      <Maximize color="#000" />
+                    )}
                   </button>
                   {pedidosFiltrados && pedidosFiltrados.length > 0 ? (
                     pedidosFiltrados.map((pedido) => {
                       const categoriasDoPedido = Array.from(
-                        new Set((pedido.items || []).map((it) => it?.categoria).filter(Boolean)),
-                      )
+                        new Set(
+                          (pedido.items || [])
+                            .map((it) => it?.categoria)
+                            .filter(Boolean)
+                        )
+                      );
                       return (
                         <div
                           key={pedido.id}
@@ -294,7 +336,9 @@ export default function Cozinha() {
                               <span className="inline-block text-gray-700 rounded-full px-2 py-0.5 text-[11px] font-bold shadow">
                                 #{pedido.id}
                               </span>
-                              <span className="ml-2 text-green-700 font-semibold text-xs">{pedido.status}</span>
+                              <span className="ml-2 text-green-700 font-semibold text-xs">
+                                {pedido.status}
+                              </span>
                             </div>
                             <div className="flex items-center text-gray-500 text-xs">
                               <Clock size={12} className="mr-1" />
@@ -302,7 +346,9 @@ export default function Cozinha() {
                             </div>
                           </div>
                           <div className="w-full !mt-5">
-                            <p className="text-gray-800 text-sm font-semibold">Compra:</p>
+                            <p className="text-gray-800 text-sm font-semibold">
+                              Compra:
+                            </p>
                             <div className="flex flex-wrap gap-1 mt-1">
                               {categoriasDoPedido.length > 0 ? (
                                 categoriasDoPedido.map((cat, idx) => (
@@ -327,24 +373,40 @@ export default function Cozinha() {
                                     <span className="truncate">
                                       {item.nome} ({item.quantidade}x)
                                       {item.observacao && (
-                                        <span className="text-xs text-gray-500 ml-1">({item.observacao})</span>
+                                        <span className="text-xs text-gray-500 ml-1">
+                                          ({item.observacao})
+                                        </span>
                                       )}
                                     </span>
                                     <span className="shrink-0 text-gray-600">
-                                      {formatBRL((item.preco || 0) * (item.quantidade || 1))}
+                                      {formatBRL(
+                                        (item.preco || 0) *
+                                          (item.quantidade || 1)
+                                      )}
                                     </span>
                                   </div>
                                   {Array.isArray(item.adicionaisSelecionados) &&
                                     item.adicionaisSelecionados.length > 0 && (
                                       <ul className="pl-5 list-[circle] text-[12px] text-gray-600">
-                                        {item.adicionaisSelecionados.map((ad, i) => (
-                                          <li key={i} className="flex justify-between gap-2">
-                                            <span className="truncate">{ad?.nome}</span>
-                                            <span className="shrink-0">
-                                              {formatBRL((toNumber(ad?.preco) ?? 0) * (toNumber(ad?.quantidade) ?? 1))}
-                                            </span>
-                                          </li>
-                                        ))}
+                                        {item.adicionaisSelecionados.map(
+                                          (ad, i) => (
+                                            <li
+                                              key={i}
+                                              className="flex justify-between gap-2"
+                                            >
+                                              <span className="truncate">
+                                                {ad?.nome}
+                                              </span>
+                                              <span className="shrink-0">
+                                                {formatBRL(
+                                                  (toNumber(ad?.preco) ?? 0) *
+                                                    (toNumber(ad?.quantidade) ??
+                                                      1)
+                                                )}
+                                              </span>
+                                            </li>
+                                          )
+                                        )}
                                       </ul>
                                     )}
                                 </li>
@@ -357,7 +419,9 @@ export default function Cozinha() {
                                 <CreditCard size={14} />
                                 <span>{pedido.metodoPagamento}</span>
                               </div>
-                              <div className="text-sm font-bold text-gray-900">{formatBRL(pedido.total)}</div>
+                              <div className="text-sm font-bold text-gray-900">
+                                {formatBRL(pedido.total)}
+                              </div>
                             </div>
                             <button
                               className="!mt-2 w-full px-4 py-2 bg-red-500 text-white rounded-lg font-bold hover:bg-red-600 transition"
@@ -367,12 +431,14 @@ export default function Cozinha() {
                             </button>
                           </div>
                         </div>
-                      )
+                      );
                     })
                   ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center text-gray-400">
                       <p className="text-xl mb-2">Nenhum pedido encontrado</p>
-                      <p className="text-sm">Não há pedidos em andamento no momento</p>
+                      <p className="text-sm">
+                        Não há pedidos em andamento no momento
+                      </p>
                     </div>
                   )}
                 </div>
@@ -392,7 +458,7 @@ export default function Cozinha() {
             </div>
           </div>
         </>
-      )}  
+      )}
     </div>
-  )
+  );
 }

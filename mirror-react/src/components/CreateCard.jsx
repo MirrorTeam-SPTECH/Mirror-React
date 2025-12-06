@@ -35,7 +35,6 @@ export default function CreateCard({
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "preco") {
-
       const precoValue = value.replace(/[^0-9.,]/g, "");
       setForm((old) => ({
         ...old,
@@ -88,7 +87,7 @@ export default function CreateCard({
       alert("Você precisa estar logado para criar produtos");
       return;
     }
-    fetch("http:
+    fetch("http://localhost:8080/api/cardapio/menu-items", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -101,7 +100,6 @@ export default function CreateCard({
         return res.json();
       })
       .then((novoItem) => {
-
         if (onProdutoCriado) {
           onProdutoCriado(novoItem);
         }
@@ -130,24 +128,33 @@ export default function CreateCard({
           <X size={20} />
         </button>
       </div>
-      <div className="!mb-3">
-        <div className="flex flex-col !mt-2 items-center">
-          <div className="w-[50%] h-[80px] border border-gray-300 rounded-md overflow-hidden !mb-1 flex items-center justify-center bg-gray-100">
-            <img
-              src={previewImage || "/placeholder.svg"}
-              alt="Preview"
-              className="max-w-full max-h-full object-contain"
-            />
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col flex-1 px-4 py-2 overflow-y-auto"
+      >
+        <div className="mb-3">
+          <div className="flex flex-col !mt-2 items-center">
+            <div className="w-[50%] h-[80px] border border-gray-300 rounded-md overflow-hidden !mb-1 flex items-center justify-center bg-gray-100">
+              <img
+                src={previewImage || "/placeholder.svg"}
+                alt="Preview"
+                className="max-w-full max-h-full object-contain"
+              />
+            </div>
+            {mode !== "view" && (
+              <input
+                type="file"
+                id="imagem"
+                name="imagem"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="text-xs"
+              />
+            )}
           </div>
-          {mode !== "view" && (
-            <input
-              type="file"
-              id="imagem"
-              name="imagem"
-              accept="image}
-        <div className="flex flex-row !gap-2">
-          {}
-          <div className="!mb-3 flex-1">
+        </div>
+        <div className="flex flex-row gap-2">
+          <div className="mb-3 flex-1">
             <label
               htmlFor="nome"
               className="block text-xs font-medium text-gray-700 !mb-1"
@@ -168,7 +175,6 @@ export default function CreateCard({
               <p className="text-[#e30613] text-xs !mt-1">{errors.nome}</p>
             )}
           </div>
-          {}
           <div className="!mb-3 flex-1">
             <label
               htmlFor="categoria"
@@ -197,7 +203,6 @@ export default function CreateCard({
             )}
           </div>
         </div>
-        {}
         <div className="flex flex-row gap-2">
           <div className="!mb-3 flex-1">
             <label
@@ -245,8 +250,8 @@ export default function CreateCard({
             </select>
           </div>
         </div>
-        {}
-        <div className="!mb-1">
+
+        <div className="mb-1">
           <label
             htmlFor="descricao"
             className="block text-xs font-medium text-gray-700 !mb-1"
@@ -263,10 +268,10 @@ export default function CreateCard({
             className="w-full !p-2 text-sm border border-gray-300 rounded-md min-h-[60px] resize-none focus:outline-none focus:ring-1 focus:ring-[#e30613] focus:border-[#e30613] text-gray-800"
           />
           {errors.descricao && (
-            <p className="text-[#e30613] text-xs !mt-1">{errors.descricao}</p>
+            <p className="text-[#e30613] text-xs mt-1">{errors.descricao}</p>
           )}
         </div>
-        {}
+
         {mode !== "view" && (
           <div className="flex justify-end !mt-auto !mb-2 gap-2">
             <button
