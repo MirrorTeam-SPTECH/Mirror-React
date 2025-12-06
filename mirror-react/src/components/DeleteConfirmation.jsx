@@ -1,15 +1,12 @@
-"use client";
-
+﻿"use client";
 import { useState, useEffect } from "react";
 import { AlertTriangle, Loader2 } from "lucide-react";
-
 export default function DeleteConfirmation({ onClose, onProdutoRemovido }) {
   const [confirmText, setConfirmText] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [produtoCompleto, setProdutoCompleto] = useState(null);
 
-  // Buscar o produto selecionado e seus dados completos
   useEffect(() => {
     const buscarProdutoCompleto = async () => {
       const selecionado = localStorage.getItem("selecionadoUnico");
@@ -17,20 +14,15 @@ export default function DeleteConfirmation({ onClose, onProdutoRemovido }) {
         setProdutoCompleto(null);
         return;
       }
-
       const { id } = JSON.parse(selecionado);
-
       try {
-        // Buscar todos os produtos da API para pegar os dados completos
-        const response = await fetch("http://localhost:8080/api/menu-items");
-        if (!response.ok) throw new Error("Erro ao buscar produtos");
 
+        const response = await fetch("http:
+        if (!response.ok) throw new Error("Erro ao buscar produtos");
         const data = await response.json();
 
-        // A API retorna { menu: { categoria: [...] } }
         const menuData = data.menu || data;
 
-        // Encontrar o produto específico
         let produtoEncontrado = null;
         const categorias = [
           "combos",
@@ -40,30 +32,26 @@ export default function DeleteConfirmation({ onClose, onProdutoRemovido }) {
           "bebidas",
           "porcoes",
         ];
-
         for (const cat of categorias) {
           if (menuData[cat]) {
             produtoEncontrado = menuData[cat].find(
               (produto) => produto.id === id
             );
             if (produtoEncontrado) {
-              produtoEncontrado.categoria = cat; // Adicionar categoria ao produto
+              produtoEncontrado.categoria = cat;
               break;
             }
           }
         }
-
         setProdutoCompleto(produtoEncontrado);
       } catch (error) {
         console.error("Erro ao buscar produto:", error);
         setError("Erro ao carregar dados do produto");
       }
     };
-
     buscarProdutoCompleto();
   }, []);
 
-  // Se não há produto selecionado ou ainda está carregando
   if (!produtoCompleto) {
     return (
       <div className="w-[350px] h-115 bg-white rounded-2xl shadow-md flex flex-col items-center justify-center font-['Montserrat']">
@@ -89,30 +77,25 @@ export default function DeleteConfirmation({ onClose, onProdutoRemovido }) {
     );
   }
 
-  // Usar o nome do produto como texto de confirmação (API retorna 'name' em inglês)
   const confirmationText = produtoCompleto.name;
   const isConfirmEnabled = confirmText === confirmationText;
-
   const handleConfirm = async () => {
     if (confirmText !== confirmationText) {
       setError("O texto digitado não corresponde ao nome do produto.");
       return;
     }
-
     setLoading(true);
     setError("");
-
     try {
-      // Obter token de autenticação
+
       const token = localStorage.getItem("token");
       if (!token) {
         alert("Você precisa estar logado para deletar produtos");
         return;
       }
 
-      // Fazer chamada direta à API
       const response = await fetch(
-        `http://localhost:8080/api/menu-items/${produtoCompleto.id}`,
+        `http:
         {
           method: "DELETE",
           headers: {
@@ -121,24 +104,19 @@ export default function DeleteConfirmation({ onClose, onProdutoRemovido }) {
           },
         }
       );
-
       if (!response.ok) {
         throw new Error(`Erro HTTP: ${response.status}`);
       }
 
-      // Limpar a seleção do localStorage
       localStorage.removeItem("selecionadoUnico");
-      // Disparar evento para atualizar componentes que dependem da seleção
+
       window.dispatchEvent(new Event("selecionadosAtualizados"));
 
-      // Notificar o componente pai para recarregar a lista
       if (onProdutoRemovido) {
         onProdutoRemovido(produtoCompleto);
       }
-
       alert(`Produto "${produtoCompleto.name}" excluído com sucesso!`);
 
-      // Fechar o modal
       onClose();
     } catch (err) {
       console.error("Erro ao excluir produto:", err);
@@ -151,7 +129,6 @@ export default function DeleteConfirmation({ onClose, onProdutoRemovido }) {
       setLoading(false);
     }
   };
-
   return (
     <div className="w-[350px] h-115 bg-white rounded-2xl shadow-md flex flex-col font-['Montserrat']">
       <div className="text-[#e30613] !mb-6 flex justify-center pt-6">
@@ -161,8 +138,7 @@ export default function DeleteConfirmation({ onClose, onProdutoRemovido }) {
         <h2 className="text-xl font-bold text-gray-800 !mt-0 !mb-4 text-center">
           Excluir Produto
         </h2>
-
-        {/* Card com informações do produto */}
+        {}
         <div className="px-4 py-3 bg-red-50 border border-red-200 rounded-md mb-4">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 border border-red-300 rounded-md overflow-hidden flex items-center justify-center bg-white">
@@ -185,7 +161,6 @@ export default function DeleteConfirmation({ onClose, onProdutoRemovido }) {
             </div>
           </div>
         </div>
-
         <p className="text-gray-600 !mb-4 leading-relaxed text-center">
           Você está prestes a excluir <strong>"{produtoCompleto.name}"</strong>{" "}
           do cardápio. Esta ação não pode ser desfeita.
@@ -193,7 +168,6 @@ export default function DeleteConfirmation({ onClose, onProdutoRemovido }) {
         <p className="text-gray-600 !mb-4 text-center">
           Para confirmar, digite o nome exato do produto abaixo:
         </p>
-
         <div className="!mt-5 !mb-6">
           <input
             type="text"
@@ -211,7 +185,6 @@ export default function DeleteConfirmation({ onClose, onProdutoRemovido }) {
             </p>
           )}
         </div>
-
         <div className="flex justify-center gap-3 !mb-8">
           <button
             className="!px-4 !py-2.5 border border-gray-300 bg-white text-gray-700 rounded-md hover:bg-gray-50 font-medium"

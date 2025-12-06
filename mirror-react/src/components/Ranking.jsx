@@ -1,4 +1,4 @@
-export default function Ranking({ title, data = [], loading = false }) {
+﻿export default function Ranking({ title, data = [], loading = false }) {
   return (
     <div className="flex h-125 w-50 z-10 bg-white !mt-10 rounded-xl shadow-md p-4 justify-center  overflow-y-auto !py-4">
       <div className="flex flex-col w-full">
@@ -8,7 +8,6 @@ export default function Ranking({ title, data = [], loading = false }) {
             <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
           )}
         </div>
-
         <div className="flex-1 overflow-y-auto">
           {loading ? (
             <div className="space-y-3">

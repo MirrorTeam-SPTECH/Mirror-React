@@ -1,28 +1,24 @@
-"use client"
-
+﻿"use client"
 import { useEffect, useState, useRef } from "react"
 import { Bell, CheckCircle, Clock, X } from "lucide-react"
 import { backfillFromHistoricoIfNeeded, compactNotificationsStorage, getNotifications } from "../utils/notifications"
-
 export default function NotificationDropdown() {
   const [isOpen, setIsOpen] = useState(false)
   const [notifications, setNotifications] = useState([])
   const [unreadCount, setUnreadCount] = useState(0)
   const dropdownRef = useRef(null)
-
   const refresh = () => {
     const ordered = getNotifications()
     setNotifications(ordered)
     setUnreadCount(ordered.filter((n) => !n.lida).length)
   }
-
   const loadNotifications = () => {
     try {
-      // 1) Compaction + índices
+
       compactNotificationsStorage()
-      // 2) Backfill seguro (com buffers e dedup forte)
-      backfillFromHistoricoIfNeeded(7000) // buffer um pouco maior para cobrir navegação imediata
-      // 3) Atualiza UI
+
+      backfillFromHistoricoIfNeeded(7000)
+
       refresh()
     } catch (e) {
       console.error("Erro ao carregar notificações:", e)
@@ -30,14 +26,12 @@ export default function NotificationDropdown() {
       setUnreadCount(0)
     }
   }
-
   useEffect(() => {
     loadNotifications()
     const handleNewNotification = () => loadNotifications()
     window.addEventListener("novaNotificacao", handleNewNotification)
     return () => window.removeEventListener("novaNotificacao", handleNewNotification)
   }, [])
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -47,32 +41,27 @@ export default function NotificationDropdown() {
     document.addEventListener("mousedown", handleClickOutside)
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
-
   const persistAndRefresh = (updated) => {
     try {
       localStorage.setItem("notificacoesPagamentos", JSON.stringify(updated))
     } catch (e) {
       console.error("Erro ao salvar notificações:", e)
     }
-    // Realinha e recarrega
+
     loadNotifications()
   }
-
   const markAsRead = (id) => {
     const updated = notifications.map((n) => (n.id === id ? { ...n, lida: true } : n))
     persistAndRefresh(updated)
   }
-
   const markAllAsRead = () => {
     const updated = notifications.map((n) => ({ ...n, lida: true }))
     persistAndRefresh(updated)
   }
-
   const removeNotification = (id) => {
     const updated = notifications.filter((n) => n.id !== id)
     persistAndRefresh(updated)
   }
-
   const formatTime = (timestamp) => {
     const now = Date.now()
     const diff = now - Number(timestamp)
@@ -84,7 +73,6 @@ export default function NotificationDropdown() {
     if (hours < 24) return `${hours}h atrás`
     return `${days}d atrás`
   }
-
   return (
     <div className="relative" ref={dropdownRef}>
       <button
@@ -101,7 +89,6 @@ export default function NotificationDropdown() {
         )}
         <span className="sr-only">{"Abrir notificações"}</span>
       </button>
-
       {isOpen && (
         <div
           role="menu"
@@ -118,14 +105,12 @@ export default function NotificationDropdown() {
               )}
             </div>
           </div>
-
           <div className="max-h-64 overflow-y-auto" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
             <style jsx>{`
               div::-webkit-scrollbar {
                 display: none;
               }
             `}</style>
-
             {notifications.length === 0 ? (
               <div className="p-4 text-center text-gray-500">
                 <Bell size={24} className="mx-auto mb-2 opacity-50" />

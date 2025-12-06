@@ -1,4 +1,4 @@
-export default function Filtros({ label, options = [], value, onChange, children }) {
+﻿export default function Filtros({ label, options = [], value, onChange, children }) {
   if (children) {
     return (
       <div className="h-12 w-50">

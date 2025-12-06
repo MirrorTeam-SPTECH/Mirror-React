@@ -1,5 +1,4 @@
-import "../styles/NavigationBarGerenciamento.css";
-
+﻿import "../styles/NavigationBarGerenciamento.css";
 export default function NavigationBarGerenciamento2() {
   const handleScroll = (sectionId) => {
     const section = document.getElementById(sectionId);
@@ -7,7 +6,6 @@ export default function NavigationBarGerenciamento2() {
       section.scrollIntoView({ behavior: "smooth" });
     }
   };
-
   return (
     <div className="container-navBar-gerenciamento">
       <ul className="menu-gerenciamento">

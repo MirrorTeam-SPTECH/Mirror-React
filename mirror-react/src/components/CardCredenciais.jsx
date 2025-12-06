@@ -1,5 +1,4 @@
-import "../styles/CardCredenciais.css";
-
+﻿import "../styles/CardCredenciais.css";
 export default function CardCredenciais({ produto, onConfirmar }) {
   return (
     <div className="credentials-wrapper">
@@ -19,11 +18,9 @@ export default function CardCredenciais({ produto, onConfirmar }) {
             <span>R$ {(Number(produto.preco.replace(",", ".")) + 1).toFixed(2)}</span>
           </div>
         </div>
-
         <div className="payment-form">
           <label htmlFor="card-number-title">Nº do cartão</label>
           <input type="text" id="card-number-title" placeholder="0000 0000 0000 0000" />
-
           <div className="row">
             <div className="input-group">
               <label htmlFor="validity">Validade</label>
@@ -34,7 +31,6 @@ export default function CardCredenciais({ produto, onConfirmar }) {
               <input type="text" id="cvv" placeholder="000" />
             </div>
           </div>
-
           <button className="checkout-btn" onClick={onConfirmar}>
             Finalizar compra
           </button>

@@ -1,11 +1,9 @@
-"use client";
-
+﻿"use client";
 import { useState, useEffect } from "react";
 import { CardProduto } from "./CardProduto";
 import styles from "../styles/ListaProdutos.module.css";
 import { useLocation } from "react-router-dom";
 import menuService from "../services/menuService";
-
 export function ListaProdutos({
   categorias,
   onProdutoClick,
@@ -15,17 +13,14 @@ export function ListaProdutos({
   const [produtosApi, setProdutosApi] = useState(null);
   const [loadingApi, setLoadingApi] = useState(false);
   const [error, setError] = useState(null);
-
   const location = useLocation();
   const isGerenciamento =
     location.pathname.startsWith("/novoPedido") ||
     location.pathname.startsWith("/cardapioEditar");
 
-  // Buscar produtos da API quando o componente monta ou quando refreshTrigger muda
   useEffect(() => {
     buscarProdutosDaApi();
   }, [refreshTrigger]);
-
   const buscarProdutosDaApi = async () => {
     setLoadingApi(true);
     setError(null);
@@ -34,13 +29,11 @@ export function ListaProdutos({
       const data = await menuService.getAllItems();
       console.log("📦 Produtos recebidos da API:", data);
 
-      // Verificar estrutura de um produto
       if (data?.menu) {
         const primeiraCategoria = Object.keys(data.menu)[0];
         const primeiroProduto = data.menu[primeiraCategoria]?.[0];
         console.log("🔍 Estrutura de um produto:", primeiroProduto);
       }
-
       setProdutosApi(data);
     } catch (err) {
       console.error("❌ Erro ao buscar produtos:", err);
@@ -49,25 +42,20 @@ export function ListaProdutos({
       setLoadingApi(false);
     }
   };
-
   const normalizeId = (titulo) =>
     titulo
       .normalize("NFD")
-      .replace(/[^\w\s-]/g, "") // remove acentos e caracteres especiais
+      .replace(/[^\w\s-]/g, "")
       .toLowerCase()
       .replace(/\s+/g, "");
 
-  // Função para mapear categorias com produtos da API
   const mapearCategoriasComProdutos = (categorias, dadosApi) => {
     if (!dadosApi) return categorias;
 
-    // A API retorna { menu: { adicionais: [...], bebidas: [...], ... } }
     const menuData = dadosApi.menu || dadosApi;
-
     return categorias.map((categoria) => {
       const categoriaId = normalizeId(categoria.titulo);
 
-      // Mapear nomes das categorias
       const mapeamento = {
         combos: "combos",
         hamburgueres: "hamburgueres",
@@ -76,10 +64,8 @@ export function ListaProdutos({
         bebidas: "bebidas",
         porcoes: "porcoes",
       };
-
       const chaveApi = mapeamento[categoriaId] || categoriaId;
       const produtosDaCategoria = menuData[chaveApi] || [];
-
       return {
         ...categoria,
         produtos: produtosDaCategoria,
@@ -87,7 +73,6 @@ export function ListaProdutos({
     });
   };
 
-  // Renderizar mensagem de erro
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center py-8">
@@ -107,7 +92,6 @@ export function ListaProdutos({
     );
   }
 
-  // Renderizar loading
   if (loadingApi) {
     return (
       <div className="flex items-center justify-center py-8">
@@ -117,15 +101,12 @@ export function ListaProdutos({
     );
   }
 
-  // Mapear categorias com produtos da API
   const categoriasComProdutos = mapearCategoriasComProdutos(
     categorias,
     produtosApi
   );
-
   const renderCategoria = (categoriaData) => {
     const categoriaKey = normalizeId(categoriaData.titulo);
-
     return (
       <div
         key={categoriaKey}
@@ -168,7 +149,6 @@ export function ListaProdutos({
       </div>
     );
   };
-
   return (
     <div
       className={`${styles.containerListaProdutos} ${

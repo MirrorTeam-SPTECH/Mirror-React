@@ -1,17 +1,14 @@
-"use client";
-
+﻿"use client";
 import { useState } from "react";
 import axios from "axios";
 import ButtonBack from "./Shared/ButtonBack";
 import CardCarregamento from "./CardCarregamento";
 import CardQRcode from "./CardQRcode";
 import { addPaymentNotification } from "../utils/notifications";
-
 export default function CardPagamento({ produto, onCartao, onClose }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [qrCodeData, setQrCodeData] = useState(null);
-
   if (!produto) {
     return (
       <div className="w-[350px] h-128 flex flex-col font-['Montserrat']">
@@ -26,7 +23,6 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
       </div>
     );
   }
-
   const nome = produto.nome || "";
   const quantity = produto.quantity || 1;
   const subtotal = produto.subtotal || "0,00";
@@ -35,7 +31,6 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
   const adicionais = Array.isArray(produto.adicionaisSelecionados)
     ? produto.adicionaisSelecionados
     : [];
-
   const parsePreco = (preco) => {
     if (typeof preco === "string")
       return Number.parseFloat(preco.replace(",", "."));
@@ -51,12 +46,10 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
     }
     return 0;
   };
-
   const calcularTotal = () => {
     const precoBase = parsePreco(produto.preco);
     const qtdProduto = produto.quantity || 1;
 
-    // Total dos adicionais (já multiplicado pelas quantidades de cada adicional)
     const totalAdicionais = adicionais.reduce((acc, adicional) => {
       const precoAdicional = parsePreco(adicional.preco);
       const quantidadeAdicional =
@@ -64,10 +57,8 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
       return acc + precoAdicional * quantidadeAdicional;
     }, 0);
 
-    // CÁLCULO CORRETO: (preço base × quantidade do produto) + adicionais
-    // Exemplo: (29,90 × 6) + 18,00 = 197,40
-    const totalCalc = precoBase * qtdProduto + totalAdicionais;
 
+    const totalCalc = precoBase * qtdProduto + totalAdicionais;
     console.log("=== CÁLCULO DE TOTAL ===");
     console.log("Produto:", produto.nome || produto.name);
     console.log("Preço base (raw):", produto.preco || produto.price);
@@ -95,10 +86,8 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
       totalCalc
     );
     console.log("========================");
-
     return totalCalc.toFixed(2);
   };
-
   const buildStandardPayment = (metodoPagamento) => {
     const unitPrice =
       typeof produto.unitPrice === "number"
@@ -123,21 +112,17 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
       typeof produto.totalNum === "number"
         ? produto.totalNum
         : subtotalNum + entregaNum + adicionaisTotal;
-
     const timestamp = Date.now();
-
     return {
       nomeLanche: nome,
       nome,
       imagem: produto.imagem || "/placeholder.svg?height=60&width=60",
       tempoPreparo: produto.tempoPreparo || "15-20 min",
-
       preco: unitPrice,
       precoUnitario: unitPrice,
       unitPrice,
       quantidade: qtd,
       quantity: qtd,
-
       subtotal: subtotal,
       subtotalNum,
       taxaEntrega: produto.taxaEntrega || "0,00",
@@ -145,17 +130,13 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
       valorTotal: totalNum,
       total: total,
       totalNum,
-
       adicionaisSelecionados,
       totalAdicionais: adicionaisTotal,
-
       observacoes: produto.observacoes || "",
-
       timestamp,
       metodoPagamento,
     };
   };
-
   const saveHistorico = (dadosPagamento) => {
     try {
       const historico = JSON.parse(
@@ -167,7 +148,6 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
           )
         : false;
       if (jaExiste) return;
-
       const unit = toNumber(dadosPagamento.unitPrice);
       const qtd = toNumber(dadosPagamento.quantity);
       const entrega =
@@ -177,7 +157,6 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
       const adicionais = Array.isArray(dadosPagamento.adicionaisSelecionados)
         ? dadosPagamento.adicionaisSelecionados
         : [];
-
       const itens = [
         {
           nome: dadosPagamento.nomeLanche,
@@ -197,7 +176,6 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
           tipo: "adicional",
         });
       });
-
       const totalNumCalc =
         typeof dadosPagamento.totalNum === "number"
           ? dadosPagamento.totalNum
@@ -208,7 +186,6 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
                 acc + toNumber(ad?.preco) * (toNumber(ad?.quantidade) || 1),
               0
             );
-
       const novoPedido = {
         id: `#${String(dadosPagamento.timestamp).toString(36).toUpperCase()}`,
         dataPedido: new Date().toISOString(),
@@ -219,7 +196,6 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
         itens,
         dadosOriginais: { timestamp: dadosPagamento.timestamp },
       };
-
       const atualizado = [
         novoPedido,
         ...(Array.isArray(historico) ? historico : []),
@@ -229,7 +205,6 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
       console.error("Erro ao salvar no histórico:", e);
     }
   };
-
   const handlePagamentoBalcao = async () => {
     setLoading(true);
     setError("");
@@ -237,18 +212,15 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
       const token = localStorage.getItem("token");
       const user = JSON.parse(localStorage.getItem("user") || "{}");
       const totalCalculado = calcularTotal();
-
       console.log("=== PAGAMENTO BALCÃO ===");
       console.log("Total calculado:", totalCalculado);
       console.log("=====================");
-
       if (!token) {
         alert("Você precisa estar logado para fazer o pagamento.");
         setLoading(false);
         return;
       }
 
-      // 1. Criar o pedido
       const orderData = {
         customerName: user.name || user.nome || "Cliente",
         customerEmail: user.email || "cliente@example.com",
@@ -256,58 +228,48 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
         total: parseFloat(totalCalculado),
         notes: produto.observacoes || "",
       };
-
       const orderResponse = await axios.post(
-        "http://localhost:8080/api/orders",
+        "http:
         orderData,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-
       const orderId = orderResponse.data.id;
 
-      // 2. Adicionar items ao pedido
-      // Formatar os adicionais para o campo observations
+
       const adicionaisTexto = adicionais
         .map(
           (ad) => `${ad.nome} (+R$ ${ad.preco.toFixed(2).replace(".", ",")})`
         )
         .join(", ");
-
       const itemData = {
         menuItemId: produto.id,
         quantity: quantity,
         unitPrice: parseFloat(totalCalculado) / quantity,
         observations: adicionaisTexto || null,
       };
-
       await axios.post(
-        `http://localhost:8080/api/orders/${orderId}/items`,
+        `http:
         itemData,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
 
-      // 3. Criar o pagamento com método CASH (Dinheiro no balcão)
       const paymentData = {
         orderId: orderId,
         method: "CASH",
         amount: parseFloat(totalCalculado),
       };
-
-      await axios.post("http://localhost:8080/api/payments", paymentData, {
+      await axios.post("http:
         headers: { Authorization: `Bearer ${token}` },
       });
-
       console.log("Pagamento no balcão registrado com sucesso!");
 
-      // Notificações e histórico local
       const std = buildStandardPayment("balcao");
       saveHistorico(std);
       addPaymentNotification(std);
-
       if (onCartao) onCartao();
       if (onClose) onClose();
       alert("Pagamento no balcão registrado com sucesso!");
@@ -323,7 +285,6 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
       setLoading(false);
     }
   };
-
   const handlePagamentoPix = async () => {
     setLoading(true);
     setError("");
@@ -331,21 +292,18 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
       const token = localStorage.getItem("token");
       const user = JSON.parse(localStorage.getItem("user") || "{}");
       const totalCalculado = calcularTotal();
-
       console.log("=== PAGAMENTO PIX ===");
       console.log("Total calculado:", totalCalculado);
       console.log("Tipo:", typeof totalCalculado);
       console.log("Produto completo:", produto);
       console.log("Adicionais completos:", adicionais);
       console.log("=====================");
-
       if (!token) {
         alert("Você precisa estar logado para fazer o pagamento via PIX.");
         setLoading(false);
         return;
       }
 
-      // 1. Criar o pedido (sem items primeiro)
       const orderData = {
         customerName: user.name || user.nome || "Cliente",
         customerEmail: user.email || "cliente@example.com",
@@ -353,65 +311,55 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
         total: parseFloat(totalCalculado),
         notes: produto.observacoes || "",
       };
-
       const orderResponse = await axios.post(
-        "http://localhost:8080/api/orders",
+        "http:
         orderData,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-
       const orderId = orderResponse.data.id;
 
-      // 2. Adicionar items ao pedido
-      // Formatar os adicionais para o campo observations
+
       const adicionaisTexto = adicionais
         .map(
           (ad) => `${ad.nome} (+R$ ${ad.preco.toFixed(2).replace(".", ",")})`
         )
         .join(", ");
-
       const itemData = {
         menuItemId: produto.id,
         quantity: quantity,
         unitPrice: parseFloat(totalCalculado) / quantity,
         observations: adicionaisTexto || null,
       };
-
       await axios.post(
-        `http://localhost:8080/api/orders/${orderId}/items`,
+        `http:
         itemData,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
 
-      // 3. Criar o pagamento
       const paymentData = {
         orderId: orderId,
         method: "PIX",
         amount: parseFloat(totalCalculado),
       };
-
       const paymentResponse = await axios.post(
-        "http://localhost:8080/api/payments",
+        "http:
         paymentData,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-
       const paymentId = paymentResponse.data.id;
 
-      // 4. Processar pagamento PIX (gerar QR Code)
       const pixResponse = await axios.post(
-        `http://localhost:8080/api/payments/${paymentId}/pix`,
+        `http:
         { customerEmail: user.email || "cliente@example.com" },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      // Salvar no histórico local
       const std = buildStandardPayment("pix");
       const payload = {
         ...std,
@@ -425,7 +373,6 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
       localStorage.setItem("novoPagamentoPix", JSON.stringify(payload));
       addPaymentNotification(std);
 
-      // Mostrar QR Code ao invés de redirecionar
       setQrCodeData({
         qrCode: pixResponse.data.qr_code,
         qrCodeBase64: pixResponse.data.qr_code_base64,
@@ -440,13 +387,11 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
         data: err.response?.data,
         message: err.message,
       });
-
       const errorMsg =
         err.response?.data?.error ||
         err.response?.data?.message ||
         err.response?.data ||
         err.message;
-
       setError("Erro ao iniciar pagamento");
       alert(
         `Erro ao iniciar pagamento PIX:\n\n${
@@ -459,12 +404,10 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
       setLoading(false);
     }
   };
-
   if (loading) {
     return <CardCarregamento />;
   }
 
-  // Se tem QR Code, mostrar componente de QR Code
   if (qrCodeData) {
     return (
       <CardQRcode
@@ -486,7 +429,6 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
   if (loading) {
     return <CardCarregamento />;
   }
-
   return (
     <div className="w-[350px] h-128 flex flex-col font-['Montserrat']">
       <div className="flex justify-center !p-5 bg-white rounded-t-2xl shadow-md">
@@ -497,7 +439,6 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
           Finalizar compra
         </h2>
       </div>
-
       <div className="flex-grow overflow-y-auto bg-white shadow-inner !px-5 !py-2">
         <div className="flex justify-between text-sm text-gray-700 !mb-2.5">
           <span>
@@ -505,7 +446,6 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
           </span>
           <span>R$ {subtotal}</span>
         </div>
-
         {adicionais.length > 0 && (
           <div className="!mb-2.5">
             {adicionais.map((ad, i) => (
@@ -526,7 +466,6 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
             ))}
           </div>
         )}
-
         <div className="flex justify-between text-sm text-gray-700 !mb-2.5">
           <span>Subtotal</span>
           <span>R$ {subtotal}</span>
@@ -535,14 +474,11 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
           <span>Taxa de entrega</span>
           <span>R$ {taxaEntrega}</span>
         </div>
-
         <hr className="border-none h-px bg-gray-200 !my-4" />
-
         <div className="flex justify-between text-lg font-bold text-gray-800 !mb-2.5">
           <span>Total</span>
           <span>R$ {total}</span>
         </div>
-
         {error && (
           <div className="bg-red-50 text-red-600 p-2 rounded-md text-sm mb-2">
             {typeof error === "string"
@@ -551,12 +487,10 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
           </div>
         )}
       </div>
-
       <div className="flex-none !px-5 !pb-5 bg-white rounded-b-2xl shadow-md">
         <p className="text-base font-medium !mb-4 text-gray-800">
           Como prefere fazer o pagamento?
         </p>
-
         <button
           className={`w-full flex justify-between items-center !p-4 !mb-2.5 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors ${
             loading ? "opacity-70 cursor-not-allowed" : ""
@@ -574,7 +508,6 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
             <span className="text-lg text-gray-600">➔</span>
           )}
         </button>
-
         <button
           className={`w-full flex justify-between items-center !p-4 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors ${
             loading ? "opacity-70 cursor-not-allowed" : ""

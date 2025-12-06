@@ -1,8 +1,6 @@
-"use client";
-
+﻿"use client";
 import { useState, useEffect } from "react";
 import { Edit2, Check, X } from "lucide-react";
-
 export default function EditCard({ onClose, onProdutoAtualizado }) {
   const [produtoSelecionado, setProdutoSelecionado] = useState(null);
   const [form, setForm] = useState({
@@ -14,39 +12,31 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
     descricao: "",
     categoria: "",
   });
-
   const [editMode, setEditMode] = useState(false);
   const [errors, setErrors] = useState({});
   const [previewImage, setPreviewImage] = useState("/placeholder.svg");
   const [loading, setLoading] = useState(false);
 
-  // Buscar produto selecionado e seus dados completos
   useEffect(() => {
     const buscarProdutoSelecionado = async () => {
       const selecionado = localStorage.getItem("selecionadoUnico");
       console.log("Selecionado no localStorage:", selecionado);
-
       if (!selecionado) {
         setProdutoSelecionado(null);
         return;
       }
-
       const { id } = JSON.parse(selecionado);
       console.log("ID do produto selecionado:", id);
-
       try {
-        // Buscar todos os produtos da API
-        const response = await fetch("http://localhost:8080/api/menu-items");
-        if (!response.ok) throw new Error("Erro ao buscar produtos");
 
+        const response = await fetch("http:
+        if (!response.ok) throw new Error("Erro ao buscar produtos");
         const data = await response.json();
         console.log("Dados da API:", data);
 
-        // A API retorna { menu: { categoria: [...] } }
         const menuData = data.menu || data;
         console.log("Menu data:", menuData);
 
-        // Encontrar o produto específico
         let produtoEncontrado = null;
         const categorias = [
           "combos",
@@ -56,7 +46,6 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
           "bebidas",
           "porcoes",
         ];
-
         for (const cat of categorias) {
           if (menuData[cat]) {
             console.log(
@@ -72,15 +61,14 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
                 cat,
                 produtoEncontrado
               );
-              produtoEncontrado.categoria = cat; // Adicionar categoria ao produto
+              produtoEncontrado.categoria = cat;
               break;
             }
           }
         }
-
         if (produtoEncontrado) {
           setProdutoSelecionado(produtoEncontrado);
-          // Mapear campos do backend (inglês) para o frontend (português)
+
           setForm({
             id: produtoEncontrado.id,
             nome: produtoEncontrado.name || "",
@@ -98,14 +86,11 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
         console.error("Erro ao buscar produto:", error);
       }
     };
-
     buscarProdutoSelecionado();
 
-    // Escutar mudanças na seleção
     const handleSelecionadosUpdate = () => {
       buscarProdutoSelecionado();
     };
-
     window.addEventListener(
       "selecionadosAtualizados",
       handleSelecionadosUpdate
@@ -116,23 +101,20 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
         handleSelecionadosUpdate
       );
   }, []);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "preco") {
-      // Permitir apenas números, vírgula e ponto
+
       const precoValue = value.replace(/[^0-9.,]/g, "");
       setForm((prev) => ({ ...prev, [name]: precoValue }));
     } else {
       setForm((prev) => ({ ...prev, [name]: value }));
     }
 
-    // Limpar erro do campo
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: null }));
     }
   };
-
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -144,7 +126,6 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
       reader.readAsDataURL(file);
     }
   };
-
   const validateForm = () => {
     const newErrors = {};
     if (!form.nome.trim()) newErrors.nome = "Nome é obrigatório";
@@ -155,17 +136,13 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-
     setLoading(true);
-
     try {
-      // Converter preço de string para número
-      const precoNumerico = parseFloat(form.preco.replace(",", "."));
 
+      const precoNumerico = parseFloat(form.preco.replace(",", "."));
       const payload = {
         name: form.nome.trim(),
         description: form.descricao.trim(),
@@ -174,16 +151,14 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
         imageUrl: form.imagem,
       };
 
-      // Obter token de autenticação
       const token = localStorage.getItem("token");
       if (!token) {
         alert("Você precisa estar logado para atualizar produtos");
         return;
       }
 
-      // Fazer requisição PUT para atualizar
       const response = await fetch(
-        `http://localhost:8080/api/menu-items/${form.id}`,
+        `http:
         {
           method: "PUT",
           headers: {
@@ -193,20 +168,15 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
           body: JSON.stringify(payload),
         }
       );
-
       if (!response.ok) throw new Error("Erro ao atualizar produto");
-
       const produtoAtualizado = await response.json();
 
-      // Notificar o componente pai para recarregar a lista
       if (onProdutoAtualizado) {
         onProdutoAtualizado(produtoAtualizado);
       }
-
       setEditMode(false);
       alert("Produto atualizado com sucesso!");
 
-      // Fechar o modal após sucesso
       onClose();
     } catch (error) {
       console.error("Erro ao atualizar produto:", error);
@@ -215,11 +185,10 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
       setLoading(false);
     }
   };
-
   const toggleEditMode = () => {
     setEditMode(!editMode);
     if (editMode) {
-      // Cancelar - restaurar dados originais
+
       if (produtoSelecionado) {
         setForm({
           id: produtoSelecionado.id,
@@ -236,7 +205,6 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
     }
   };
 
-  // Se não há produto selecionado
   if (!produtoSelecionado) {
     return (
       <div className="w-[350px] h-115 bg-white rounded-2xl shadow-md flex flex-col items-center justify-center font-['Montserrat']">
@@ -260,10 +228,9 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
       </div>
     );
   }
-
   return (
     <div className="w-[350px] h-115 bg-white rounded-2xl shadow-md flex flex-col font-['Montserrat']">
-      {/* Header */}
+      {}
       <div className="flex justify-between items-center !p-4 border-b border-gray-200">
         <h2 className="text-lg font-bold !m-0 text-gray-800">
           {editMode ? "Editando Produto" : "Detalhes do Produto"}
@@ -276,8 +243,7 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
           <X size={20} />
         </button>
       </div>
-
-      {/* Indicador do produto selecionado */}
+      {}
       <div className="px-4 py-2 bg-blue-50 border-b border-blue-200">
         <p className="text-xs text-blue-800">
           <strong>Produto:</strong> {produtoSelecionado.nome} (ID:{" "}
@@ -287,12 +253,11 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
           <strong>Categoria:</strong> {produtoSelecionado.categoria}
         </p>
       </div>
-
       <form
         onSubmit={handleSubmit}
         className="flex flex-col flex-1 !px-4 !py-2 overflow-y-auto"
       >
-        {/* Imagem */}
+        {}
         <div className="!mb-3">
           <div className="flex flex-col items-center">
             <div className="w-[50%] h-[80px] border border-gray-300 rounded-md overflow-hidden !mb-1 flex items-center justify-center bg-gray-100">
@@ -307,16 +272,7 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
                 type="file"
                 id="imagem"
                 name="imagem"
-                accept="image/*"
-                onChange={handleImageChange}
-                disabled={loading}
-                className="w-full text-xs text-gray-500 file:mr-2 file:!py-1 file:!px-2 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
-              />
-            )}
-          </div>
-        </div>
-
-        {/* Nome */}
+                accept="image}
         <div className="!mb-2">
           <label
             htmlFor="nome"
@@ -339,8 +295,7 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
             <p className="text-[#e30613] text-xs !mt-1">{errors.nome}</p>
           )}
         </div>
-
-        {/* Preço e Tempo de Preparo */}
+        {}
         <div className="flex flex-row gap-2 !mb-3">
           <div className="w-1/2">
             <label
@@ -399,8 +354,7 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
             )}
           </div>
         </div>
-
-        {/* Descrição */}
+        {}
         <div className="!mb-3">
           <label
             htmlFor="descricao"
@@ -423,8 +377,7 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
             <p className="text-[#e30613] text-xs !mt-1">{errors.descricao}</p>
           )}
         </div>
-
-        {/* Botões */}
+        {}
         <div className="flex justify-end !mb-2 gap-2">
           {editMode ? (
             <>

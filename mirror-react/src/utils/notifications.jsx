@@ -1,17 +1,8 @@
-/**
- * Utilitário robusto de notificações de pagamento
- * - Persiste notificações em "notificacoesPagamentos"
- * - Índices persistentes: "notifsIndexIds" e "notifsIndexSigs"
- * - Deduplicação forte por ID e por assinatura (nome+valor+minuto)
- * - Backfill do "historicoPedidos" com janelas de proteção para evitar duplicatas
- */
-
-export const NOTIFS_KEY = "notificacoesPagamentos"
+﻿export const NOTIFS_KEY = "notificacoesPagamentos"
 export const HIST_KEY = "historicoPedidos"
 const INDEX_IDS_KEY = "notifsIndexIds"
 const INDEX_SIGS_KEY = "notifsIndexSigs"
 const LAST_BACKFILL_AT = "notifsLastBackfillAt"
-
 function readArray(key) {
   try {
     const raw = localStorage.getItem(key)
@@ -21,7 +12,6 @@ function readArray(key) {
     return []
   }
 }
-
 function writeArray(key, arr) {
   try {
     localStorage.setItem(key, JSON.stringify(arr))
@@ -29,7 +19,6 @@ function writeArray(key, arr) {
     console.error("Erro ao salvar no localStorage:", e)
   }
 }
-
 function readSet(key) {
   try {
     const raw = localStorage.getItem(key)
@@ -39,7 +28,6 @@ function readSet(key) {
     return new Set()
   }
 }
-
 function writeSet(key, set) {
   try {
     localStorage.setItem(key, JSON.stringify(Array.from(set)))
@@ -47,7 +35,6 @@ function writeSet(key, set) {
     console.error("Erro ao salvar índice:", e)
   }
 }
-
 function toNumber(v) {
   if (v == null) return 0
   if (typeof v === "number") return Number.isFinite(v) ? v : 0
@@ -59,7 +46,6 @@ function toNumber(v) {
   return 0
 }
 
-// Retorna string BRL sem o prefixo "R$ " (o componente já renderiza "R$ {valor}")
 export function formatBRLNumber(n) {
   try {
     return new Intl.NumberFormat("pt-BR", {
@@ -75,7 +61,6 @@ export function formatBRLNumber(n) {
     return fixed.replace(".", ",")
   }
 }
-
 function normalizeNotification(n, indexFallback = 0) {
   const id =
     typeof n?.id === "number" || typeof n?.id === "string"
@@ -83,7 +68,6 @@ function normalizeNotification(n, indexFallback = 0) {
       : typeof n?.timestamp === "number"
         ? n.timestamp
         : indexFallback
-
   const timestamp =
     typeof n?.timestamp === "number"
       ? n.timestamp
@@ -92,28 +76,24 @@ function normalizeNotification(n, indexFallback = 0) {
         : typeof id === "number"
           ? id
           : Date.now()
-
   const nomeLanche = n?.nomeLanche ?? n?.nome ?? n?.titulo ?? "Pedido"
   const valorNum =
     typeof n?.valorTotal === "number" ? n.valorTotal : toNumber(n?.valorTotal ?? n?.totalNum ?? n?.total ?? 0)
-
   return {
     id,
     lida: !!n?.lida,
     timestamp,
     nomeLanche,
-    valorTotal: formatBRLNumber(valorNum), // string "12,90"
+    valorTotal: formatBRLNumber(valorNum),
     metodoPagamento: n?.metodoPagamento || "balcao",
   }
 }
 
-// Assinatura por nome + valor em centavos + minuto
 function signature(n) {
   const cents = Math.round(toNumber(n.valorTotal) * 100)
   const minute = Math.floor(Number(n.timestamp) / 60000)
   return `${n.nomeLanche}|${cents}|${minute}`
 }
-
 function deduplicateList(list) {
   const byId = new Map()
   const bySig = new Set()
@@ -126,7 +106,6 @@ function deduplicateList(list) {
   }
   return Array.from(byId.values())
 }
-
 function updateIndexesWith(list) {
   const idSet = readSet(INDEX_IDS_KEY)
   const sigSet = readSet(INDEX_SIGS_KEY)
@@ -137,11 +116,6 @@ function updateIndexesWith(list) {
   writeSet(INDEX_IDS_KEY, idSet)
   writeSet(INDEX_SIGS_KEY, sigSet)
 }
-
-/**
- * Retorna notificações normalizadas, deduplicadas e ordenadas (desc).
- * Compacta storage e alinha os índices.
- */
 export function getNotifications() {
   const raw = readArray(NOTIFS_KEY)
   const normalized = raw.map((n, i) => normalizeNotification(n, i))
@@ -150,21 +124,15 @@ export function getNotifications() {
   updateIndexesWith(unique)
   return unique
 }
-
-/**
- * Adiciona notificação "ao vivo", deduplicando por índices e conteúdo.
- */
 export function addPaymentNotification(payment) {
   try {
     const idSet = readSet(INDEX_IDS_KEY)
     const sigSet = readSet(INDEX_SIGS_KEY)
-
     const timestamp = typeof payment?.timestamp === "number" ? payment.timestamp : Date.now()
     const id = String(timestamp)
     const nomeLanche = payment?.nomeLanche || payment?.nome || payment?.titulo || "Pedido"
     const valorNum =
       typeof payment?.valorTotal === "number" ? payment.valorTotal : toNumber(payment?.totalNum ?? payment?.total ?? 0)
-
     const novo = normalizeNotification(
       {
         id: timestamp,
@@ -178,12 +146,10 @@ export function addPaymentNotification(payment) {
     )
     const sig = signature(novo)
 
-    // Se já conhecemos, não insere
     if (idSet.has(id) || sigSet.has(sig)) {
       return getNotifications()
     }
 
-    // Verifica conteúdo atual
     const current = getNotifications()
     const existsById = current.some((n) => String(n.id) === id)
     const existsBySig = current.some((n) => signature(n) === sig)
@@ -194,14 +160,12 @@ export function addPaymentNotification(payment) {
       writeSet(INDEX_SIGS_KEY, sigSet)
       return current
     }
-
     const updated = [novo, ...current].sort((a, b) => b.timestamp - a.timestamp)
     writeArray(NOTIFS_KEY, updated)
     idSet.add(id)
     sigSet.add(sig)
     writeSet(INDEX_IDS_KEY, idSet)
     writeSet(INDEX_SIGS_KEY, sigSet)
-
     try {
       window.dispatchEvent(new Event("novaNotificacao"))
     } catch {}
@@ -212,7 +176,6 @@ export function addPaymentNotification(payment) {
   }
 }
 
-// Debounce simples para backfill no mount (evitar rodar 2x no StrictMode)
 function shouldRunBackfillNow(debounceMs = 3000) {
   try {
     const last = Number(sessionStorage.getItem(LAST_BACKFILL_AT) || "0")
@@ -224,32 +187,21 @@ function shouldRunBackfillNow(debounceMs = 3000) {
     return true
   }
 }
-
-/**
- * Backfill a partir do histórico:
- * - Ignora eventos muito recentes (bufferMs)
- * - Ignora eventos com timestamp próximo do último já notificado
- * - Usa índices e assinatura para deduplicar
- */
 export function backfillFromHistoricoIfNeeded(bufferMs = 5000) {
   if (!shouldRunBackfillNow(3000)) {
-    // Já rodou muito recentemente (ex.: StrictMode)
+
     return getNotifications()
   }
-
   const now = Date.now()
   const historico = readArray(HIST_KEY)
   if (!Array.isArray(historico) || historico.length === 0) {
     return getNotifications()
   }
-
   const current = getNotifications()
   const idSet = readSet(INDEX_IDS_KEY)
   const sigSet = readSet(INDEX_SIGS_KEY)
   const maxNotifTs = current.length ? Number(current[0].timestamp) : 0
-
   const novos = []
-
   for (const pedido of historico) {
     const ts =
       typeof pedido?.dadosOriginais?.timestamp === "number"
@@ -257,14 +209,11 @@ export function backfillFromHistoricoIfNeeded(bufferMs = 5000) {
         : Date.parse(pedido?.dataPedido) || null
     if (!ts) continue
 
-    // Evita concorrer com notificação ao vivo
     if (now - ts < bufferMs) continue
-    // Se já temos notificação mais recente ou no mesmo minuto, pula pedidos muito próximos
-    if (maxNotifTs && Math.abs(ts - maxNotifTs) < bufferMs) continue
 
+    if (maxNotifTs && Math.abs(ts - maxNotifTs) < bufferMs) continue
     const id = String(ts)
     if (idSet.has(id) || current.some((n) => String(n.id) === id)) continue
-
     let nomeLanche = "Pedido"
     if (Array.isArray(pedido?.itens) && pedido.itens.length > 0) {
       const principal = pedido.itens.find((i) => i?.tipo === "produto") || pedido.itens[0]
@@ -272,9 +221,7 @@ export function backfillFromHistoricoIfNeeded(bufferMs = 5000) {
     } else if (pedido?.id) {
       nomeLanche = String(pedido.id)
     }
-
     const valorNum = typeof pedido?.total === "number" ? pedido.total : toNumber(pedido?.total)
-
     const candidato = normalizeNotification(
       {
         id: ts,
@@ -286,15 +233,12 @@ export function backfillFromHistoricoIfNeeded(bufferMs = 5000) {
       },
       0,
     )
-
     const sig = signature(candidato)
     if (sigSet.has(sig) || current.some((n) => signature(n) === sig)) continue
-
     novos.push(candidato)
     idSet.add(id)
     sigSet.add(sig)
   }
-
   if (novos.length > 0) {
     const merged = deduplicateList([...novos, ...current]).sort((a, b) => b.timestamp - a.timestamp)
     writeArray(NOTIFS_KEY, merged)
@@ -305,13 +249,8 @@ export function backfillFromHistoricoIfNeeded(bufferMs = 5000) {
     } catch {}
     return merged
   }
-
   return current
 }
-
-/**
- * Compacta storage e realinha índices.
- */
 export function compactNotificationsStorage() {
   const unique = getNotifications()
   writeArray(NOTIFS_KEY, unique)

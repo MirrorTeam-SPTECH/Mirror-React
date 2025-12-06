@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { CirclePlus, CircleX, SquarePen, Trash2, Search } from "lucide-react";
 import { useLocation } from "react-router-dom";
-
 export default function ControlePedidos({
   titulo,
   esconderBotoes = false,
@@ -9,15 +8,13 @@ export default function ControlePedidos({
   onAtualizar,
   onDeletar,
   onCancelarPedido = false,
-  onPesquisarPedido, // nova prop para ação de pesquisa
+  onPesquisarPedido,
 }) {
   const location = useLocation();
   const [pesquisa, setPesquisa] = useState("");
-
   const handlePesquisar = () => {
     if (onPesquisarPedido) onPesquisarPedido(pesquisa);
   };
-
   return (
     <div className="w-full flex justify-center h-26">
       <div className="w-[90%] py-6">

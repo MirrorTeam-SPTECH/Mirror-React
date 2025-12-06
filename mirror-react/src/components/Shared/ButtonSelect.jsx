@@ -1,51 +1,40 @@
-"use client"
-
+﻿"use client"
 import { useState, useEffect } from "react"
-
 export default function ButtonSelect({ produtoId, categoria, onToggle }) {
   const [isSelected, setIsSelected] = useState(false)
-
   useEffect(() => {
-    // Verificar o estado inicial
+
     const checkSelectedStatus = () => {
       const selecionado = JSON.parse(localStorage.getItem("selecionadoUnico"))
       const found = selecionado && selecionado.id === produtoId && selecionado.categoria === categoria
       setIsSelected(found)
     }
-
     checkSelectedStatus()
 
-    // Atualiza quando outro componente dispara o evento
     const handleSelecionadosUpdate = () => {
       checkSelectedStatus()
     }
-
     window.addEventListener("selecionadosAtualizados", handleSelecionadosUpdate)
     return () => window.removeEventListener("selecionadosAtualizados", handleSelecionadosUpdate)
   }, [produtoId, categoria])
-
   const toggleSelect = (e) => {
     e.stopPropagation()
-
     const selecionado = JSON.parse(localStorage.getItem("selecionadoUnico"))
     const isAlreadySelected = selecionado && selecionado.id === produtoId && selecionado.categoria === categoria
-
     if (isAlreadySelected) {
-      // Desmarca
+
       localStorage.removeItem("selecionadoUnico")
       setIsSelected(false)
       if (onToggle) onToggle(false)
     } else {
-      // Marca este e desmarca todos os outros
+
       localStorage.setItem("selecionadoUnico", JSON.stringify({ id: produtoId, categoria }))
       setIsSelected(true)
       if (onToggle) onToggle(true)
     }
 
-    // Notificar outros componentes
     window.dispatchEvent(new Event("selecionadosAtualizados"))
   }
-
   return (
     <button
       type="button"

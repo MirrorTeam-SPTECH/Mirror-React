@@ -1,27 +1,20 @@
-"use client"
-
+﻿"use client"
 import { useEffect, useState } from "react"
 import { CheckCircle, X } from "lucide-react"
-
 export default function NotificationModal({ notification, onClose }) {
   const [isVisible, setIsVisible] = useState(false)
-
   useEffect(() => {
     if (notification) {
       setIsVisible(true)
 
-      // Auto-close após 3 segundos
       const timer = setTimeout(() => {
         setIsVisible(false)
-        setTimeout(() => onClose(), 400) // Aguarda animação terminar
+        setTimeout(() => onClose(), 400)
       }, 4000)
-
       return () => clearTimeout(timer)
     }
   }, [notification, onClose])
-
   if (!notification) return null
-
   return (
     <div
       className={`fixed top-4 right-4 z-50 transition-all duration-300 ${

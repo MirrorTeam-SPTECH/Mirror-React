@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import authService from "../services/authService";
 import { ArrowLeft } from "lucide-react";
@@ -7,24 +7,20 @@ import imgFundoCadastro from "../assets/img/Blob 5.png";
 import imgFoodTruck from "../assets/img/Design_sem_nome-removebg-preview 1.png";
 import imgLeft from "../assets/img/6-removebg-preview 1.png";
 import imgRight from "../assets/img/7-removebg-preview 1.png";
-
 const Cadastro = () => {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmacaoSenha, setConfirmacaoSenha] = useState("");
   const navigate = useNavigate();
-
   const handleCadastro = async (e) => {
     e.preventDefault();
-
     const arrobaEmail = email.indexOf("@");
     const pontoEmail = email.indexOf(".com");
     const caracteresEspeciais = ["!", "@", "#", "$", "*", "&", "%"];
     const senhaTemEspecial = caracteresEspeciais.some((caractere) =>
       senha.includes(caractere)
     );
-
     if (!nome || !email || !senha || !confirmacaoSenha) {
       alert("Preencha todos os campos");
     } else if (arrobaEmail < 1) {
@@ -42,13 +38,11 @@ const Cadastro = () => {
     } else {
       try {
         await authService.register({ nome, email, senha });
-
         alert("Cadastro realizado com sucesso!");
         navigate("/login");
       } catch (error) {
         console.error("Erro:", error);
 
-        // Tratamento específico para erro 409 (email já cadastrado)
         if (error.response?.status === 409) {
           alert(
             "Este e-mail já está cadastrado! Por favor, use outro e-mail ou faça login."
@@ -61,10 +55,9 @@ const Cadastro = () => {
       }
     }
   };
-
   return (
     <main className="cadastro">
-      {/* (SEU HTML CONTINUA IGUAL, apenas o form que foi atualizado) */}
+      {}
       <img
         className="img-background"
         src={imgFundoCadastro}
@@ -134,5 +127,4 @@ const Cadastro = () => {
     </main>
   );
 };
-
 export default Cadastro;

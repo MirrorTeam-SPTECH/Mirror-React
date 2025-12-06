@@ -1,5 +1,4 @@
-"use client";
-
+﻿"use client";
 import { useState, useEffect } from "react";
 import HeaderGerenciamento from "../components/HeaderGerenciamento";
 import ControlePedidos from "../components/ControlePedidos";
@@ -9,7 +8,6 @@ import Filtros from "../components/Filtros";
 import Resultados from "../components/Resultados";
 import { Search, ChevronDown, RefreshCw } from "lucide-react";
 import { useDashboardData } from "../data/useDashboardData";
-
 export default function Relatorios() {
   const [dataSelecionada, setDataSelecionada] = useState("");
   const [filtroPagamento, setFiltroPagamento] = useState("");
@@ -19,7 +17,6 @@ export default function Relatorios() {
   const [loading, setLoading] = useState(true);
   const [novoPagamentoBalcao, setNovoPagamentoBalcao] = useState(null);
 
-  // KPIs/Ranking reagem aos filtros
   const {
     stats,
     loading: statsLoading,
@@ -31,12 +28,10 @@ export default function Relatorios() {
     filtroOrigem,
     filtroPesquisar
   );
-
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 2000);
     return () => clearTimeout(timer);
   }, []);
-
   useEffect(() => {
     const item = localStorage.getItem("novoPagamentoBalcao");
     if (item) {
@@ -50,11 +45,9 @@ export default function Relatorios() {
       }
     }
   }, []);
-
   const handleDateChange = (e) => {
     setDataSelecionada(e.target.value);
   };
-
   const handleResetFilters = () => {
     setDataSelecionada("");
     setFiltroPagamento("");
@@ -62,11 +55,10 @@ export default function Relatorios() {
     setFiltroOrigem("");
     setFiltroPesquisar("");
   };
-
   return (
     <>
       {loading ? (
-        // skeleton...
+
         <div className="w-full h-22 flex justify-center items-center ">
           <div className="w-[90%] flex items-center justify-between px-16">
             <ul className="flex gap-6 text-xs">
@@ -84,7 +76,6 @@ export default function Relatorios() {
             titulo="Relatório de Pedidos"
             esconderBotoes={true}
           />
-
           <div className="flex !-mt-18 items-center gap-4">
             <div className="relative !ml-18">
               <input
@@ -96,7 +87,6 @@ export default function Relatorios() {
               />
               <ChevronDown className="absolute right-2 top-2.5 h-5 w-5 text-gray-500 pointer-events-none" />
             </div>
-
             <button
               onClick={handleResetFilters}
               className="flex items-center gap-2 bg-white text-gray-700 border border-gray-300 rounded-md h-10 px-3 hover:bg-gray-50"
@@ -106,13 +96,11 @@ export default function Relatorios() {
               Limpar filtros
             </button>
           </div>
-
           {error && (
             <div className="!ml-18 !mt-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
               <p>{error?.message || "Erro ao carregar relatórios"}</p>
             </div>
           )}
-
           <div className="flex flex-row gap-4 !ml-18">
             <Kpi
               tittle="Total de Pedidos"
@@ -140,7 +128,6 @@ export default function Relatorios() {
               loading={statsLoading}
             />
           </div>
-
           <div className="flex flex-row !ml-18 !-mt-80 items-center">
             <div className="flex gap-4">
               <Filtros
@@ -191,7 +178,6 @@ export default function Relatorios() {
               </div>
             </Filtros>
           </div>
-
           <Resultados
             pagamentoBalcao={novoPagamentoBalcao}
             filtros={{
@@ -199,7 +185,7 @@ export default function Relatorios() {
               valor: filtroValor,
               origem: filtroOrigem,
               pesquisar: filtroPesquisar,
-              data: dataSelecionada, // envia a data para a tabela
+              data: dataSelecionada,
             }}
           />
         </>

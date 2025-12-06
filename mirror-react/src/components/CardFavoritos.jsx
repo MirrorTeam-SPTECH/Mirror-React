@@ -1,15 +1,12 @@
-import HeartButton from "./Shared/HeartButton";
+﻿import HeartButton from "./Shared/HeartButton";
 import Vector15 from "../assets/img/Vector15.png";
 import Vector16 from "../assets/img/Vector16.png";
-
 export function Favoritos({ id, categoria, nome, valor, descricao, imagem, onRemove }) {
-  
   const handleToggle = (isNowFavorite) => {
     if( !isNowFavorite && onRemove){
       onRemove(id, categoria)
     }
   }
-  
   return (
     <div className="favoritos-container relative flex flex-col h-[550px] bg-white rounded-2xl shadow-lg overflow-hidden">
       <img
@@ -50,5 +47,4 @@ export function Favoritos({ id, categoria, nome, valor, descricao, imagem, onRem
       </div>
     </div>
   );
-
 }

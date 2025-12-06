@@ -1,6 +1,4 @@
-
-import "../styles/NavigationBar.css";
-
+﻿import "../styles/NavigationBar.css";
 export default function NavigationBar() {
   const handleScroll = (sectionId) => {
     const section = document.getElementById(sectionId);
@@ -8,13 +6,11 @@ export default function NavigationBar() {
       section.scrollIntoView({ behavior: "smooth" });
     }
   };
-
   return (
     <div className="container-navBar">
       <ul className="menu">
          <li>
           <button
-
             className="Fixed"
             id="active"
             onClick={() => handleScroll("combos")}
@@ -24,7 +20,6 @@ export default function NavigationBar() {
         </li>
         <li>
           <button
-
             className="Fixed"
             id="active"
             onClick={() => handleScroll("hamburgueres")}
@@ -61,7 +56,6 @@ export default function NavigationBar() {
         </li>
         <li>
           <button
-
             className="Fixed"
             id="active"
             onClick={() => handleScroll("porcoes")}

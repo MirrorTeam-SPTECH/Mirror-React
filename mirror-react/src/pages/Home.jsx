@@ -1,5 +1,4 @@
-"use client"
-
+﻿"use client"
 import { useEffect, useState } from "react"
 import { Header } from "../components/Header"
 import { Pesquisa } from "../components/Pesquisa"
@@ -15,7 +14,6 @@ import CardCarregamento from "../components/CardCarregamento"
 import CardPagamentoRealizado from "../components/CardPagamentoRealizado"
 import { todasCategorias } from "../utils/Categorias"
 import "../styles/Carregamento.css"
-
 export default function Home() {
   const [loading, setLoading] = useState(true)
   const [produtoSelecionado, setProdutoSelecionado] = useState(null)
@@ -27,22 +25,18 @@ export default function Home() {
     const storedFavoritos = JSON.parse(localStorage.getItem("favoritos")) || []
     return storedFavoritos
   })
-
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 2000)
     return () => clearTimeout(timer)
   }, [])
-
   useEffect(() => {
     localStorage.setItem("favoritos", JSON.stringify(favoritos))
   }, [favoritos])
-
   useEffect(() => {
     if (produtoCarrinho) {
       console.log("Estado atual do produtoCarrinho:", produtoCarrinho)
     }
   }, [produtoCarrinho])
-
   const handleClickProduto = (produto) => {
     if (produtoSelecionado?.id === produto.id) {
       setProdutoSelecionado(null)
@@ -56,7 +50,6 @@ export default function Home() {
       setEtapaAtual("lancheSelecionado")
     }
   }
-
   const handleFavoritar = (produtoId, categoria) => {
     setFavoritos((prevFavoritos) => {
       const isFavorito = prevFavoritos.some((fav) => fav.id === produtoId)
@@ -69,56 +62,46 @@ export default function Home() {
       }
     })
   }
-
   const handleAvancarAdicionais = (produtoComQuantidade) => {
     console.log("Home recebeu do CardLancheSelecionado:", produtoComQuantidade)
     setProdutoComAdicionais(produtoComQuantidade)
     setEtapaAtual("adicionais")
   }
-
   const handleAvancarCarrinho = (produtoFinalizado) => {
     console.log("Home recebeu do CardAdicionais:", produtoFinalizado)
     setProdutoCarrinho(produtoFinalizado)
     setEtapaAtual("carrinho")
   }
-
   const handleVoltarLancheSelecionado = () => {
     setEtapaAtual("lancheSelecionado")
   }
-
   const handleAvancarPagamento = () => setEtapaAtual("pagamento")
-
   const handlePix = () => {
     setMetodoPagamento("pix")
     setEtapaAtual("carregamento")
     setTimeout(() => setEtapaAtual("qrcode"), 2000)
   }
-
   const handleCartao = () => {
     setMetodoPagamento("cartao")
     setEtapaAtual("carregamento")
     setTimeout(() => setEtapaAtual("realizado"), 2000)
   }
-
   const handleConfirmarPagamento = () => {
     setEtapaAtual("carregamento")
     setTimeout(() => setEtapaAtual("realizado"), 2000)
   }
-
   const handleVoltarHome = () => {
     setProdutoSelecionado(null)
     setProdutoComAdicionais(null)
     setProdutoCarrinho(null)
     setEtapaAtual(null)
   }
-
   const handleRemoverDoCarrinho = () => {
     setProdutoSelecionado(null)
     setProdutoComAdicionais(null)
     setProdutoCarrinho(null)
     setEtapaAtual(null)
   }
-
   return (
     <div className="containerProjeto h-screen">
       {loading ? (

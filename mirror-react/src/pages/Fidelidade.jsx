@@ -1,5 +1,4 @@
-"use client";
-
+﻿"use client";
 import { useState, useEffect, useCallback } from "react";
 import { useRef } from "react";
 import { Header } from "../components/Header";
@@ -10,7 +9,6 @@ import Vector15 from "../assets/img/Vector15.png";
 import Vector16 from "../assets/img/Vector16.png";
 import "../styles/Fidelidade.css";
 import confetti from "canvas-confetti";
-
 export default function FidelidadePage() {
   const [fidelidade, setFidelidade] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,7 +17,6 @@ export default function FidelidadePage() {
   const [pedidosProcessados, setPedidosProcessados] = useState(new Set());
   const [userEmail, setUserEmail] = useState(null);
 
-  // Obter email do usuário logado
   useEffect(() => {
     try {
       const userStr = localStorage.getItem("user");
@@ -32,37 +29,28 @@ export default function FidelidadePage() {
     }
   }, []);
 
-  // Montagem: carrega favoritos visuais e progresso persistido (específico por usuário)
   useEffect(() => {
     if (!userEmail) return;
 
-    // Chaves específicas do usuário
     const favKey = `favoritos_${userEmail}`;
     const fidelKey = `dadosFidelidade_${userEmail}`;
-
     const ids = JSON.parse(localStorage.getItem(favKey) || "[]");
     setFidelidade(produtosData.hamburgueres.filter((p) => ids.includes(p.id)));
-
     const saved = JSON.parse(localStorage.getItem(fidelKey) || "{}");
     const compras = saved.compras || 0;
     const processados = new Set(saved.pedidosProcessados || []);
-
     setComprasRealizadas(compras);
     setPremioDisponivel(compras >= 10);
     setPedidosProcessados(processados);
     setLoading(false);
   }, [userEmail]);
 
-  // Verifica novas compras de: novoPagamentoBalcao, novoPagamentoPix e como backup o historicoPedidos
   const verificarNovasCompras = useCallback(() => {
     if (!userEmail) return;
-
     const fidelKey = `dadosFidelidade_${userEmail}`;
-
     let novaCompraDetectada = false;
     const novos = new Set(pedidosProcessados);
 
-    // Balcão
     const novoPagamentoBalcao = localStorage.getItem("novoPagamentoBalcao");
     if (novoPagamentoBalcao) {
       try {
@@ -75,12 +63,11 @@ export default function FidelidadePage() {
       } catch (e) {
         console.error("Erro ao processar novoPagamentoBalcao:", e);
       } finally {
-        // Limpa a chave sempre que encontrada (processada/corrompida)
+
         localStorage.removeItem("novoPagamentoBalcao");
       }
     }
 
-    // PIX
     const novoPagamentoPix = localStorage.getItem("novoPagamentoPix");
     if (novoPagamentoPix) {
       try {
@@ -97,8 +84,6 @@ export default function FidelidadePage() {
       }
     }
 
-    // Backup: buscar pedidos do usuário pela API (se necessário)
-    // Removido o uso de historicoPedidos global que continha pedidos de todos os usuários
 
     if (novaCompraDetectada) {
       const total = novos.size;
@@ -106,14 +91,13 @@ export default function FidelidadePage() {
       setComprasRealizadas(Math.min(total, 10));
       setPremioDisponivel(total >= 10);
 
-      // Persistência com chave específica do usuário
       localStorage.setItem(
         fidelKey,
         JSON.stringify({
           compras: Math.min(total, 10),
           pedidosProcessados: Array.from(novos),
           ultimaAtualizacao: new Date().toISOString(),
-          // preserva contagem de prêmios se existir
+
           premiosResgatados:
             JSON.parse(localStorage.getItem(fidelKey) || "{}")
               .premiosResgatados || 0,
@@ -121,15 +105,12 @@ export default function FidelidadePage() {
       );
     }
   }, [pedidosProcessados, userEmail]);
-
   useEffect(() => {
-    verificarNovasCompras(); // primeiro disparo
+    verificarNovasCompras();
     const interval = setInterval(verificarNovasCompras, 1000);
     return () => clearInterval(interval);
   }, [verificarNovasCompras]);
-
   const progressoRef = useRef(null);
-
   useEffect(() => {
     if (premioDisponivel && progressoRef.current) {
       const rect = progressoRef.current.getBoundingClientRect();
@@ -143,7 +124,6 @@ export default function FidelidadePage() {
       });
     }
   }, [premioDisponivel]);
-
   const renderBloco = (items, isLeftBlock = false) => (
     <div className="bloco-central">
       {isLeftBlock ? (
@@ -192,15 +172,13 @@ export default function FidelidadePage() {
               );
             })}
           </div>
-
           <div className="progresso-texto flex flex-col items-center justify-end !mt-10">
             {premioDisponivel && (
               <p className="text-center text-lg font-bold text-green-600">
                 🎉 Prêmio disponível para resgate!
               </p>
             )}
-
-            {/* Debug info - removido histórico global que continha todos os usuários */}
+            {}
             <div className="text-xs text-gray-500 mt-2">
               <p>Pedidos processados: {pedidosProcessados.size}</p>
             </div>
@@ -261,7 +239,6 @@ export default function FidelidadePage() {
       </div>
     </div>
   );
-
   return (
     <div>
       {loading ? (

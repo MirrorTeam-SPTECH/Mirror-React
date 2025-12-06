@@ -1,11 +1,9 @@
-"use client";
-
+﻿"use client";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Header } from "../components/Header";
 import { SubNavigation } from "../components/SubNavigation";
 import "../styles/HistoricoPedido.css";
-
 const formatarData = (data) =>
   new Date(data).toLocaleDateString("pt-BR", {
     day: "2-digit",
@@ -14,13 +12,11 @@ const formatarData = (data) =>
     hour: "2-digit",
     minute: "2-digit",
   });
-
 const formatarPreco = (preco) => {
   const precoNum =
     typeof preco === "number" ? preco : Number.parseFloat(preco || 0);
   return precoNum.toFixed(2).replace(".", ",");
 };
-
 function OrderItem({ item }) {
   return (
     <div className="item-pedido">
@@ -47,7 +43,6 @@ function OrderItem({ item }) {
     </div>
   );
 }
-
 function OrderCard({ pedido, onPedirNovamente, numeroPedidoUsuario }) {
   const getStatusText = (status) => {
     const statusMap = {
@@ -60,17 +55,14 @@ function OrderCard({ pedido, onPedirNovamente, numeroPedidoUsuario }) {
     };
     return statusMap[status] || status;
   };
-
   const getStatusClass = (status) => {
     if (["DELIVERED", "READY"].includes(status)) return "finalizado";
     if (["CANCELLED"].includes(status)) return "cancelado";
     return "em-andamento";
   };
-
   const statusText = getStatusText(pedido.status);
   const statusClass = getStatusClass(pedido.status);
   const isInProgress = statusClass === "em-andamento";
-
   return (
     <div className="card-pedido">
       <div className="topo-pedido">
@@ -82,7 +74,6 @@ function OrderCard({ pedido, onPedirNovamente, numeroPedidoUsuario }) {
           <div className="data">{formatarData(pedido.createdAt)}</div>
         </div>
       </div>
-
       <div className="cliente-info">
         <p>
           <strong>Cliente:</strong> {pedido.customerName}
@@ -93,13 +84,11 @@ function OrderCard({ pedido, onPedirNovamente, numeroPedidoUsuario }) {
           </p>
         )}
       </div>
-
       <div className="itens-pedido">
         {(pedido.items || []).map((item) => (
           <OrderItem key={item.id} item={item} />
         ))}
       </div>
-
       <div className="pagamento-info">
         <p>
           <strong>Pagamento:</strong> {pedido.payment?.method || "N/A"}
@@ -108,11 +97,9 @@ function OrderCard({ pedido, onPedirNovamente, numeroPedidoUsuario }) {
           <strong>Status Pagamento:</strong> {pedido.payment?.status || "N/A"}
         </p>
       </div>
-
       <div className="total-pedido">
         Total: R$ {formatarPreco(pedido.total)}
       </div>
-
       <button
         className={isInProgress ? "botao-repetir-cinza" : "botao-repetir-claro"}
         onClick={() => onPedirNovamente(pedido)}
@@ -123,63 +110,50 @@ function OrderCard({ pedido, onPedirNovamente, numeroPedidoUsuario }) {
     </div>
   );
 }
-
 export default function HistoricoPedidos() {
   const [pedidos, setPedidos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const carregarPedidos = async () => {
     try {
       setLoading(true);
       setError(null);
       const token = localStorage.getItem("token");
       const userStr = localStorage.getItem("user");
-
       if (!token || !userStr) {
         setError("Você precisa estar logado para ver o histórico");
         setLoading(false);
         return;
       }
-
       const user = JSON.parse(userStr);
       const userEmail = user.email;
-
       if (!userEmail) {
         setError("Email do usuário não encontrado");
         setLoading(false);
         return;
       }
-
       console.log("Buscando pedidos do usuário:", userEmail);
 
-      // Usar o endpoint que filtra por email do cliente
       const response = await axios.get(
-        `http://localhost:8080/api/orders/customer/${encodeURIComponent(
+        `http:
           userEmail
         )}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-
       console.log("Resposta da API:", response.data);
 
-      // A API retorna um array direto neste endpoint
       const pedidosData = Array.isArray(response.data) ? response.data : [];
 
-      // Ordenar por data mais recente
       const pedidosOrdenados = pedidosData.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
-
       console.log("Pedidos ordenados:", pedidosOrdenados);
 
-      // Debug: verificar se os itens têm observations
       if (pedidosOrdenados.length > 0) {
         console.log("Primeiro pedido - items:", pedidosOrdenados[0].items);
       }
-
       setPedidos(pedidosOrdenados);
     } catch (err) {
       console.error("Erro ao carregar pedidos:", err);
@@ -192,23 +166,18 @@ export default function HistoricoPedidos() {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     carregarPedidos();
 
-    // Recarregar a cada 30 segundos
     const interval = setInterval(() => {
       carregarPedidos();
     }, 30000);
-
     return () => clearInterval(interval);
   }, []);
-
   const handlePedirNovamente = () => {
     alert("Funcionalidade em desenvolvimento: adicionar pedido ao carrinho");
-    // TODO: Implementar re-adicionar ao carrinho
-  };
 
+  };
   if (loading) {
     return (
       <div className="containerProjeto">
@@ -221,7 +190,6 @@ export default function HistoricoPedidos() {
       </div>
     );
   }
-
   if (error) {
     return (
       <div className="containerProjeto">
@@ -239,13 +207,11 @@ export default function HistoricoPedidos() {
       </div>
     );
   }
-
   return (
     <div className="containerProjeto">
       <Header titulo="Histórico" p="Seus pedidos anteriores" />
       <main className="historico">
         <h2 className="titulo-secao">Histórico de Pedidos</h2>
-
         {pedidos.length === 0 ? (
           <div className="sem-pedidos">
             <div className="icone-vazio">📋</div>

@@ -1,5 +1,4 @@
-// src/pages/SiteInstitucional.jsx
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import { Instagram, MessageCircle, Moon, Sun } from "lucide-react";
 import wallpaper from "../assets/img/truckHome2.png";
 import logoPortal from "../assets/img/logo.png";
@@ -9,10 +8,8 @@ import LocalizationCtn from "../assets/img/Localization.png";
 import sobreNos from "../assets/img/sobre nós.png";
 import { Link } from "react-router-dom";
 import MenuCarousel from "../components/MenuCarousel";
-
 const SiteInstitucional = () => {
   const [darkMode, setDarkMode] = useState(false);
-
   useEffect(() => {
     if (darkMode) {
       document.body.classList.add('dark-mode');
@@ -20,11 +17,9 @@ const SiteInstitucional = () => {
       document.body.classList.remove('dark-mode');
     }
   }, [darkMode]);
-
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
-
   return (
     <div className="fullContent relative flex justify-center items-center flex-col">
       <section id="Home" className={`homePage w-screen relative flex justify-center h-[75.5dvh] transition-colors duration-300 ${darkMode ? 'bg-[#7D0000]' : ''}`}>
@@ -67,7 +62,6 @@ const SiteInstitucional = () => {
               <button className="btnLogin w-[35%] h-[45%] font-semibold cursor-pointer rounded-lg bg-red-600 hover:bg-red-950 transition duration-400 text-white">
                 <Link to="/login">Login</Link>
               </button>
-
               <button className="btnCadastro w-[50%] h-[45%] rounded-lg border-2 border-red-600 cursor-pointer text-red-600 font-semibold hover:bg-red-600 hover:text-white transition duration-400">
                 <Link to="/cadastro">Cadastre-se</Link>
               </button>
@@ -101,11 +95,9 @@ const SiteInstitucional = () => {
           </div>
         </div>
       </section>
-
-      {/* Sobre Nós - Pão Superior */}
+      {}
       <section id="AboutUs" className={`AboutUs relative !top-[200px] w-full h-[90dvh] z-0 transition-colors duration-300 ${darkMode ? 'bg-[#452500]' : 'bg-amber-600'}`}>
         <img className="absolute !-top-17" src={sobreNos} alt="" />
-
         <div className="flex flex-row justify-between items-start gap-10 !pt-[100px] px-14 relative z-10">
           <div className="flex flex-col gap-3 !ml-14">
             <div className="flex gap-3 items-end">
@@ -113,14 +105,12 @@ const SiteInstitucional = () => {
               <div className={`h-[230px] w-[200px] rounded-2xl transition-colors duration-300 ${darkMode ? 'bg-gray-700' : 'bg-amber-50'}`}></div>
               <div className={`h-[200px] w-[350px] rounded-2xl transition-colors duration-300 ${darkMode ? 'bg-gray-700' : 'bg-amber-50'}`}></div>
             </div>
-
             <div className="flex gap-3">
               <div className={`h-[200px] w-[275px] rounded-2xl transition-colors duration-300 ${darkMode ? 'bg-gray-700' : 'bg-amber-50'}`}></div>
               <div className={`h-[230px] w-[200px] rounded-2xl transition-colors duration-300 ${darkMode ? 'bg-gray-700' : 'bg-amber-50'}`}></div>
               <div className={`h-[200px] w-[275px] rounded-2xl transition-colors duration-300 ${darkMode ? 'bg-gray-700' : 'bg-amber-50'}`}></div>
             </div>
           </div>
-
           <div className="flex flex-col justify-start items-start !mt-6 !mr-14">
             <span className="text-8xl font-bold text-white">Sobre Nós</span>
             <p className="!mt-6 text-white text-xl max-w-[400px] leading-relaxed">
@@ -136,7 +126,7 @@ const SiteInstitucional = () => {
           style={{ transform: "rotate(0deg)", transition: "0.3s" }}
           viewBox="0 0 1440 100"
           version="1.1"
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="http:
         >
           <path
             className={`w-full transition-colors duration-300 ${darkMode ? 'fill-[#e9bb04]' : 'fill-[#7DCD38]'}`}
@@ -145,8 +135,7 @@ const SiteInstitucional = () => {
           />
         </svg>
       </section>
-
-      {/* Chefs - Queijo */}
+      {}
       <section id="Chefs" className={`Chefs relative !top-[200px] w-full h-[75dvh] z-0 transition-colors duration-300 ${darkMode ? 'bg-[#e9bb04]' : 'bg-[#7DCD38]'}`}>
         <div className="flex flex-row w-full h-[500px] top-[45%] absolute transform -translate-y-1/2 justify-around">
           <div className="flex flex-col justify-center items-center">
@@ -188,7 +177,7 @@ const SiteInstitucional = () => {
           style={{ transform: "rotate(0deg)", transition: "0.3s" }}
           viewBox="0 0 1440 100"
           version="1.1"
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="http:
         >
           <path
             className={`w-full transition-colors duration-300 ${darkMode ? 'fill-[#e9bb04]' : 'fill-[#2C0000]'}`}
@@ -197,8 +186,7 @@ const SiteInstitucional = () => {
           />
         </svg>
       </section>
-
-      {/* Menu - Queijo */}
+      {}
       <section className={`Menu relative !top-[200px] w-full h-[90dvh] z-0 transition-colors duration-300 ${darkMode ? 'bg-[#e9bb04]' : 'bg-[#2C0000]'}`}>
         <div className="flex flex-col justify-start items-center w-full h-full">
           <p className="!mt-10 text-white text-xl max-w-[400px] leading-relaxed">
@@ -210,8 +198,7 @@ const SiteInstitucional = () => {
           </div>
         </div>
       </section>
-
-      {/* Contato - Hambúrguer */}
+      {}
       <section className={`Contact relative !top-[200px] w-full h-[35dvh] z-0 transition-colors duration-300 ${darkMode ? 'bg-[#2C0000]' : 'bg-[#FFD940]'}`}>
         <div className="flex flex-col w-full h-full items-center">
           <span className="text-7xl font-bold text-white !mt-10">
@@ -234,8 +221,7 @@ const SiteInstitucional = () => {
           </div>
         </div>
       </section>
-
-      {/* Localização - Hambúrguer */}
+      {}
       <section className={`Contact relative !top-[200px] w-full h-[65dvh] flex justify-center items-center !px-8 flex-col transition-colors duration-300 ${darkMode ? 'bg-[#2C0000]' : 'bg-[#A40000]'}`}>
         <div className="flex flex-row justify-center items-center w-full h-full gap-5">
           <div className="flex flex-col items-start justify-center gap-[35px] !-mt-[7%] relative">
@@ -244,17 +230,15 @@ const SiteInstitucional = () => {
               className="h-[440px] w-[auto] !-ml-20"
               alt=""
             />
-
             <h2 className="text-[100px] font-bold text-white leading-[1] text-right !-mt-[30%] whitespace-nowrap">
               Nossa
               <br />
               Localização
             </h2>
           </div>
-
           <div className="bg-[#f1f1f1] h-[350px] w-[45%] !mt-[10px] rounded-[10px] overflow-hidden">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2165.210150247894!2d-46.71189489120232!3d-23.482309332977163!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94cef90a69d6b48b%3A0xbdcf6cb742a0539d!2sR.%20Domingos%20Giglio%2C%2081%20-%20Vila%20Miriam%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2002972-010!5e0!3m2!1spt-BR!2sbr!4v1741995970605!5m2!1spt-BR!2sbr"
+              src="https:
               width="100%"
               height="100%"
               style={{ border: 0 }}
@@ -265,8 +249,7 @@ const SiteInstitucional = () => {
           </div>
         </div>
       </section>
-
-      {/* Footer - Pão Inferior */}
+      {}
       <section className={`Footer relative !top-[200px] w-full h-[60dvh] flex justify-center items-center !px-8 transition-colors duration-300 ${darkMode ? 'bg-[#452500]' : 'bg-[#C26700]'}`}>
         <div className="flex flex-col justify-center items-center w-full h-full gap-5">
           <div className="flex flex-row h-[350px] w-[100%] justify-around items-center gap-10">
@@ -279,7 +262,6 @@ const SiteInstitucional = () => {
                 Siga-nos nas redes sociais e descubra nosso cardápio itinerante!
               </p>
             </div>
-
             <div className="flex flex-col justify-start items-center w-[100px] h-[90%] gap-3">
               <span className="text-2xl font-bold text-white">Social</span>
               <div className="flex flex-row gap-2 justify-center items-center">
@@ -289,7 +271,6 @@ const SiteInstitucional = () => {
                 </span>
               </div>
             </div>
-
             <div className="flex flex-col justify-start items-center w-[100px] h-[90%] gap-3">
               <span className="text-2xl font-bold text-white">Detalhes</span>
               <ul className="text-sm font-bold text-white flex flex-col justify-center items-start !-ml-7">
@@ -299,7 +280,6 @@ const SiteInstitucional = () => {
                 <li>Contato</li>
               </ul>
             </div>
-
             <div className="flex flex-col justify-start items-center w-[140px] h-[90%] gap-3">
               <span className="text-2xl font-bold text-white">Contato</span>
               <div className="flex flex-row gap-2 justify-center items-center">
@@ -320,5 +300,4 @@ const SiteInstitucional = () => {
     </div>
   );
 };
-
 export default SiteInstitucional;

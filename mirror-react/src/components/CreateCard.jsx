@@ -1,8 +1,6 @@
-"use client";
-
+﻿"use client";
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
-
 export default function CreateCard({
   produto = null,
   onClose,
@@ -18,10 +16,8 @@ export default function CreateCard({
     descricao: produto?.descricao || "",
     categoria: produto?.categoria || "",
   });
-
   const [errors, setErrors] = useState({});
   const [previewImage, setPreviewImage] = useState(form.imagem);
-
   useEffect(() => {
     if (produto) {
       setForm({
@@ -36,11 +32,10 @@ export default function CreateCard({
       setPreviewImage(produto.imagem || "/placeholder.svg");
     }
   }, [produto]);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "preco") {
-      // Permitir apenas números, vírgula e ponto
+
       const precoValue = value.replace(/[^0-9.,]/g, "");
       setForm((old) => ({
         ...old,
@@ -50,7 +45,6 @@ export default function CreateCard({
       setForm((old) => ({ ...old, [name]: value }));
     }
   };
-
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -62,7 +56,6 @@ export default function CreateCard({
       reader.readAsDataURL(file);
     }
   };
-
   const validateForm = () => {
     const newErrors = {};
     if (!form.nome.trim()) newErrors.nome = "Nome é obrigatório";
@@ -74,34 +67,28 @@ export default function CreateCard({
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validateForm()) return;
 
-    // Converter preço de string para número
     const precoNumerico = parseFloat(form.preco.replace(",", "."));
 
-    // Preparar payload com nomes de campos corretos para o backend
     const payload = {
       name: form.nome.trim(),
       description: form.descricao.trim(),
       price: precoNumerico,
-      category: form.categoria.toUpperCase(), // Backend espera enum em maiúsculo
+      category: form.categoria.toUpperCase(),
       preparationTime: form.tempoPreparo,
       imageUrl: form.imagem,
     };
-
     console.log("Enviando payload:", JSON.stringify(payload, null, 2));
 
-    // Obter token de autenticação
     const token = localStorage.getItem("token");
     if (!token) {
       alert("Você precisa estar logado para criar produtos");
       return;
     }
-
-    fetch("http://localhost:8080/api/menu-items", {
+    fetch("http:
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -114,11 +101,11 @@ export default function CreateCard({
         return res.json();
       })
       .then((novoItem) => {
-        // Chama a função que veio do CardapioEditar para atualizar o estado
+
         if (onProdutoCriado) {
           onProdutoCriado(novoItem);
         }
-        // Fecha o modal
+
         onClose();
       })
       .catch((err) => {
@@ -126,7 +113,6 @@ export default function CreateCard({
         alert("Erro ao criar produto: " + err.message);
       });
   };
-
   return (
     <div className="w-[350px] h-115 bg-white rounded-2xl shadow-md flex flex-col font-['Montserrat']">
       <div className="flex justify-between items-center !p-4 border-b border-gray-200">
@@ -144,7 +130,6 @@ export default function CreateCard({
           <X size={20} />
         </button>
       </div>
-
       <div className="!mb-3">
         <div className="flex flex-col !mt-2 items-center">
           <div className="w-[50%] h-[80px] border border-gray-300 rounded-md overflow-hidden !mb-1 flex items-center justify-center bg-gray-100">
@@ -159,21 +144,9 @@ export default function CreateCard({
               type="file"
               id="imagem"
               name="imagem"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="w-full text-xs text-gray-500 file:mr-2 file:!py-1 file:!px-2 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
-            />
-          )}
-        </div>
-      </div>
-
-      <form
-        onSubmit={handleSubmit}
-        className="!px-4 !py-2 overflow-y-auto flex-1"
-      >
-        {/* Nome e Categoria em linha */}
+              accept="image}
         <div className="flex flex-row !gap-2">
-          {/* Nome */}
+          {}
           <div className="!mb-3 flex-1">
             <label
               htmlFor="nome"
@@ -195,8 +168,7 @@ export default function CreateCard({
               <p className="text-[#e30613] text-xs !mt-1">{errors.nome}</p>
             )}
           </div>
-
-          {/* Categoria */}
+          {}
           <div className="!mb-3 flex-1">
             <label
               htmlFor="categoria"
@@ -225,8 +197,7 @@ export default function CreateCard({
             )}
           </div>
         </div>
-
-        {/* Preço e Tempo de Preparo */}
+        {}
         <div className="flex flex-row gap-2">
           <div className="!mb-3 flex-1">
             <label
@@ -274,8 +245,7 @@ export default function CreateCard({
             </select>
           </div>
         </div>
-
-        {/* Descrição */}
+        {}
         <div className="!mb-1">
           <label
             htmlFor="descricao"
@@ -296,8 +266,7 @@ export default function CreateCard({
             <p className="text-[#e30613] text-xs !mt-1">{errors.descricao}</p>
           )}
         </div>
-
-        {/* Botões */}
+        {}
         {mode !== "view" && (
           <div className="flex justify-end !mt-auto !mb-2 gap-2">
             <button

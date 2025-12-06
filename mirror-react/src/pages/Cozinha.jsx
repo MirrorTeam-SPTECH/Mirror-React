@@ -1,5 +1,4 @@
-"use client"
-
+﻿"use client"
 import { useEffect, useState, useMemo } from "react"
 import HeaderGerenciamento from "../components/HeaderGerenciamento"
 import DeleteConfirmation from "../components/DeleteConfirmation"
@@ -7,7 +6,6 @@ import { todasCategorias } from "../utils/Categorias"
 import "../styles/Carregamento.css"
 import { Maximize, Minimize, Clock, Search, CreditCard, BadgePercent } from "lucide-react"
 
-// Util: assinatura para dedupe quando não há id estável
 function buildSignature(p) {
   try {
     const cliente = String(p?.cliente ?? "")
@@ -24,7 +22,6 @@ function buildSignature(p) {
   }
 }
 
-// Dedupe por id e por assinatura
 function dedupeOrders(list) {
   const byId = new Set()
   const bySig = new Set()
@@ -43,7 +40,6 @@ function dedupeOrders(list) {
   return result
 }
 
-// Helpers para normalizar números e adicionais (mesmo princípio do Histórico)
 function toNumber(v) {
   if (v == null) return undefined
   if (typeof v === "number" && Number.isFinite(v)) return v
@@ -53,7 +49,6 @@ function toNumber(v) {
   }
   return undefined
 }
-
 function normalizeAddons(maybe) {
   const src = Array.isArray(maybe) ? maybe : []
   return src
@@ -70,7 +65,6 @@ function normalizeAddons(maybe) {
     })
     .filter((a) => a && a.nome)
 }
-
 export default function Cozinha() {
   const [loading, setLoading] = useState(true)
   const [cardAberto, setCardAberto] = useState(null)
@@ -78,18 +72,15 @@ export default function Cozinha() {
   const [pedidos, setPedidos] = useState([])
   const [pedidoSelecionado, setPedidoSelecionado] = useState(null)
   const [searchTerm, setSearchTerm] = useState("")
-
   function Expandir() {
     setExpandido((prev) => !prev)
   }
-
   useEffect(() => {
     const carregarPedidos = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/pedidos")
+        const response = await fetch("http:
           .then((res) => (res.ok ? res.json() : null))
           .catch(() => null)
-
         if (Array.isArray(response)) {
           setPedidos(processarPedidosAPI(response))
         } else {
@@ -102,27 +93,24 @@ export default function Cozinha() {
         setLoading(false)
       }
     }
-
     carregarPedidos()
     const interval = setInterval(() => {
       carregarPedidos()
     }, 30000)
     return () => clearInterval(interval)
   }, [])
-
   const processarPedidosAPI = (pedidosAPI) => {
     const mapeados = pedidosAPI.map((pedido) => {
       const id = pedido?.id != null ? String(pedido.id) : `${Date.now()}-${Math.random()}`
 
-      // Normaliza itens e centraliza todos os adicionais em "adicionaisSelecionados"
       const items =
         Array.isArray(pedido?.itens) && pedido.itens.length > 0
           ? pedido.itens.map((item) => {
               const adicionaisSelecionados = [
-                // acompanhamentos (seu termo)
+
                 ...normalizeAddons(item?.acompanhamentos),
                 ...normalizeAddons(item?.acompanhamentosSelecionados),
-                // comuns
+
                 ...normalizeAddons(item?.adicionais),
                 ...normalizeAddons(item?.adicionaisSelecionados),
                 ...normalizeAddons(item?.extras),
@@ -153,7 +141,6 @@ export default function Cozinha() {
               },
             ]
 
-      // Adicionais/acompanhamentos no nível do pedido -> anexar ao primeiro item
       const topLevelAddons = [
         ...normalizeAddons(pedido?.acompanhamentos),
         ...normalizeAddons(pedido?.acompanhamentosSelecionados),
@@ -164,12 +151,10 @@ export default function Cozinha() {
       if (topLevelAddons.length > 0 && items.length > 0) {
         items[0].adicionaisSelecionados = [...(items[0].adicionaisSelecionados || []), ...topLevelAddons]
       }
-
       const total =
         typeof pedido?.valor === "string"
           ? Number.parseFloat(pedido.valor.replace(",", "."))
           : Number(pedido?.valor ?? 0)
-
       return {
         id,
         cliente: pedido?.nomeCliente || "Cliente",
@@ -183,7 +168,6 @@ export default function Cozinha() {
     })
     return dedupeOrders(mapeados)
   }
-
   const pedidosFiltrados = useMemo(() => {
     if (!searchTerm) return pedidos
     const term = searchTerm.toLowerCase()
@@ -216,28 +200,23 @@ export default function Cozinha() {
       )
     })
   }, [pedidos, searchTerm])
-
   const handleCardClose = () => {
     setCardAberto(null)
     setPedidoSelecionado(null)
   }
-
   const handleCancelarPedido = (pedido) => {
     setPedidoSelecionado(pedido)
     setCardAberto("cancelar")
   }
-
   const confirmarCancelamento = () => {
     setPedidos((prev) => prev.filter((p) => String(p.id) !== String(pedidoSelecionado?.id)))
     setCardAberto(null)
     setPedidoSelecionado(null)
   }
-
   const formatBRL = (n) =>
     new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 2 }).format(
       Number(n || 0),
     )
-
   return (
     <div className="containerProjeto">
       {loading ? (
@@ -268,7 +247,6 @@ export default function Cozinha() {
                 <button className="!px-4 !py-2 bg-blue-500 text-white rounded-lg font-bold hover:bg-blue-600 transition flex items-center !gap-2">
                   Novo Pedido
                 </button>
-
                 <div className="relative w-[250px]">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={16} />
                   <input
@@ -281,7 +259,6 @@ export default function Cozinha() {
                 </div>
               </div>
             </div>
-
             <div className="flex w-full justify-center items-center !mb-0 min-h-[70vh]">
               <div className={cardAberto ? "flex-3 w-[70%]" : "w-full flex justify-center"}>
                 <div
@@ -302,7 +279,6 @@ export default function Cozinha() {
                   >
                     {expandido ? <Minimize color="#000" /> : <Maximize color="#000" />}
                   </button>
-
                   {pedidosFiltrados && pedidosFiltrados.length > 0 ? (
                     pedidosFiltrados.map((pedido) => {
                       const categoriasDoPedido = Array.from(
@@ -325,7 +301,6 @@ export default function Cozinha() {
                               <span>{pedido.tempoPreparo}</span>
                             </div>
                           </div>
-
                           <div className="w-full !mt-5">
                             <p className="text-gray-800 text-sm font-semibold">Compra:</p>
                             <div className="flex flex-wrap gap-1 mt-1">
@@ -344,7 +319,6 @@ export default function Cozinha() {
                               )}
                             </div>
                           </div>
-
                           <div className="flex-1 w-full">
                             <ul className="text-gray-700 text-[13px] mb-3 list-disc list-inside">
                               {pedido.items.map((item, index) => (
@@ -360,7 +334,6 @@ export default function Cozinha() {
                                       {formatBRL((item.preco || 0) * (item.quantidade || 1))}
                                     </span>
                                   </div>
-
                                   {Array.isArray(item.adicionaisSelecionados) &&
                                     item.adicionaisSelecionados.length > 0 && (
                                       <ul className="pl-5 list-[circle] text-[12px] text-gray-600">
@@ -378,7 +351,6 @@ export default function Cozinha() {
                               ))}
                             </ul>
                           </div>
-
                           <div className="w-full mt-auto">
                             <div className="flex items-center justify-between border-t border-gray-300 pt-2">
                               <div className="flex items-center gap-1 text-gray-700 text-xs">
@@ -405,7 +377,6 @@ export default function Cozinha() {
                   )}
                 </div>
               </div>
-
               {cardAberto && (
                 <div className="flex-1 !-mt-25 !mr-17 w-[30%] flex flex-col items-center justify-center">
                   {cardAberto === "cancelar" && (
@@ -425,4 +396,3 @@ export default function Cozinha() {
     </div>
   )
 }
-

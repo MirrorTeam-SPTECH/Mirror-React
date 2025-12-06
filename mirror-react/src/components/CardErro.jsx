@@ -1,6 +1,5 @@
-import React from 'react';
+﻿import React from 'react';
 import '../styles/CardErro.css';
-
 const CardErro = () => {
   return (
     <div className="card-erro">
@@ -15,5 +14,4 @@ const CardErro = () => {
     </div>
   );
 };
-
 export default CardErro;

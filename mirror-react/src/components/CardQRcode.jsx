@@ -1,10 +1,7 @@
-// src/components/CardQRcode.jsx
-"use client";
-
+﻿"use client";
 import React, { useState } from "react";
 import { ArrowLeft, Copy, Check, ExternalLink } from "lucide-react";
 import "../styles/CardQRcode.css";
-
 export default function CardQRcode({
   qrCode,
   qrCodeBase64,
@@ -13,7 +10,6 @@ export default function CardQRcode({
   onClose,
 }) {
   const [copiado, setCopiado] = useState(false);
-
   const copiarCodigo = () => {
     if (qrCode) {
       navigator.clipboard.writeText(qrCode);
@@ -21,17 +17,15 @@ export default function CardQRcode({
       setTimeout(() => setCopiado(false), 3000);
     }
   };
-
   const abrirTicket = () => {
     if (ticketUrl) {
       window.open(ticketUrl, "_blank");
     }
   };
-
   return (
     <div className="qrcode-overlay">
       <div className="qrcode-container">
-        {/* Header */}
+        {}
         <div className="qrcode-header">
           <button onClick={onClose} className="btn-voltar-qr">
             <ArrowLeft size={20} />
@@ -39,8 +33,7 @@ export default function CardQRcode({
           <h2 className="qrcode-titulo">Pagamento via PIX</h2>
           <div style={{ width: "40px" }}></div>
         </div>
-
-        {/* QR Code Display */}
+        {}
         <div className="qrcode-content">
           <div className="qr-image-container">
             {qrCodeBase64 ? (
@@ -51,7 +44,7 @@ export default function CardQRcode({
               />
             ) : qrCode ? (
               <img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(
+                src={`https:
                   qrCode
                 )}`}
                 alt="QR Code PIX"
@@ -63,12 +56,10 @@ export default function CardQRcode({
               </div>
             )}
           </div>
-
           <p className="qrcode-instrucao">
             Escaneie o QR Code com seu app bancário ou copie o código PIX
           </p>
-
-          {/* Código PIX */}
+          {}
           {qrCode && (
             <div className="codigo-pix-container">
               <p className="codigo-pix-label">Código PIX:</p>
@@ -78,8 +69,7 @@ export default function CardQRcode({
             </div>
           )}
         </div>
-
-        {/* Actions */}
+        {}
         <div className="qrcode-actions">
           {qrCode && (
             <button className="btn-qr-action btn-copiar" onClick={copiarCodigo}>
@@ -96,14 +86,12 @@ export default function CardQRcode({
               )}
             </button>
           )}
-
           {ticketUrl && (
             <button className="btn-qr-action btn-ticket" onClick={abrirTicket}>
               <ExternalLink size={20} />
               <span>Abrir Comprovante</span>
             </button>
           )}
-
           {onConfirmar && (
             <button
               className="btn-qr-action btn-confirmar"

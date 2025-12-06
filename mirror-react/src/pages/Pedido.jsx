@@ -1,19 +1,15 @@
-"use client"
-
+﻿"use client"
 import { useEffect, useState } from "react"
 import HeaderGerenciamento from "../components/HeaderGerenciamento"
 import { Search, Clock } from "lucide-react"
 
-// Chaves de armazenamento
 const HISTORICO_KEY = "historicoPedidos"
 const STATUS_OVERRIDES_KEY = "pedidoStatusOverrides"
 
-// Status internos da UI
 const PENDENTE = "pendente"
 const EM_ANDAMENTO = "em_andamento"
 const FINALIZADO = "finalizado"
 
-// Util: assinatura para dedupe quando não há id estável
 function buildSignature(p) {
   try {
     const cliente = String(p?.cliente ?? "")
@@ -23,14 +19,13 @@ function buildSignature(p) {
       .trim()
       .toLowerCase()
     const totalCents = Math.round(Number(p?.total ?? 0) * 100)
-    const minute = new Date(p?.dataCriacao ?? Date.now()).toISOString().slice(0, 16) // YYYY-MM-DDTHH:mm
+    const minute = new Date(p?.dataCriacao ?? Date.now()).toISOString().slice(0, 16)
     return `${cliente}|${firstItem}|${totalCents}|${minute}`
   } catch {
     return `sig-${Date.now()}`
   }
 }
 
-// Dedupe por id e por assinatura
 function dedupeOrders(list) {
   const byId = new Set()
   const bySig = new Set()
@@ -48,7 +43,6 @@ function dedupeOrders(list) {
   }
   return result
 }
-
 export default function Pedido() {
   const [loading, setLoading] = useState(true)
   const [pedidos, setPedidos] = useState({
@@ -60,7 +54,6 @@ export default function Pedido() {
   const [searchTerm, setSearchTerm] = useState("")
   const [pedidosEntregues, setPedidosEntregues] = useState([])
 
-  // Utils de localStorage
   const readJSON = (key, fallback) => {
     try {
       const raw = localStorage.getItem(key)
@@ -71,7 +64,6 @@ export default function Pedido() {
       return fallback
     }
   }
-
   const writeJSON = (key, value) => {
     try {
       localStorage.setItem(key, JSON.stringify(value))
@@ -79,7 +71,6 @@ export default function Pedido() {
       console.error("Falha ao salvar localStorage:", key, e)
     }
   }
-
   const loadOverrides = () => readJSON(STATUS_OVERRIDES_KEY, {})
   const saveOverride = (id, status) => {
     const overrides = loadOverrides()
@@ -87,7 +78,6 @@ export default function Pedido() {
     writeJSON(STATUS_OVERRIDES_KEY, overrides)
   }
 
-  // Normalizações
   const normalizeFromAPI = (p) => {
     const id = p?.id != null ? String(p.id) : `#${Date.now()}`
     const items =
@@ -110,14 +100,11 @@ export default function Pedido() {
               categoria: p?.categoria ?? p?.categoriaNome ?? undefined,
             },
           ]
-
     const total = typeof p?.valor === "string" ? Number.parseFloat(p.valor.replace(",", ".")) : Number(p?.valor ?? 0)
 
-    // Mapeia status vinda da API para colunas
     let status = PENDENTE
     const apiStatus = String(p?.status ?? "").toUpperCase()
     const emPreparo = Boolean(p?.emPreparo)
-
     if (apiStatus === "FINALIZADO" || apiStatus === "FINALIZADO_PAGO") {
       status = FINALIZADO
     } else if ((apiStatus === "PAGO" || apiStatus === "APROVADO") && emPreparo) {
@@ -125,7 +112,6 @@ export default function Pedido() {
     } else if (apiStatus === "PAGO" || apiStatus === "APROVADO" || apiStatus === "PENDENTE") {
       status = PENDENTE
     }
-
     return {
       id,
       cliente: p?.nomeCliente ?? "Cliente",
@@ -137,7 +123,6 @@ export default function Pedido() {
       tempoPreparo: p?.tempoPreparo ?? "20 min",
     }
   }
-
   const normalizeFromHistorico = (p) => {
     const id = p?.id != null ? String(p.id) : `#${Date.now()}`
     const items = Array.isArray(p?.items)
@@ -158,7 +143,6 @@ export default function Pedido() {
             categoria: p?.categoria ?? p?.categoriaNome ?? undefined,
           },
         ]
-
     const total =
       typeof p?.total === "string"
         ? Number.parseFloat(p.total.replace(",", "."))
@@ -166,13 +150,11 @@ export default function Pedido() {
             p?.total ??
               (Array.isArray(items) ? items.reduce((acc, it) => acc + (it.preco || 0) * (it.quantidade || 1), 0) : 0),
           )
-
     let status = String(p?.status ?? PENDENTE).toLowerCase()
     if (["finalizado", "entregue", "finalizado_pago"].includes(status)) status = FINALIZADO
     else if (["em_andamento", "em-andamento", "andamento", "preparo", "preparando"].includes(status))
       status = EM_ANDAMENTO
     else status = PENDENTE
-
     return {
       id,
       cliente: p?.cliente ?? "Cliente",
@@ -184,7 +166,6 @@ export default function Pedido() {
       tempoPreparo: p?.tempoPreparo ?? "20 min",
     }
   }
-
   const applyOverrides = (list) => {
     const overrides = loadOverrides()
     return list.map((p) => {
@@ -192,7 +173,6 @@ export default function Pedido() {
       return overridden ? { ...p, status: overridden } : p
     })
   }
-
   const distributeToColumns = (list) => {
     const result = { pendente: [], em_andamento: [], finalizado: [] }
     list.forEach((p) => {
@@ -202,11 +182,10 @@ export default function Pedido() {
     })
     return result
   }
-
   const flattenAndSaveHistorico = (stateObj) => {
     const combined = [...stateObj.pendente, ...stateObj.em_andamento, ...stateObj.finalizado]
     const deduped = dedupeOrders(combined)
-    // Ordena por data (mais recente primeiro)
+
     deduped.sort((a, b) => {
       const ta = new Date(a.dataCriacao).getTime() || 0
       const tb = new Date(b.dataCriacao).getTime() || 0
@@ -215,14 +194,13 @@ export default function Pedido() {
     writeJSON(HISTORICO_KEY, deduped)
   }
 
-  // Carregar pedidos do localStorage e/ou API
   useEffect(() => {
     const carregarPedidos = async () => {
       try {
-        // 1) Busca API
+
         let apiList = null
         try {
-          const res = await fetch("http://localhost:8080/api/pedidos")
+          const res = await fetch("http:
           if (res.ok) {
             const json = await res.json()
             if (Array.isArray(json)) {
@@ -232,15 +210,14 @@ export default function Pedido() {
         } catch {
           apiList = null
         }
-
         if (apiList && apiList.length > 0) {
-          // Aplica overrides persistidos para manter colunas
+
           const withOverrides = applyOverrides(apiList)
           const distributed = distributeToColumns(withOverrides)
           setPedidos(distributed)
           flattenAndSaveHistorico(distributed)
         } else {
-          // 2) Fallback: localStorage
+
           const hist = readJSON(HISTORICO_KEY, [])
           const normalized = (Array.isArray(hist) ? hist : []).map(normalizeFromHistorico)
           const withOverrides = applyOverrides(dedupeOrders(normalized))
@@ -248,7 +225,6 @@ export default function Pedido() {
           setPedidos(distributed)
         }
 
-        // Após carregar, consome imediatamente pagamentos “ao vivo” se existirem e não duplicar
         verificarNovosPedidos(true)
       } catch (error) {
         console.error("Erro ao carregar pedidos:", error)
@@ -262,18 +238,16 @@ export default function Pedido() {
       }
     }
     carregarPedidos()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [])
 
-  // Poll para novos pagamentos do localStorage (balcão/PIX)
   useEffect(() => {
     const interval = setInterval(() => {
       verificarNovosPedidos(false)
     }, 5000)
     return () => clearInterval(interval)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
+  }, [])
   const existeNoEstadoPorIdOuAssinatura = (candidate) => {
     const id = candidate?.id != null ? String(candidate.id) : null
     const sig = buildSignature(candidate)
@@ -281,14 +255,13 @@ export default function Pedido() {
     return all.some((p) => String(p.id) === id || buildSignature(p) === sig)
   }
 
-  // Verificar novos pedidos sinalizados por outras telas
   const verificarNovosPedidos = (consumirImediato) => {
     const processar = (key, metodo) => {
       const raw = localStorage.getItem(key)
       if (!raw) return
       try {
         const dadosPagamento = JSON.parse(raw)
-        // Cria o pedido candidato sem inserir ainda, para checar duplicidade
+
         const candidato = construirPedidoDePagamento(dadosPagamento, metodo)
         if (!existeNoEstadoPorIdOuAssinatura(candidato)) {
           adicionarNovoPedidoConstruido(candidato)
@@ -296,21 +269,19 @@ export default function Pedido() {
       } catch (error) {
         console.error("Erro ao processar pagamento:", key, error)
       } finally {
-        // Remove somente se o consumo é imediato (primeiro load) OU sempre após tentar processar
+
         if (consumirImediato) {
           localStorage.removeItem(key)
         } else {
-          // Para evitar reprocessamento infinito, removemos depois de processar
+
           localStorage.removeItem(key)
         }
       }
     }
-
     processar("novoPagamentoBalcao", "balcao")
     processar("novoPagamentoPix", "pix")
   }
 
-  // Constrói pedido a partir de dados de pagamento (sem inserir ainda)
   const construirPedidoDePagamento = (dadosPagamento, metodoPagamento) => {
     const produtoPrincipal = {
       nome: dadosPagamento?.nomeLanche || dadosPagamento?.nome || "Produto",
@@ -320,9 +291,7 @@ export default function Pedido() {
           ? Number.parseFloat(dadosPagamento.precoUnitario.replace(",", "."))
           : Number(dadosPagamento?.precoUnitario ?? dadosPagamento?.preco ?? 0),
     }
-
     const items = [produtoPrincipal]
-
     if (Array.isArray(dadosPagamento?.adicionaisSelecionados) && dadosPagamento.adicionaisSelecionados.length > 0) {
       dadosPagamento.adicionaisSelecionados.forEach((ad) => {
         items.push({
@@ -332,20 +301,17 @@ export default function Pedido() {
         })
       })
     }
-
     const total =
       typeof dadosPagamento?.total === "string"
         ? Number.parseFloat(dadosPagamento.total.replace(",", "."))
         : Number(dadosPagamento?.total ?? 0)
 
-    // Preferir id vindo do fluxo de pagamento; se não houver, usa timestamp do payload se existir
     const idBase =
       dadosPagamento?.id ??
       dadosPagamento?.pedidoId ??
       dadosPagamento?.timestamp ??
       dadosPagamento?.createdAt ??
       Date.now()
-
     return {
       id: String(idBase),
       cliente: "Cliente",
@@ -358,10 +324,9 @@ export default function Pedido() {
     }
   }
 
-  // Insere novo pedido já construído (com dedupe, override e histórico)
   const adicionarNovoPedidoConstruido = (novoPedido) => {
     setPedidos((prev) => {
-      // Evita duplicar dentro do próprio set
+
       const already =
         prev.pendente.some(
           (p) => String(p.id) === String(novoPedido.id) || buildSignature(p) === buildSignature(novoPedido),
@@ -372,22 +337,19 @@ export default function Pedido() {
         prev.finalizado.some(
           (p) => String(p.id) === String(novoPedido.id) || buildSignature(p) === buildSignature(novoPedido),
         )
-
       if (already) return prev
-
       const novosPendentes = [novoPedido, ...prev.pendente]
       const next = {
         ...prev,
         pendente: dedupeOrders(novosPendentes),
       }
-      // persiste override e histórico
+
       saveOverride(novoPedido.id, PENDENTE)
       flattenAndSaveHistorico(next)
       return next
     })
   }
 
-  // Selecionar pedido (highlight)
   const handleSelectPedido = (pedido) => {
     if (pedidoSelecionado && pedidoSelecionado.id === pedido.id) {
       setPedidoSelecionado(null)
@@ -396,7 +358,6 @@ export default function Pedido() {
     }
   }
 
-  // Mover entre colunas + persistir
   const moverPedido = (pedido, origem, destino) => {
     setPedidos((prev) => {
       const novaOrigem = prev[origem].filter((p) => String(p.id) !== String(pedido.id))
@@ -414,7 +375,6 @@ export default function Pedido() {
     setPedidoSelecionado(null)
   }
 
-  // Busca
   const filtrarPedidos = (pedidosLista) => {
     if (!searchTerm) return pedidosLista
     const term = String(searchTerm).toLowerCase()
@@ -422,10 +382,8 @@ export default function Pedido() {
       if (!pedido) return false
       const idStr = String(pedido.id ?? "").toLowerCase()
       if (idStr.includes(term)) return true
-
       const clienteStr = String(pedido.cliente ?? "").toLowerCase()
       if (clienteStr.includes(term)) return true
-
       if (Array.isArray(pedido.items)) {
         const temItem = pedido.items.some((item) =>
           String(item?.nome ?? "")
@@ -434,19 +392,15 @@ export default function Pedido() {
         )
         if (temItem) return true
       }
-
       const totalStr = String(
         typeof pedido.total === "number" ? pedido.total.toFixed(2) : (pedido.total ?? ""),
       ).toLowerCase()
       if (totalStr.includes(term)) return true
-
       const metodoStr = String(pedido.metodoPagamento ?? "").toLowerCase()
       if (metodoStr.includes(term)) return true
-
       return false
     })
   }
-
   if (loading) {
     return (
       <div className="containerProjeto layout-gerenciamento">
@@ -466,11 +420,9 @@ export default function Pedido() {
       </div>
     )
   }
-
   return (
     <div className="containerProjeto layout-gerenciamento">
       <HeaderGerenciamento activePage="pedido" />
-
       <div className="w-full !p-5 !mb-20">
         <div className="flex justify-between items-center !mb-5">
           <h2 className="text-white text-2xl font-bold">Pedidos do Dia</h2>
@@ -485,13 +437,10 @@ export default function Pedido() {
                 className="w-full !py-2 !pl-10 !pr-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500"
               />
             </div>
-
-           
           </div>
         </div>
-
         <div className="grid grid-cols-1 md:grid-cols-3 !gap-5">
-          {/* Coluna 1: Pagamento Pendente */}
+          {}
           <div className="bg-white rounded-xl shadow-md overflow-hidden">
             <div className="text-lg font-bold text-gray-800 !p-4 border-b border-gray-200">Pagamento Pendente</div>
             <div className="flex flex-col !gap-4 !p-4 max-h-[70vh] overflow-y-auto">
@@ -511,9 +460,7 @@ export default function Pedido() {
                         {pedido.tempoPreparo}
                       </span>
                     </div>
-
                     <div className="text-base !mb-2">{pedido.cliente}</div>
-
                     <div className="!mb-3">
                       {pedido.items.map((item, index) => (
                         <div key={index} className="flex justify-between text-sm text-gray-600 !mb-1">
@@ -524,14 +471,12 @@ export default function Pedido() {
                         </div>
                       ))}
                     </div>
-
                     <div className="flex justify-between items-center !mt-3 !pt-3 border-t border-gray-200">
                       <span className="font-bold text-base">
                         R$ {typeof pedido.total === "number" ? pedido.total.toFixed(2) : pedido.total}
                       </span>
                       <span className="text-sm text-gray-600">{pedido.metodoPagamento}</span>
                     </div>
-
                     <button
                       className="w-full !mt-3 !py-2.5 bg-green-600 text-white font-bold rounded-md hover:bg-green-700 transition"
                       onClick={(e) => {
@@ -551,8 +496,7 @@ export default function Pedido() {
               )}
             </div>
           </div>
-
-          {/* Coluna 2: Pedido em Andamento */}
+          {}
           <div className="bg-white rounded-xl shadow-md overflow-hidden">
             <div className="text-lg font-bold text-gray-800 !p-4 border-b border-gray-200">Pedido em Andamento</div>
             <div className="flex flex-col !gap-4 !p-4 max-h-[70vh] overflow-y-auto">
@@ -572,9 +516,7 @@ export default function Pedido() {
                         {pedido.tempoPreparo}
                       </span>
                     </div>
-
                     <div className="text-base !mb-2">{pedido.cliente}</div>
-
                     <div className="!mb-3">
                       {pedido.items.map((item, index) => (
                         <div key={index} className="flex justify-between text-sm text-gray-600 !mb-1">
@@ -585,14 +527,12 @@ export default function Pedido() {
                         </div>
                       ))}
                     </div>
-
                     <div className="flex justify-between items-center !mt-3 !pt-3 border-t border-gray-200">
                       <span className="font-bold text-base">
                         R$ {typeof pedido.total === "number" ? pedido.total.toFixed(2) : pedido.total}
                       </span>
                       <span className="text-sm text-gray-600">{pedido.metodoPagamento}</span>
                     </div>
-
                     <button
                       className="w-full !mt-3 !py-2.5 bg-blue-600 text-white font-bold rounded-md hover:bg-blue-700 transition"
                       onClick={(e) => {
@@ -612,8 +552,7 @@ export default function Pedido() {
               )}
             </div>
           </div>
-
-          {/* Coluna 3: Pedido Finalizado */}
+          {}
           <div className="bg-white rounded-xl shadow-md overflow-hidden">
             <div className="text-lg font-bold text-gray-800 !p-4 border-b border-gray-200">Pedido Finalizado</div>
             <div className="flex flex-col !gap-4 !p-4 max-h-[70vh] overflow-y-auto">
@@ -633,9 +572,7 @@ export default function Pedido() {
                         {pedido.tempoPreparo}
                       </span>
                     </div>
-
                     <div className="text-base !mb-2">{pedido.cliente}</div>
-
                     <div className="!mb-3">
                       {pedido.items.map((item, index) => (
                         <div key={index} className="flex justify-between text-sm text-gray-600 !mb-1">
@@ -646,14 +583,12 @@ export default function Pedido() {
                         </div>
                       ))}
                     </div>
-
                     <div className="flex justify-between items-center !mt-3 !pt-3 border-t border-gray-200">
                       <span className="font-bold text-base">
                         R$ {typeof pedido.total === "number" ? pedido.total.toFixed(2) : pedido.total}
                       </span>
                       <span className="text-sm text-gray-600">{pedido.metodoPagamento}</span>
                     </div>
-
                     <button
                       className={`w-full !mt-3 !py-2.5 bg-amber-500 text-white font-bold rounded-md hover:bg-amber-600 transition ${
                         pedidosEntregues.includes(pedido.id) ? "cursor-not-allowed opacity-60" : ""

@@ -1,6 +1,4 @@
-// src/pages/Home.jsx
-"use client";
-
+﻿"use client";
 import { useEffect, useState } from "react";
 import HeaderGerenciamento from "../components/HeaderGerenciamento"
 import ControlePedidos from "../components/ControlePedidos";
@@ -16,22 +14,18 @@ import CardCarregamento from "../components/CardCarregamento";
 import CardPagamentoRealizado from "../components/CardPagamentoRealizado";
 import { todasCategorias } from "../utils/Categorias";
 import "../styles/Carregamento.css";
-
 export default function Home() {
   const [loading, setLoading] = useState(true);
   const [produtoSelecionado, setProdutoSelecionado] = useState(null);
   const [etapaAtual, setEtapaAtual] = useState(null);
-
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 2000);
     return () => clearTimeout(timer);
   }, []);
-
   const handleClickProduto = (produto) => {
     setProdutoSelecionado({ ...produto, preco: produto.preco });
     setEtapaAtual("lancheSelecionado");
   };
-
   const handleAvancarCarrinho = () => setEtapaAtual("carrinho");
   const handleAvancarPagamento = () => setEtapaAtual("pagamento");
   const handlePix = () => setEtapaAtual("pix");
@@ -44,7 +38,6 @@ export default function Home() {
     setProdutoSelecionado(null);
     setEtapaAtual(null);
   };
-
   return (
     <div className="containerProjeto">
       {loading ? (
@@ -52,7 +45,6 @@ export default function Home() {
           <div className="skeleton headerGerenciamento-skeleton"></div>
           <div className="skeleton pesquisa-skeleton" />
           <div className="skeleton nav-skeleton" />
-
           {todasCategorias.map((_, i) => (
             <div className="skeleton lista-produto-skeleton" key={i}>
               <div className="categoria-titulo-skeleton skeleton" />
@@ -91,7 +83,6 @@ export default function Home() {
                 compact
               />
             </div>
-
             <div
               style={{
                 flex: 1,

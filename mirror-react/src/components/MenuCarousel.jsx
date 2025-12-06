@@ -1,11 +1,9 @@
-import React, { useState } from "react";
-
+﻿import React, { useState } from "react";
 const CARD_WIDTH = 450;
-const GAP = 20; // px
+const GAP = 20;
 const VISIBLE = 3;
 const STEP = CARD_WIDTH + GAP;
 const WRAPPER_WIDTH = VISIBLE * CARD_WIDTH + (VISIBLE - 1) * GAP;
-
 const items = [
   { nome: "Hamburger 1" },
   { nome: "Hamburger 2" },
@@ -17,20 +15,15 @@ const items = [
   { nome: "Hamburger 8" },
   { nome: "Hamburger 9" },
 ];
-
 export default function MenuCarousel() {
   const [index, setIndex] = useState(0);
-
   const increment = () => {
   const maxIndex = items.length - VISIBLE;
   setIndex((prev) => Math.min(prev + 1, maxIndex));
 };
-
 const decrement = () => {
   setIndex((prev) => Math.max(prev - 1, 0));
 };
-
-
   return (
     <div className="flex flex-col items-center justify-center w-full">
       <div className="flex items-center gap-3">
@@ -42,7 +35,6 @@ const decrement = () => {
           {"<"}
         </button>
         <div className="overflow-hidden mx-auto" style={{ width: `${WRAPPER_WIDTH}px` }}>
-
           <div
             className="flex transition-transform duration-[1500ms] ease-in-out gap-[20px] items-center"
             style={{
@@ -54,7 +46,7 @@ const decrement = () => {
                 key={idx}
                 className="flex flex-col items-center justify-end w-[450px] h-[300px] bg-[#6B4F4F] rounded-xl flex-shrink-0"
               >
-                {/* Aqui você pode colocar a imagem do hambúrguer */}
+                {}
                 <span className="text-white text-lg font-semibold mt-auto mb-2">
                   {item.nome}
                 </span>
@@ -79,8 +71,6 @@ const decrement = () => {
     }`}
   ></div>
 ))}
-
-    
       </div>
     </div>
   );

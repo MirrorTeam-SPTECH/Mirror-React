@@ -1,17 +1,13 @@
-"use client";
-
+﻿"use client";
 import "handsontable/styles/handsontable.min.css";
 import "handsontable/styles/ht-theme-main.min.css";
 import "../styles/Resultados.css";
-
 import { registerAllModules } from "handsontable/registry";
 import { HotTable } from "@handsontable/react-wrapper";
 import { useState, useEffect, useRef, useMemo } from "react";
-import api from "../config/api"; // Usar api configurada com Bearer token
-
+import api from "../config/api";
 registerAllModules();
 
-// Helpers
 function formatCurrency(value) {
   const num = Number(value) || 0;
   return new Intl.NumberFormat("pt-BR", {
@@ -19,7 +15,6 @@ function formatCurrency(value) {
     currency: "BRL",
   }).format(num);
 }
-
 function formatDate(dateString) {
   if (!dateString) return "";
   const d = new Date(dateString);
@@ -33,7 +28,6 @@ function formatDate(dateString) {
   });
 }
 
-// Compara somente a data em horário local (evita deslocamentos por fuso/UTC)
 function sameDayLocal(isoString, yyyyMmDd) {
   if (!isoString || !yyyyMmDd) return true;
   try {
@@ -47,45 +41,39 @@ function sameDayLocal(isoString, yyyyMmDd) {
     return false;
   }
 }
-
 export default function Resultados({ filtros = {}, pagamentoBalcao }) {
   const [pedidosOriginais, setPedidosOriginais] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const intervalRef = useRef(null);
-
   useEffect(() => {
     fetchPedidos();
 
-    // Atualização automática a cada 5 segundos
     intervalRef.current = setInterval(() => {
       fetchPedidos();
     }, 30000);
-
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, []);
 
-  // Recarrega quando um novo pagamento no balcão é detectado
   useEffect(() => {
     if (pagamentoBalcao) {
       fetchPedidos();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pagamentoBalcao]);
 
+  }, [pagamentoBalcao]);
   const fetchPedidos = async () => {
     try {
       setLoading(true);
       let response;
       try {
-        response = await api.get("/api/orders");
+        response = await api.get("/orders");
       } catch {
-        // Fallback para dados do histórico local se existir
+
         const historico = JSON.parse(
           localStorage.getItem("historicoPedidos") || "[]"
         );
@@ -102,7 +90,7 @@ export default function Resultados({ filtros = {}, pagamentoBalcao }) {
             })),
           };
         } else {
-          // Mock básico (último recurso)
+
           response = {
             data: [
               {
@@ -181,12 +169,10 @@ export default function Resultados({ filtros = {}, pagamentoBalcao }) {
           };
         }
       }
-
       console.log("📦 Resposta da API /api/orders:", response);
       console.log("📦 response.data:", response.data);
       console.log("📦 response.data.content:", response.data.content);
 
-      // Log do primeiro pedido para ver a estrutura
       if (response.data?.content && response.data.content.length > 0) {
         const primeiroPedido = response.data.content[0];
         console.log("🔍 Estrutura do primeiro pedido:", primeiroPedido);
@@ -197,22 +183,19 @@ export default function Resultados({ filtros = {}, pagamentoBalcao }) {
         });
       }
 
-      // A API retorna um objeto com { content: [], totalElements: X }
-      // Então precisamos pegar o array de dentro de 'content'
+
       let pedidos = Array.isArray(response.data?.content)
         ? response.data.content
         : Array.isArray(response.data)
         ? response.data
         : [];
 
-      // Mapear campos do backend para o formato esperado pelo frontend
       pedidos = pedidos.map((pedido) => {
-        // Pegar o primeiro item para nome e quantidade (simplificado)
+
         const primeiroItem = pedido.items?.[0] || {};
         const nomeItem =
           primeiroItem.menuItemName || primeiroItem.name || "Item";
         const quantidade = primeiroItem.quantity || 1;
-
         return {
           id: pedido.id,
           nomeProduto: nomeItem,
@@ -221,13 +204,12 @@ export default function Resultados({ filtros = {}, pagamentoBalcao }) {
           metodoPagamento: pedido.payment?.method?.toLowerCase() || "balcao",
           status: pedido.status || "PENDING",
           dataCriacao: pedido.createdAt,
-          // Campos extras para possível uso futuro
+
           customerName: pedido.customerName,
           items: pedido.items,
           payment: pedido.payment,
         };
       });
-
       console.log(
         "✅ Pedidos extraídos e mapeados:",
         pedidos.length,
@@ -244,17 +226,14 @@ export default function Resultados({ filtros = {}, pagamentoBalcao }) {
     }
   };
 
-  // Aplicar filtros aos dados (inclui data local)
   const pedidosFiltrados = useMemo(() => {
-    // Garantir que pedidosOriginais seja um array
+
     if (!Array.isArray(pedidosOriginais)) {
       console.warn("⚠️ pedidosOriginais não é um array:", pedidosOriginais);
       return [];
     }
-
     let filtrados = [...pedidosOriginais];
 
-    // Filtro por pagamento
     if (filtros.pagamento) {
       filtrados = filtrados.filter(
         (pedido) =>
@@ -263,7 +242,6 @@ export default function Resultados({ filtros = {}, pagamentoBalcao }) {
       );
     }
 
-    // Filtro por valor
     if (filtros.valor) {
       filtrados = filtrados.filter((pedido) => {
         const valor = Number(pedido.valor) || 0;
@@ -280,14 +258,12 @@ export default function Resultados({ filtros = {}, pagamentoBalcao }) {
       });
     }
 
-    // Filtro por status/origem
     if (filtros.origem) {
       filtrados = filtrados.filter((pedido) =>
         pedido.status?.toLowerCase().includes(filtros.origem.toLowerCase())
       );
     }
 
-    // Filtro por pesquisa
     if (filtros.pesquisar) {
       const termo = filtros.pesquisar.toLowerCase();
       filtrados = filtrados.filter((pedido) => {
@@ -299,17 +275,14 @@ export default function Resultados({ filtros = {}, pagamentoBalcao }) {
       });
     }
 
-    // Filtro por data (YYYY-MM-DD, local)
     if (filtros.data) {
       filtrados = filtrados.filter((pedido) =>
         sameDayLocal(pedido.dataCriacao, filtros.data)
       );
     }
-
     return filtrados;
   }, [pedidosOriginais, filtros]);
 
-  // Transformar dados filtrados para o formato do Handsontable
   const dadosFormatados = useMemo(() => {
     return pedidosFiltrados.map((pedido) => [
       pedido.id,
@@ -322,7 +295,6 @@ export default function Resultados({ filtros = {}, pagamentoBalcao }) {
     ]);
   }, [pedidosFiltrados]);
 
-  // Configurações da tabela (sem col widths rígidas para ocupar 100%)
   const columns = [
     { title: "ID" },
     { title: "Produto" },
@@ -332,7 +304,6 @@ export default function Resultados({ filtros = {}, pagamentoBalcao }) {
     { title: "Status" },
     { title: "Data/Hora" },
   ];
-
   if (loading) {
     return (
       <div className="resultados-container">
@@ -343,7 +314,6 @@ export default function Resultados({ filtros = {}, pagamentoBalcao }) {
       </div>
     );
   }
-
   if (error) {
     return (
       <div className="resultados-container">
@@ -353,9 +323,7 @@ export default function Resultados({ filtros = {}, pagamentoBalcao }) {
       </div>
     );
   }
-
   const isDateFiltered = Boolean(filtros.data);
-
   return (
     <div className="resultados-container">
       <div className="tabela-wrapper">
@@ -375,11 +343,11 @@ export default function Resultados({ filtros = {}, pagamentoBalcao }) {
             autoWrapCol={false}
             rowHeaders={false}
             contextMenu={false}
-            // Use header height consistente com o CSS
+
             columnHeaderHeight={45}
             rowHeights={40}
             settings={{
-              // Permitir scroll horizontal/vertical quando necessário
+
               scrollV: true,
               scrollH: true,
               manualRowResize: false,

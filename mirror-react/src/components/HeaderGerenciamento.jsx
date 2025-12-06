@@ -1,9 +1,7 @@
-"use client"
-
+﻿"use client"
 import { Link } from "react-router-dom"
 import LogoPortaldoChurras from "../assets/img/LogoPortaldoChurras.svg"
 import NotificationDropdown from "./NotificationDropdown"
-
 export default function HeaderGerenciamento({ activePage }) {
   const menuItems = [
     { label: "PEDIDOS", page: "pedido", href: "/pedido" },
@@ -11,7 +9,6 @@ export default function HeaderGerenciamento({ activePage }) {
     { label: "CARDÁPIO", page: "cardapio", href: "/cardapioEditar" },
     { label: "RELATÓRIOS", page: "relatorios", href: "/relatorios" },
   ]
-
   return (
     <div className="w-full h-22 flex justify-center items-center">
       <div className="w-[90%] flex items-center justify-between px-16">

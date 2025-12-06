@@ -1,8 +1,6 @@
-import '../styles/Header.css';
+﻿import '../styles/Header.css';
 import ImgHeader from '../assets/img/ImgHeader.png';
 import Logo from '../assets/img/Logo.png';
-
-
 export function Header(props) {
   return (
     <div className="header-container">

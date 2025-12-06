@@ -1,7 +1,5 @@
-import React from "react";
+﻿import React from "react";
 import { ArrowLeft } from "lucide-react";
-
-
 export default function ButtonBack({ onClose }) {
   return (
     <button
@@ -25,7 +23,6 @@ export default function ButtonBack({ onClose }) {
         transition-colors
         z-10
         focus:outline-none
-        
       "
       onClick={onClose}
       type="button"

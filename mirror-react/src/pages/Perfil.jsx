@@ -1,5 +1,4 @@
-"use client";
-
+﻿"use client";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -18,7 +17,6 @@ import { Header } from "../components/Header";
 import { SubNavigation } from "../components/SubNavigation";
 import axios from "axios";
 import "../styles/Perfil.css";
-
 export default function Perfil() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -27,11 +25,9 @@ export default function Perfil() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
 
-  // Estados para controlar visibilidade das senhas
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -40,11 +36,9 @@ export default function Perfil() {
     newPassword: "",
     confirmPassword: "",
   });
-
   useEffect(() => {
     loadUserData();
   }, []);
-
   const loadUserData = () => {
     try {
       const storedUser = localStorage.getItem("user");
@@ -60,7 +54,7 @@ export default function Perfil() {
           confirmPassword: "",
         });
       } else {
-        // Se não houver usuário, mostrar erro ao invés de redirecionar
+
         setError("Você precisa fazer login para acessar seu perfil");
       }
     } catch (err) {
@@ -70,7 +64,6 @@ export default function Perfil() {
       setLoading(false);
     }
   };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -78,18 +71,15 @@ export default function Perfil() {
       [name]: value,
     }));
   };
-
   const handleSave = async () => {
     try {
       setSaving(true);
       setError(null);
 
-      // Validações
       if (!formData.name || !formData.email) {
         setError("Nome e email são obrigatórios");
         return;
       }
-
       if (formData.newPassword || formData.confirmPassword) {
         if (!formData.currentPassword) {
           setError("Digite sua senha atual para alterar a senha");
@@ -104,29 +94,25 @@ export default function Perfil() {
           return;
         }
       }
-
       const token = localStorage.getItem("token");
       if (!token) {
         navigate("/login");
         return;
       }
 
-      // Preparar dados para atualização do perfil
       const updateData = {
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
       };
 
-      // Atualizar perfil (nome, email, telefone)
-      await axios.put("http://localhost:8080/api/users/me", updateData, {
+      await axios.put("http:
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // Se está alterando senha, usar endpoint separado
       if (formData.newPassword) {
         await axios.put(
-          "http://localhost:8080/api/users/me/password",
+          "http:
           {
             currentPassword: formData.currentPassword,
             newPassword: formData.newPassword,
@@ -137,7 +123,6 @@ export default function Perfil() {
         );
       }
 
-      // Atualizar localStorage com os novos dados
       const updatedUser = {
         ...user,
         name: formData.name,
@@ -149,14 +134,12 @@ export default function Perfil() {
       localStorage.setItem("user", JSON.stringify(updatedUser));
       setUser(updatedUser);
 
-      // Limpar campos de senha
       setFormData((prev) => ({
         ...prev,
         currentPassword: "",
         newPassword: "",
         confirmPassword: "",
       }));
-
       setEditMode(false);
       alert("Perfil atualizado com sucesso!");
     } catch (err) {
@@ -166,11 +149,10 @@ export default function Perfil() {
       setSaving(false);
     }
   };
-
   const handleCancel = () => {
     setEditMode(false);
     setError(null);
-    // Restaurar dados originais
+
     setFormData({
       name: user.name || user.nome || "",
       email: user.email || "",
@@ -180,7 +162,6 @@ export default function Perfil() {
       confirmPassword: "",
     });
   };
-
   const handleLogout = () => {
     if (window.confirm("Tem certeza que deseja sair?")) {
       localStorage.removeItem("token");
@@ -189,7 +170,6 @@ export default function Perfil() {
       navigate("/login");
     }
   };
-
   if (loading) {
     return (
       <div className="containerProjeto">
@@ -203,7 +183,6 @@ export default function Perfil() {
     );
   }
 
-  // Se não houver usuário, mostrar tela de erro com botão para login
   if (!user) {
     return (
       <div className="containerProjeto">
@@ -231,14 +210,12 @@ export default function Perfil() {
       </div>
     );
   }
-
   return (
     <div className="containerProjeto">
       <Header titulo="Perfil" p="Seus dados pessoais" />
-
       <main className="perfil-container">
         <div className="perfil-card">
-          {/* Avatar */}
+          {}
           <div className="perfil-avatar">
             <div className="avatar-circle">
               <User size={60} color="#fff" />
@@ -247,15 +224,13 @@ export default function Perfil() {
               {user?.name || user?.nome || "Usuário"}
             </h2>
           </div>
-
-          {/* Erro */}
+          {}
           {error && (
             <div className="perfil-error">
               <p>{error}</p>
             </div>
           )}
-
-          {/* Formulário */}
+          {}
           <div className="perfil-form">
             <div className="form-group">
               <label>
@@ -271,7 +246,6 @@ export default function Perfil() {
                 placeholder="Seu nome completo"
               />
             </div>
-
             <div className="form-group">
               <label>
                 <Mail size={18} />
@@ -286,7 +260,6 @@ export default function Perfil() {
                 placeholder="seu@email.com"
               />
             </div>
-
             <div className="form-group">
               <label>
                 <Phone size={18} />
@@ -301,12 +274,10 @@ export default function Perfil() {
                 placeholder="(11) 99999-9999"
               />
             </div>
-
-            {/* Seção de alteração de senha (só aparece em modo de edição) */}
+            {}
             {editMode && (
               <div className="senha-section">
                 <h3>Alterar Senha (opcional)</h3>
-
                 <div className="form-group">
                   <label>
                     <Lock size={18} />
@@ -335,7 +306,6 @@ export default function Perfil() {
                     </button>
                   </div>
                 </div>
-
                 <div className="form-group">
                   <label>
                     <Lock size={18} />
@@ -362,7 +332,6 @@ export default function Perfil() {
                     </button>
                   </div>
                 </div>
-
                 <div className="form-group">
                   <label>
                     <Lock size={18} />
@@ -394,8 +363,7 @@ export default function Perfil() {
               </div>
             )}
           </div>
-
-          {/* Botões de Ação */}
+          {}
           <div className="perfil-actions">
             {!editMode ? (
               <>
@@ -434,7 +402,6 @@ export default function Perfil() {
           </div>
         </div>
       </main>
-
       <SubNavigation />
     </div>
   );
