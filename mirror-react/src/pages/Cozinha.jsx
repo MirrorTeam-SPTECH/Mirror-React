@@ -1,5 +1,6 @@
 ﻿"use client";
 import { useEffect, useState, useMemo } from "react";
+import { API_BASE_URL } from "../config/api";
 import HeaderGerenciamento from "../components/HeaderGerenciamento";
 import DeleteConfirmation from "../components/DeleteConfirmation";
 import { todasCategorias } from "../utils/Categorias";
@@ -95,7 +96,7 @@ export default function Cozinha() {
   useEffect(() => {
     const carregarPedidos = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/pedidos")
+        const response = await fetch(`${API_BASE_URL}/pedidos`)
           .then((res) => (res.ok ? res.json() : null))
           .catch(() => null);
         if (Array.isArray(response)) {

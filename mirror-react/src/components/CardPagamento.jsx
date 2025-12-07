@@ -1,6 +1,7 @@
 ﻿"use client";
 import { useState } from "react";
 import axios from "axios";
+import { API_BASE_URL } from "../config/api";
 import ButtonBack from "./Shared/ButtonBack";
 import CardCarregamento from "./CardCarregamento";
 import CardQRcode from "./CardQRcode";
@@ -228,7 +229,7 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
         notes: produto.observacoes || "",
       };
       const orderResponse = await axios.post(
-        "http://localhost:8080/api/pedidos",
+        `${API_BASE_URL}/pedidos`,
         orderData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -248,7 +249,7 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
         observations: adicionaisTexto || null,
       };
       await axios.post(
-        `http://localhost:8080/api/pedidos/${orderId}/itens`,
+        `${API_BASE_URL}/pedidos/${orderId}/itens`,
         itemData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -260,7 +261,7 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
         method: "CASH",
         amount: parseFloat(totalCalculado),
       };
-      await axios.post("http://localhost:8080/api/pagamentos", paymentData, {
+      await axios.post(`${API_BASE_URL}/pagamentos`, paymentData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       console.log("Pagamento no balcão registrado com sucesso!");
@@ -310,7 +311,7 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
         notes: produto.observacoes || "",
       };
       const orderResponse = await axios.post(
-        "http://localhost:8080/api/pedidos",
+        `${API_BASE_URL}/pedidos`,
         orderData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -330,7 +331,7 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
         observations: adicionaisTexto || null,
       };
       await axios.post(
-        `http://localhost:8080/api/pedidos/${orderId}/itens`,
+        `${API_BASE_URL}/pedidos/${orderId}/itens`,
         itemData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -343,7 +344,7 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
         amount: parseFloat(totalCalculado),
       };
       const paymentResponse = await axios.post(
-        "http://localhost:8080/api/pagamentos",
+        `${API_BASE_URL}/pagamentos`,
         paymentData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -352,7 +353,7 @@ export default function CardPagamento({ produto, onCartao, onClose }) {
       const paymentId = paymentResponse.data.id;
 
       const pixResponse = await axios.post(
-        `http://localhost:8080/api/pagamentos/${paymentId}/pix`,
+        `${API_BASE_URL}/pagamentos/${paymentId}/pix`,
         { customerEmail: user.email || "cliente@example.com" },
         { headers: { Authorization: `Bearer ${token}` } }
       );

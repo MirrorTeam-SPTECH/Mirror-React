@@ -1,6 +1,7 @@
 ﻿"use client";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { API_BASE_URL } from "../config/api";
 import { Header } from "../components/Header";
 import { SubNavigation } from "../components/SubNavigation";
 import "../styles/HistoricoPedido.css";
@@ -135,7 +136,7 @@ export default function HistoricoPedidos() {
       console.log("Buscando pedidos do usuário:", userEmail);
 
       const response = await axios.get(
-        `http://localhost:8080/api/orders/customer/${encodeURIComponent(
+        `${API_BASE_URL}/orders/customer/${encodeURIComponent(
           userEmail
         )}`,
         {

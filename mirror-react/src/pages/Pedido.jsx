@@ -1,5 +1,6 @@
 ﻿"use client";
 import { useEffect, useState } from "react";
+import { API_BASE_URL } from "../config/api";
 import HeaderGerenciamento from "../components/HeaderGerenciamento";
 import { Search, Clock } from "lucide-react";
 
@@ -234,7 +235,7 @@ export default function Pedido() {
       try {
         let apiList = null;
         try {
-          const res = await fetch("http://localhost:8080/api/pedidos");
+          const res = await fetch(`${API_BASE_URL}/pedidos`);
           if (res.ok) {
             const json = await res.json();
             if (Array.isArray(json)) {

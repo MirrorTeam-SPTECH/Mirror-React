@@ -1,6 +1,7 @@
 ﻿"use client";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../config/api";
 import {
   User,
   Mail,
@@ -105,13 +106,13 @@ export default function Perfil() {
         phone: formData.phone,
       };
 
-      await axios.put("http://localhost:8080/api/users/profile", updatedData, {
+      await axios.put(`${API_BASE_URL}/users/profile`, updatedData, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       if (formData.newPassword) {
         await axios.put(
-          "http://localhost:8080/api/users/change-password",
+          `${API_BASE_URL}/users/change-password`,
           {
             currentPassword: formData.currentPassword,
             newPassword: formData.newPassword,

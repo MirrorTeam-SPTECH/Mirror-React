@@ -1,6 +1,7 @@
 ﻿"use client";
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
+import { API_BASE_URL } from "../config/api";
 export default function CreateCard({
   produto = null,
   onClose,
@@ -87,7 +88,7 @@ export default function CreateCard({
       alert("Você precisa estar logado para criar produtos");
       return;
     }
-    fetch("http://localhost:8080/api/cardapio/menu-items", {
+    fetch(`${API_BASE_URL}/cardapio/menu-items`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

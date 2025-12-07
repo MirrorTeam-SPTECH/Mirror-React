@@ -1,6 +1,7 @@
 ﻿"use client";
 import { useState, useEffect } from "react";
 import { AlertTriangle, Loader2 } from "lucide-react";
+import { API_BASE_URL } from "../config/api";
 
 export default function DeleteConfirmation({ onClose, onProdutoRemovido }) {
   const [confirmText, setConfirmText] = useState("");
@@ -17,7 +18,7 @@ export default function DeleteConfirmation({ onClose, onProdutoRemovido }) {
       }
       const { id } = JSON.parse(selecionado);
       try {
-        const response = await fetch("http://localhost:8080/api/cardapio/menu");
+        const response = await fetch(`${API_BASE_URL}/cardapio/menu`);
         if (!response.ok) throw new Error("Erro ao buscar produtos");
         const data = await response.json();
 
@@ -95,7 +96,7 @@ export default function DeleteConfirmation({ onClose, onProdutoRemovido }) {
       }
 
       const response = await fetch(
-        `http://localhost:8080/api/cardapio/menu-items/${produtoCompleto.id}`,
+        `${API_BASE_URL}/cardapio/menu-items/${produtoCompleto.id}`,
         {
           method: "DELETE",
           headers: {

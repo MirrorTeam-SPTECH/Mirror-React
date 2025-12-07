@@ -1,6 +1,7 @@
 ﻿"use client";
 import { useState, useEffect } from "react";
 import { Edit2, Check, X } from "lucide-react";
+import { API_BASE_URL } from "../config/api";
 export default function EditCard({ onClose, onProdutoAtualizado }) {
   const [produtoSelecionado, setProdutoSelecionado] = useState(null);
   const [form, setForm] = useState({
@@ -28,7 +29,7 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
       const { id } = JSON.parse(selecionado);
       console.log("ID do produto selecionado:", id);
       try {
-        const response = await fetch("http://localhost:8080/api/cardapio/menu");
+        const response = await fetch(`${API_BASE_URL}/cardapio/menu`);
         if (!response.ok) throw new Error("Erro ao buscar produtos");
         const data = await response.json();
         console.log("Dados da API:", data);
@@ -155,7 +156,7 @@ export default function EditCard({ onClose, onProdutoAtualizado }) {
       }
 
       const response = await fetch(
-        `http://localhost:8080/api/cardapio/menu-items/${produtoCompleto.id}`,
+        `${API_BASE_URL}/cardapio/menu-items/${produtoCompleto.id}`,
         {
           method: "PUT",
           headers: {
