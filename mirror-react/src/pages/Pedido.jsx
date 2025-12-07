@@ -235,7 +235,7 @@ export default function Pedido() {
       try {
         let apiList = null;
         try {
-          const res = await fetch(`${API_BASE_URL}/pedidos`);
+          const res = await fetch(`${API_BASE_URL}/orders`);
           if (res.ok) {
             const json = await res.json();
             if (Array.isArray(json)) {

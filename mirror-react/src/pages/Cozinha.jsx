@@ -96,7 +96,7 @@ export default function Cozinha() {
   useEffect(() => {
     const carregarPedidos = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/pedidos`)
+        const response = await fetch(`${API_BASE_URL}/orders`)
           .then((res) => (res.ok ? res.json() : null))
           .catch(() => null);
         if (Array.isArray(response)) {
