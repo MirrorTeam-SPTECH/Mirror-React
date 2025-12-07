@@ -88,7 +88,7 @@ export default function CreateCard({
       alert("Você precisa estar logado para criar produtos");
       return;
     }
-    fetch(`${API_BASE_URL}/cardapio/menu-items`, {
+    fetch(`${API_BASE_URL}/menu-items`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

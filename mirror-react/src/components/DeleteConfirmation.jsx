@@ -18,7 +18,7 @@ export default function DeleteConfirmation({ onClose, onProdutoRemovido }) {
       }
       const { id } = JSON.parse(selecionado);
       try {
-        const response = await fetch(`${API_BASE_URL}/cardapio/menu`);
+        const response = await fetch(`${API_BASE_URL}/menu-items`);
         if (!response.ok) throw new Error("Erro ao buscar produtos");
         const data = await response.json();
 
@@ -96,7 +96,7 @@ export default function DeleteConfirmation({ onClose, onProdutoRemovido }) {
       }
 
       const response = await fetch(
-        `${API_BASE_URL}/cardapio/menu-items/${produtoCompleto.id}`,
+        `${API_BASE_URL}/menu-items/${produtoCompleto.id}`,
         {
           method: "DELETE",
           headers: {
